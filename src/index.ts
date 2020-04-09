@@ -5,9 +5,11 @@ import * as opt from "optimist";
 import SwaggerParser from "@apidevtools/swagger-parser";
 import { generateDescription } from "./generators/ApiDescriptionGenerator";
 import { Spec } from "swagger-schema-official";
+import fs from "fs-extra";
 
 type ProgramProps = {
   source: string | undefined;
+  target: string | undefined;
   help: never;
 };
 
@@ -15,9 +17,11 @@ const optimist = opt
   .usage("Usage: rest2ts -s path/to/swagger.json")
   .alias("h", "help")
   .alias("s", "source")
-  .describe("s", "Path to the swagger file");
+  .alias("t", "target")
+  .describe("s", "Path to the swagger file")
+  .describe("s", "Target path");
 
-const { source, help } = optimist.argv as ProgramProps;
+const { help, source, target } = optimist.argv as ProgramProps;
 
 if (help) {
   optimist.showHelp();
@@ -26,6 +30,11 @@ if (help) {
 
 if (source === undefined) {
   console.error("Source -s not set");
+  process.exit(1);
+}
+
+if (target === undefined) {
+  console.error("Target -t not set");
   process.exit(1);
 }
 
@@ -39,6 +48,12 @@ SwaggerParser.validate(source, (err, api) => {
     process.exit(1);
   } else if (api) {
     const apiDesc = generateDescription(api as Spec);
+    fs.outputFile(`${target}/ApiDescription.ts`, apiDesc)
+      .then(() => fs.readFile(`${target}/ApiDescription.ts`, "utf8"))
+      .catch((err) => {
+        console.error(err);
+        process.exit(1);
+      });
   } else {
     console.error(`Something went wrong`);
 
