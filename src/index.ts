@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 import * as opt from "optimist";
+import https from "https";
+const rootCas = require("ssl-root-cas/latest").create();
 
 type ProgramProps = {
   source: string | undefined;
@@ -25,3 +27,22 @@ if (source === undefined) {
 }
 
 console.log(`Getting openAPI from ${source}`);
+
+https.globalAgent.options.ca = rootCas;
+https
+  .get(source, (resp) => {
+    let data = "";
+
+    // A chunk of data has been recieved.
+    resp.on("data", (chunk) => {
+      data += chunk;
+    });
+
+    // The whole response has been received. Print out the result.
+    resp.on("end", () => {
+      console.log(JSON.parse(data).explanation);
+    });
+  })
+  .on("error", (err) => {
+    console.log("Error: " + err.message);
+  });
