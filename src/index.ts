@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 import * as opt from "optimist";
-import https from "https";
-const rootCas = require("ssl-root-cas/latest").create();
+// import https from "https";
+// const rootCas = require("ssl-root-cas/latest").create();
+import SwaggerParser from "@apidevtools/swagger-parser";
+import { generateDescription } from "./generators/ApiDescriptionGenerator";
+import { Spec } from "swagger-schema-official";
 
 type ProgramProps = {
   source: string | undefined;
@@ -28,21 +31,17 @@ if (source === undefined) {
 
 console.log(`Getting openAPI from ${source}`);
 
-https.globalAgent.options.ca = rootCas;
-https
-  .get(source, (resp) => {
-    let data = "";
+process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = "0";
 
-    // A chunk of data has been recieved.
-    resp.on("data", (chunk) => {
-      data += chunk;
-    });
+SwaggerParser.validate(source, (err, api) => {
+  if (err) {
+    console.error(err);
+    process.exit(1);
+  } else if (api) {
+    const apiDesc = generateDescription(api as Spec);
+  } else {
+    console.error(`Something went wrong`);
 
-    // The whole response has been received. Print out the result.
-    resp.on("end", () => {
-      console.log(JSON.parse(data).explanation);
-    });
-  })
-  .on("error", (err) => {
-    console.log("Error: " + err.message);
-  });
+    process.exit(1);
+  }
+});
