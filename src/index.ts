@@ -6,6 +6,7 @@ import SwaggerParser from "@apidevtools/swagger-parser";
 import { generateDescription } from "./generators/ApiDescriptionGenerator";
 import { Spec } from "swagger-schema-official";
 import fs from "fs-extra";
+import { renderDescription } from "./renderers/ApiDescriptionRender";
 
 type ProgramProps = {
   source: string | undefined;
@@ -48,7 +49,7 @@ SwaggerParser.validate(source, (err, api) => {
     process.exit(1);
   } else if (api) {
     const apiDesc = generateDescription(api as Spec);
-    fs.outputFile(`${target}/ApiDescription.ts`, apiDesc)
+    fs.outputFile(`${target}/ApiDescription.ts`, renderDescription(apiDesc))
       .then(() => fs.readFile(`${target}/ApiDescription.ts`, "utf8"))
       .catch((err) => {
         console.error(err);
