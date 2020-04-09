@@ -8,5 +8,10 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Gabriel Ecegi",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^13.11.1",
+    "@types/optimist": "0.0.29",
+    "optimist": "^0.6.1"
+  }
 }
