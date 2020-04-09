@@ -1,3 +1,3 @@
 #!/usr/bin/env node
 
-console.log(`wasam`);
+console.log(`whats up`);
