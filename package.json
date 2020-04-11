@@ -2,10 +2,17 @@
   "name": "rest2ts",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "start": "tsc -w",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "publishConfig": { 
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "repository": {
+    "url": "https://github.com/gaboe/rest2ts",  
+    "type" : "git"
   },
   "author": "Gabriel Ecegi",
   "license": "ISC",
