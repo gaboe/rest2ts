@@ -11,7 +11,7 @@
     "registry": "https://npm.pkg.github.com/"
   },
   "repository": {
-    "url": "https://github.com/gaboe/rest2ts",  
+    "url": "git://github.com/gaboe/rest2ts.git",  
     "type" : "git"
   },
   "author": "Gabriel Ecegi",
