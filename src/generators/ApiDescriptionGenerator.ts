@@ -1,4 +1,4 @@
-import { Spec, Path } from "swagger-schema-official";
+import { SwaggerSchema, Path } from "../models/SwaggerSchema";
 
 export type ApiDescription = { [pathName: string]: string };
 
@@ -34,7 +34,7 @@ const formatPath = (str: string) =>
 
 const getCommonPrefix = (str: string) => `${formatPath(str).split("_")[0]}_`;
 
-export const generateDescription = (spec: Spec) => {
+export const generateDescription = (spec: SwaggerSchema) => {
   const api: ApiDescription = {};
 
   const commonPrefix = Object.keys(spec.paths).reduce(

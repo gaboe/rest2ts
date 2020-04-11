@@ -7,6 +7,8 @@ import { generateDescription } from "./generators/ApiDescriptionGenerator";
 import { Spec } from "swagger-schema-official";
 import fs from "fs-extra";
 import { renderDescription } from "./renderers/ApiDescriptionRender";
+import { generateContracts } from "./generators/ContractGenerator";
+import { SwaggerSchema } from "./models/SwaggerSchema";
 
 type ProgramProps = {
   source: string | undefined;
@@ -48,13 +50,20 @@ SwaggerParser.validate(source, (err, api) => {
     console.error(err);
     process.exit(1);
   } else if (api) {
-    const apiDesc = generateDescription(api as Spec);
-    fs.outputFile(`${target}/ApiDescription.ts`, renderDescription(apiDesc))
-      .then(() => fs.readFile(`${target}/ApiDescription.ts`, "utf8"))
-      .catch((err) => {
-        console.error(err);
-        process.exit(1);
-      });
+    const apiDesc = generateDescription(api as SwaggerSchema);
+    fs.outputFile(
+      `${target}/ApiDescription.ts`,
+      renderDescription(apiDesc)
+    ).catch((err) => {
+      console.error(err);
+      process.exit(1);
+    });
+
+    const contracts = generateContracts(api as SwaggerSchema);
+    fs.outputFile(`${target}/ApiContracts.ts`, contracts).catch((err) => {
+      console.error(err);
+      process.exit(1);
+    });
   } else {
     console.error(`Something went wrong`);
 
