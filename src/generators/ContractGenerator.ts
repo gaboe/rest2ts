@@ -5,8 +5,6 @@ const renderProperties = (swaggerSchema: SwaggerSchema) => (
   schemaName: string,
   schema: Schema
 ): string => {
-  console.log("----", schemaName, schema);
-
   if (schema.type === "object" && schema.properties) {
     const properties = Object.keys(schema.properties)
       .map((op) => {
@@ -22,7 +20,6 @@ const renderProperties = (swaggerSchema: SwaggerSchema) => (
   } else if (schema.enum) {
     return schema.enum.map((e) => e).join(" | ");
   } else if (schema.allOf) {
-    console.log(schema.allOf);
     return schema.allOf[0].enum?.map((e) => e).join(" | ") || "";
     // return schema.allOf[0].$ref?.split("/").reverse()[0] || "";
   } else {
@@ -50,7 +47,10 @@ export const generateContracts = (swaggerSchema: SwaggerSchema) => {
         name: k,
         properties: rp(k, o),
       };
-      return render(`interface {{ name }} {\n\t{{ properties }}\n}`, view);
+      if (o.type === "object") {
+        return render(`interface {{ name }} {\n\t{{ properties }}\n}\n`, view);
+      }
+      return render(`const {{ name }} = {{ properties }};\n`, view);
     })
     .join("\n");
 
