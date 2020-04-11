@@ -9,6 +9,7 @@ import fs from "fs-extra";
 import { renderDescription } from "./renderers/ApiDescriptionRender";
 import { generateContracts } from "./generators/ContractGenerator";
 import { SwaggerSchema } from "./models/SwaggerSchema";
+import { render } from "mustache";
 
 type ProgramProps = {
   source: string | undefined;
@@ -50,17 +51,18 @@ SwaggerParser.validate(source, (err, api) => {
     console.error(err);
     process.exit(1);
   } else if (api) {
-    const apiDesc = generateDescription(api as SwaggerSchema);
-    fs.outputFile(
-      `${target}/ApiDescription.ts`,
-      renderDescription(apiDesc)
-    ).catch((err) => {
-      console.error(err);
-      process.exit(1);
-    });
-
+    const apiDesc = renderDescription(
+      generateDescription(api as SwaggerSchema)
+    );
     const contracts = generateContracts(api as SwaggerSchema);
-    fs.outputFile(`${target}/ApiContracts.ts`, contracts).catch((err) => {
+    const view = {
+      apiDesc,
+      contracts,
+    };
+    fs.outputFile(
+      `${target}/Api.ts`,
+      render("{{{ apiDesc }}}\n\n {{{ contracts }}}", view)
+    ).catch((err) => {
       console.error(err);
       process.exit(1);
     });
