@@ -1,21 +1,21 @@
 {
   "name": "rest2ts",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "index.ts",
   "scripts": {
     "start": "tsc -w",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "publishConfig": { 
-    "registry": "https://npm.pkg.github.com/"
-  },
   "repository": {
-    "url": "git://github.com/gaboe/rest2ts.git",  
-    "type" : "git"
+    "url": "git://github.com/gaboe/rest2ts.git",
+    "type": "git"
   },
   "author": "Gabriel Ecegi",
   "license": "ISC",
+  "bin": {
+    "rest2ts": "./build/index.js"
+  },
   "dependencies": {
     "@types/node": "^13.11.1",
     "@types/optimist": "0.0.29",
