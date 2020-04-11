@@ -20,8 +20,14 @@ const renderProperties = (swaggerSchema: SwaggerSchema) => (
   } else if (schema.enum) {
     return schema.enum.map((e) => e).join(" | ");
   } else if (schema.allOf) {
-    return schema.allOf[0].enum?.map((e) => e).join(" | ") || "";
-    // return schema.allOf[0].$ref?.split("/").reverse()[0] || "";
+    console.log(schemaName, schema.allOf[0]);
+    if (schema.allOf[0].enum) {
+      return schema.allOf[0].enum.map((e) => e).join(" | ");
+    }
+    if (schema.allOf[0].type === "object") {
+      return "any";
+    }
+    return "any";
   } else {
     switch (schema.type) {
       case "integer":
