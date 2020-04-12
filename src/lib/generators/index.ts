@@ -18,7 +18,7 @@ export const generate = (api: any, baseUrl: string) => {
     // raw: JSON.stringify(api, null, 2),
   };
   const content = render(
-    "{{{ infrastructure }}}\n\n {{{ apiDesc }}}\n\n {{{ contracts }}}\n\n {{{ services }}} \n {{{ raw }}}",
+    "{{{ infrastructure }}}\n\n{{{ apiDesc }}}\n\n{{{ contracts }}}\n\n{{{ services }}}\n{{{ raw }}}",
     view
   );
   return content;

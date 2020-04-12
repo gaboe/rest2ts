@@ -31,6 +31,14 @@ const getContractResult = (
   const post = endpointDescription.pathObject.post;
   if (post && post.responses["200"]?.content?.["application/json"]) {
     const schema = post.responses["200"].content["application/json"].schema;
+    if (schema.type === "array") {
+      const typeName = Maybe.fromNullable(schema.items)
+        .chain((e) => (e instanceof Array ? Just(e[0]) : Just(e)))
+        .chain((e) => (e.$ref ? Just(e.$ref) : Nothing))
+        .chain((e) => Just(getTypeNameFromRef(e)))
+        .orDefault("");
+      return Just(`${typeName}[]`);
+    }
     return Maybe.fromNullable(schema.$ref).chain((e) =>
       Just(getTypeNameFromRef(e))
     );
@@ -60,7 +68,7 @@ export const generateServices = (swagger: SwaggerSchema, baseUrl: string) => {
       };
 
       return render(
-        "export const {{name}} = ({{{formattedParam}}}): Promise<FetchResponse<{{contractResult}}>> => \n\t apiPost('{{{url}}}', {{contractParameterName}}, headers);\n",
+        "export const {{name}} = ({{{formattedParam}}}): \n\tPromise<FetchResponse<{{contractResult}}>> => \n\tapiPost('{{{url}}}', {{contractParameterName}}, headers);\n",
         view
       );
     })

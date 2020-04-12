@@ -1,9 +1,10 @@
 import { SwaggerSchema, Schema } from "../models/SwaggerSchema";
 import { render } from "mustache";
 import { getTypeNameFromRef } from "./Common";
+import { Maybe, Just } from "purify-ts";
 
 const renderProperties = (swagger: SwaggerSchema) => (
-  schemaName: string,
+  // schemaName: string,
   schema: Schema
 ): string => {
   if (schema.type === "object" && schema.properties) {
@@ -12,7 +13,7 @@ const renderProperties = (swagger: SwaggerSchema) => (
         const childProp = (schema.properties as any)[op] as Schema;
         const view = {
           name: op,
-          type: renderProperties(swagger)(op, childProp),
+          type: renderProperties(swagger)(childProp),
         };
         return render("{{ name }}: {{ type }};", view);
       })
@@ -44,7 +45,11 @@ const renderProperties = (swagger: SwaggerSchema) => (
       case "object":
         return "{}";
       case "array":
-        return "[]";
+        const arrayTypeSchema = Maybe.fromNullable(schema.items)
+          .chain((e) => (e instanceof Array ? Just(e[0]) : Just(e)))
+          .chain((e) => Just(renderProperties(swagger)(e)))
+          .orDefault("");
+        return `${arrayTypeSchema}[]`;
       default:
         return (schema.type || schema.allOf) as string;
     }
@@ -60,7 +65,7 @@ export const generateContracts = (swaggerSchema: SwaggerSchema) => {
 
       const view = {
         name: k,
-        properties: rp(k, o),
+        properties: rp(o),
       };
       if (o.type === "object") {
         return render(`interface {{ name }} {\n\t{{ properties }}\n}\n`, view);
