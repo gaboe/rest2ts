@@ -35,26 +35,29 @@ const getContractResult = (
   return Nothing;
 };
 
-export const generateServices = (swagger: SwaggerSchema) => {
+export const generateServices = (swagger: SwaggerSchema, baseUrl: string) => {
   const endpoints = getEndpointsDescriptions(swagger);
   const view = endpoints
     .map((e) => {
       const { formattedParam, contractParameterName } = getRequestContractType(
         e
       ).orDefault({
-        contractParameterName: "{}",
         formattedParam: "",
+        contractParameterName: "{}",
       });
+      const comma = formattedParam.length > 0 ? ", " : "";
+
       const contractResult = getContractResult(e).orDefault("any");
       const view = {
         name: e.name,
-        formattedParam,
+        formattedParam: `${formattedParam}${comma}headers = new Headers()`,
         contractParameterName,
         contractResult,
+        url: `${baseUrl}${e.url}`,
       };
 
       return render(
-        "export const {{name}} = ({{formattedParam}}): Promise<FetchResponse<{{contractResult}}>> => apiPost('', {{contractParameterName}});",
+        "export const {{name}} = ({{{formattedParam}}}): Promise<FetchResponse<{{contractResult}}>> => \n\t apiPost('{{{url}}}', {{contractParameterName}}, headers);\n",
         view
       );
     })

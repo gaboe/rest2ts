@@ -47,6 +47,8 @@ console.log(`Getting openAPI from ${source}`);
 
 process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = "0";
 
+const baseUrl = source.substring(0, source.indexOf("/swagger/"));
+
 SwaggerParser.parse(source, (err, api) => {
   if (err) {
     console.error(err);
@@ -59,7 +61,7 @@ SwaggerParser.parse(source, (err, api) => {
       apiDesc,
       contracts,
       infrastructure: infrastructureTemplate,
-      services: generateServices(swaggerSchema),
+      services: generateServices(swaggerSchema, baseUrl),
       // raw: JSON.stringify(api, null, 2),
     };
     fs.outputFile(
