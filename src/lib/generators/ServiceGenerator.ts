@@ -5,19 +5,22 @@ import {
 } from "./ApiDescriptionGenerator";
 import { render } from "mustache";
 import { Maybe, Nothing, Just } from "purify-ts";
+import { getTypeNameFromRef } from "./Common";
 
 const getRequestContractType = (
   endpointDescription: EndpointDescription
 ): Maybe<{ contractParameterName: string; formattedParam: string }> => {
   const post = endpointDescription.pathObject.post;
   if (post && post.requestBody?.content["application/json"]) {
-    const ref = post.requestBody.content["application/json"].schema;
-    return Maybe.fromNullable(ref.$ref?.split("/").reverse()[0]).chain((v) =>
-      Just({
-        contractParameterName: "requestContract",
-        formattedParam: `requestContract: ${v}`,
-      })
-    );
+    const schema = post.requestBody.content["application/json"].schema;
+    return Maybe.fromNullable(schema.$ref)
+      .chain((e) => Just(getTypeNameFromRef(e)))
+      .chain((v) =>
+        Just({
+          contractParameterName: "requestContract",
+          formattedParam: `requestContract: ${v}`,
+        })
+      );
   }
   return Nothing;
 };
@@ -27,10 +30,10 @@ const getContractResult = (
 ): Maybe<string> => {
   const post = endpointDescription.pathObject.post;
   if (post && post.responses["200"]?.content?.["application/json"]) {
-    const ref = post.responses["200"].content["application/json"].schema;
-    return Maybe.fromNullable(ref.$ref?.split("/").reverse()[0]) as Maybe<
-      string
-    >;
+    const schema = post.responses["200"].content["application/json"].schema;
+    return Maybe.fromNullable(schema.$ref).chain((e) =>
+      Just(getTypeNameFromRef(e))
+    );
   }
   return Nothing;
 };

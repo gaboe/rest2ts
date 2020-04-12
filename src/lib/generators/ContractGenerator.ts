@@ -1,5 +1,6 @@
 import { SwaggerSchema, Schema } from "../models/SwaggerSchema";
 import { render } from "mustache";
+import { getTypeNameFromRef } from "./Common";
 
 const renderProperties = (swagger: SwaggerSchema) => (
   schemaName: string,
@@ -19,11 +20,20 @@ const renderProperties = (swagger: SwaggerSchema) => (
     return properties;
   } else if (schema.enum) {
     return schema.enum.map((e) => e).join(" | ");
-  } else if (schema.allOf) {
-    if (schema.allOf[0].enum) {
-      return schema.allOf[0].enum.map((e) => e).join(" | ");
+  } else if (schema.allOf && schema.allOf[0]) {
+    const allOf = schema.allOf[0];
+    if (allOf.$ref) {
+      const typeName = getTypeNameFromRef(allOf.$ref);
+      const tt = swagger.components.schemas[typeName];
+      if (tt.type === "object") {
+        return typeName;
+      }
+      return `typeof ${typeName}`;
     }
-    if (schema.allOf[0].type === "object") {
+    if (allOf.enum) {
+      return allOf.enum.map((e) => e).join(" | ");
+    }
+    if (allOf.type === "object") {
       return "any";
     }
     return "any";
