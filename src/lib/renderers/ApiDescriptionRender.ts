@@ -12,7 +12,7 @@ export const renderDescription = (api: ApiDescription) => {
       return render(`{{ prop }}: "{{{ value }}}"`, view);
     })
     .join(",\n\t");
-  const view = render(`export const API = { \n\t{{{ rows }}}\n}`, { rows });
+  const view = render(`export const API = { \n\t{{{ rows }}}\n}\n`, { rows });
 
   return view;
 };
