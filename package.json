@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
+    "dev": "run-p start test",
     "start": "tsc -w",
-    "test": "ava"
+    "test": "ava -w"
   },
   "repository": {
     "url": "git://github.com/gaboe/rest2ts.git",
@@ -32,13 +33,14 @@
     "@types/mustache": "^4.0.1",
     "@types/swagger-schema-official": "^2.0.19",
     "ava": "^3.6.0",
+    "npm-run-all": "^4.1.5",
     "swagger-schema-official": "^2.0.0-bab6bed"
   },
   "ava": {
-		"typescript": {
-			"rewritePaths": {
-				"src/": "build/"
-			}
-		}
-	}
+    "typescript": {
+      "rewritePaths": {
+        "src/": "build/"
+      }
+    }
+  }
 }
