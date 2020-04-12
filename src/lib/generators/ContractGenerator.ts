@@ -44,7 +44,7 @@ const renderProperties = (swagger: SwaggerSchema) => (
 export const generateContracts = (swaggerSchema: SwaggerSchema) => {
   const rp = renderProperties(swaggerSchema);
 
-  const rows = Object.keys(swaggerSchema.components.schemas)
+  const rows = Object.keys(swaggerSchema.components?.schemas || [])
     .map((k) => {
       const o = swaggerSchema.components.schemas[k];
 
