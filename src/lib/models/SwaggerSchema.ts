@@ -125,6 +125,7 @@ export interface Operation {
   requestBody: {
     content: OperationContent;
   };
+  parameters: Parameter[];
 }
 
 // ------------------------------ Schema -------------------------------------

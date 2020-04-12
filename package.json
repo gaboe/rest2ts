@@ -43,6 +43,7 @@
       "rewritePaths": {
         "src/": "build/"
       }
-    }
+    },
+    "ignoredByWatcher": ["tests/infrastructure/ApiFetch.spec.ts"]
   }
 }

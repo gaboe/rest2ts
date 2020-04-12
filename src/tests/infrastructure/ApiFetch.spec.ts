@@ -71,20 +71,20 @@ test("get to web api", async (t) => {
   t.pass();
 });
 
-test("post to web api", async (t) => {
-  var response = await apiPost<HttpResponse, HttpRequest>(
-    "https://jsonplaceholder.typicode.com/posts",
-    {
-      body: "test test test",
-      title: "test",
-      userId: 666,
-    },
-    new Headers()
-  );
+// test("post to web api", async (t) => {
+//   var response = await apiPost<HttpResponse, HttpRequest>(
+//     "https://jsonplaceholder.typicode.com/posts",
+//     {
+//       body: "test test test",
+//       title: "test",
+//       userId: 666,
+//     },
+//     new Headers()
+//   );
 
-  t.deepEqual(response.status, 201);
-  t.deepEqual(response.json.userId, 666);
-  t.deepEqual(response.json.title, "test");
-  t.deepEqual(response.json.body, "test test test");
-  t.pass();
-});
+//   t.deepEqual(response.status, 201);
+//   t.deepEqual(response.json.userId, 666);
+//   t.deepEqual(response.json.title, "test");
+//   t.deepEqual(response.json.body, "test test test");
+//   t.pass();
+// });

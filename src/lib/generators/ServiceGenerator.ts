@@ -1,4 +1,4 @@
-import { SwaggerSchema, Operation } from "../models/SwaggerSchema";
+import { SwaggerSchema, Operation, Schema } from "../models/SwaggerSchema";
 import {
   getEndpointsDescriptions,
   EndpointDescription,
@@ -62,12 +62,42 @@ const GET = (
   contractResult: string,
   baseUrl: string
 ) => {
+  const getType = (schema: Schema): string => {
+    switch (schema.type) {
+      case "integer":
+        return "number";
+      case "object":
+        return "{}";
+      case "array":
+        const arrayTypeSchema = Maybe.fromNullable(schema.items)
+          .chain((e) => (e instanceof Array ? Just(e[0]) : Just(e)))
+          .chain((e) => Just(e.$ref ? getTypeNameFromRef(e.$ref) : getType(e)))
+          .orDefault("");
+        return `${arrayTypeSchema}[]`;
+      default:
+        return (schema.type || schema.allOf) as string;
+    }
+  };
+  const parameters = (endpointDescription.pathObject.get?.parameters || [])
+    .map((e) => {
+      const param = {
+        name: e.name,
+        type: getType((e as any).schema),
+      };
+      return param;
+    })
+    .map((e) => `${e.name}: ${e.type}`)
+    .join(", ");
+
   const view = {
     name: endpointDescription.name,
     contractParameterName,
     contractResult,
     url: `${baseUrl}${endpointDescription.url}`,
-    formattedParam: "headers = new Headers()",
+    formattedParam:
+      parameters.length > 0
+        ? `${parameters}, headers = new Headers()`
+        : "headers = new Headers()",
   };
 
   return render(

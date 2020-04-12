@@ -47,7 +47,11 @@ const renderProperties = (swagger: SwaggerSchema) => (
       case "array":
         const arrayTypeSchema = Maybe.fromNullable(schema.items)
           .chain((e) => (e instanceof Array ? Just(e[0]) : Just(e)))
-          .chain((e) => Just(renderProperties(swagger)(e)))
+          .chain((e) =>
+            Just(
+              e.$ref ? getTypeNameFromRef(e.$ref) : renderProperties(swagger)(e)
+            )
+          )
           .orDefault("");
         return `${arrayTypeSchema}[]`;
       default:
