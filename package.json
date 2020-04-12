@@ -27,10 +27,18 @@
     "swagger-parser": "^9.0.1"
   },
   "devDependencies": {
+    "@ava/typescript": "^1.1.1",
     "@types/fs-extra": "^8.1.0",
     "@types/mustache": "^4.0.1",
     "@types/swagger-schema-official": "^2.0.19",
     "ava": "^3.6.0",
     "swagger-schema-official": "^2.0.0-bab6bed"
-  }
+  },
+  "ava": {
+		"typescript": {
+			"rewritePaths": {
+				"src/": "build/"
+			}
+		}
+	}
 }
