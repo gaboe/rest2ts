@@ -1,18 +1,18 @@
 export const infrastructureTemplate = `
-//ARCHITECTURE START
-export type FetchResponse<T> = {
+// ARCHITECTURE START
+type FetchResponse<T> = {
   json: T;
   status: number;
 };
 
-export async function fetchJson<T>(...args: any): Promise<FetchResponse<T>> {
+async function fetchJson<T>(...args: any): Promise<FetchResponse<T>> {
   const res: Response = await (fetch as any)(...args);
   const json = await res.json();
 
   return { json: json, status: res.status };
 }
 
-export function apiPost<TResponse, TRequest>(url: string, request: TRequest, headers: Headers) {
+function apiPost<TResponse, TRequest>(url: string, request: TRequest, headers: Headers) {
   var headers = new Headers();
   headers.append("Content-Type", "application/json");
 
@@ -27,5 +27,5 @@ export function apiPost<TResponse, TRequest>(url: string, request: TRequest, hea
 
   return fetchJson<TResponse>(url, requestOptions as any);
 }
-//ARCHITECTURE END
+// ARCHITECTURE END
 `;
