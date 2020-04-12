@@ -108,15 +108,22 @@ export interface ExternalDocs {
   url: string;
   description?: string;
 }
+
+export interface OperationContent {
+  [mimeType: string]: {
+    schema: Schema;
+  };
+}
+
 export interface Operation {
-  responses: { [responseName: string]: Response | Reference };
+  responses: {
+    [responseName: string]: {
+      content: OperationContent;
+    };
+  };
   tags?: string[];
   requestBody: {
-    content: {
-      [mimeType: string]: {
-        schema: Schema;
-      };
-    };
+    content: OperationContent;
   };
 }
 

@@ -5,16 +5,32 @@ import {
 } from "./ApiDescriptionGenerator";
 import { render } from "mustache";
 import { Maybe, Nothing, Just } from "purify-ts";
-const getRequestContractType = (ed: EndpointDescription): Maybe<string> => {
-  if (
-    ed.pathObject.post &&
-    ed.pathObject.post.requestBody?.content["application/json"]
-  ) {
-    const ref =
-      ed.pathObject.post.requestBody.content["application/json"].schema;
+
+const getRequestContractType = (
+  endpointDescription: EndpointDescription
+): Maybe<{ contractParameterName: string; formattedParam: string }> => {
+  const post = endpointDescription.pathObject.post;
+  if (post && post.requestBody?.content["application/json"]) {
+    const ref = post.requestBody.content["application/json"].schema;
     return Maybe.fromNullable(ref.$ref?.split("/").reverse()[0]).chain((v) =>
-      Just(`requestContract: ${v}`)
+      Just({
+        contractParameterName: "requestContract",
+        formattedParam: `requestContract: ${v}`,
+      })
     );
+  }
+  return Nothing;
+};
+
+const getContractResult = (
+  endpointDescription: EndpointDescription
+): Maybe<string> => {
+  const post = endpointDescription.pathObject.post;
+  if (post && post.responses["200"]?.content?.["application/json"]) {
+    const ref = post.responses["200"].content["application/json"].schema;
+    return Maybe.fromNullable(ref.$ref?.split("/").reverse()[0]) as Maybe<
+      string
+    >;
   }
   return Nothing;
 };
@@ -23,15 +39,22 @@ export const generateServices = (swagger: SwaggerSchema) => {
   const endpoints = getEndpointsDescriptions(swagger);
   const view = endpoints
     .map((e) => {
-      const requestContractType = getRequestContractType(e);
-      const contractParameter = requestContractType.orDefault("");
+      const { formattedParam, contractParameterName } = getRequestContractType(
+        e
+      ).orDefault({
+        contractParameterName: "{}",
+        formattedParam: "",
+      });
+      const contractResult = getContractResult(e).orDefault("any");
       const view = {
         name: e.name,
-        contractParameter,
+        formattedParam,
+        contractParameterName,
+        contractResult,
       };
 
       return render(
-        "export const {{name}} = ({{contractParameter}}): Promise<any> => {return any}",
+        "export const {{name}} = ({{formattedParam}}): Promise<FetchResponse<{{contractResult}}>> => apiPost('', {{contractParameterName}});",
         view
       );
     })
