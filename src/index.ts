@@ -11,6 +11,7 @@ import { SwaggerSchema } from "./lib/models/SwaggerSchema";
 import { render } from "mustache";
 import { infrastructureTemplate } from "./lib/renderers/InfrastructureTemplates";
 import { generateServices } from "./lib/generators/ServiceGenerator";
+import { generate } from "./lib/generators";
 
 type ProgramProps = {
   source: string | undefined;
@@ -54,23 +55,9 @@ SwaggerParser.parse(source, (err, api) => {
     console.error(err);
     process.exit(1);
   } else if (api) {
-    const swaggerSchema = api as SwaggerSchema;
-    const apiDesc = renderDescription(generateDescription(swaggerSchema));
-    const contracts = generateContracts(swaggerSchema);
-    const view = {
-      apiDesc,
-      contracts,
-      infrastructure: infrastructureTemplate,
-      services: generateServices(swaggerSchema, baseUrl),
-      // raw: JSON.stringify(api, null, 2),
-    };
-    fs.outputFile(
-      `${target}/Api.ts`,
-      render(
-        "{{{ apiDesc }}}\n\n {{{ contracts }}}\n\n {{{ infrastructure }}}\n\n {{{ services }}} \n {{{ raw }}}",
-        view
-      )
-    ).catch((err) => {
+    const content = generate(api, baseUrl);
+
+    fs.outputFile(`${target}/Api.ts`, content).catch((err) => {
       console.error(err);
       process.exit(1);
     });
