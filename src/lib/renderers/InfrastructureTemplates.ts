@@ -1,4 +1,6 @@
-export const infrastructureTemplate = `export type FetchResponse<T> = {
+export const infrastructureTemplate = `
+//ARCHITECTURE START
+export type FetchResponse<T> = {
   json: T;
   status: number;
 };
@@ -24,4 +26,6 @@ export function apiPost<TResponse, TRequest>(url: string, request: TRequest, hea
   };
 
   return fetchJson<TResponse>(url, requestOptions as any);
-}`;
+}
+//ARCHITECTURE END
+`;
