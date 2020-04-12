@@ -1,4 +1,7 @@
-export const infrastructureTemplate = `
+import test from "ava";
+import fetch from "node-fetch";
+
+(global as any).Headers = (fetch as any).Headers;
 // ARCHITECTURE START
 type FetchResponse<T> = {
   json: T;
@@ -44,4 +47,44 @@ function apiGet<TResponse>(url: string, headers: Headers, ...params: string[]) {
   return fetchJson<TResponse>(url + queryString);
 }
 // ARCHITECTURE END
-`;
+
+type HttpResponse = {
+  id: number;
+  userId: number;
+  title: string;
+  body: string;
+};
+
+type HttpRequest = {
+  userId: number;
+  title: string;
+  body: string;
+};
+
+test("get to web api", async (t) => {
+  var response = await apiGet<HttpResponse>(
+    "https://jsonplaceholder.typicode.com/todos/1",
+    new Headers()
+  );
+  t.deepEqual(response.status, 200);
+  t.deepEqual(response.json.userId, 1);
+  t.pass();
+});
+
+test("post to web api", async (t) => {
+  var response = await apiPost<HttpResponse, HttpRequest>(
+    "https://jsonplaceholder.typicode.com/posts",
+    {
+      body: "test test test",
+      title: "test",
+      userId: 666,
+    },
+    new Headers()
+  );
+
+  t.deepEqual(response.status, 201);
+  t.deepEqual(response.json.userId, 666);
+  t.deepEqual(response.json.title, "test");
+  t.deepEqual(response.json.body, "test test test");
+  t.pass();
+});
