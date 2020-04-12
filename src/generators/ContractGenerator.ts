@@ -1,7 +1,7 @@
 import { SwaggerSchema, Schema } from "../models/SwaggerSchema";
 import { render } from "mustache";
 
-const renderProperties = (swaggerSchema: SwaggerSchema) => (
+const renderProperties = (swagger: SwaggerSchema) => (
   schemaName: string,
   schema: Schema
 ): string => {
@@ -11,7 +11,7 @@ const renderProperties = (swaggerSchema: SwaggerSchema) => (
         const childProp = (schema.properties as any)[op] as Schema;
         const view = {
           name: op,
-          type: renderProperties(swaggerSchema)(op, childProp),
+          type: renderProperties(swagger)(op, childProp),
         };
         return render("{{ name }}: {{ type }};", view);
       })
@@ -20,7 +20,6 @@ const renderProperties = (swaggerSchema: SwaggerSchema) => (
   } else if (schema.enum) {
     return schema.enum.map((e) => e).join(" | ");
   } else if (schema.allOf) {
-    console.log(schemaName, schema.allOf[0]);
     if (schema.allOf[0].enum) {
       return schema.allOf[0].enum.map((e) => e).join(" | ");
     }

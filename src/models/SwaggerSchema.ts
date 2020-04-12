@@ -110,17 +110,14 @@ export interface ExternalDocs {
 }
 export interface Operation {
   responses: { [responseName: string]: Response | Reference };
-  summary?: string;
-  description?: string;
-  externalDocs?: ExternalDocs;
-  operationId?: string;
-  produces?: string[];
-  consumes?: string[];
-  parameters?: Array<Parameter | Reference>;
-  schemes?: string[];
-  deprecated?: boolean;
-  security?: Array<{ [securityDefinitionName: string]: string[] }>;
   tags?: string[];
+  requestBody: {
+    content: {
+      [mimeType: string]: {
+        schema: Schema;
+      };
+    };
+  };
 }
 
 // ------------------------------ Schema -------------------------------------
