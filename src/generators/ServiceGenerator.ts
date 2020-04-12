@@ -4,32 +4,34 @@ import {
   EndpointDescription,
 } from "./ApiDescriptionGenerator";
 import { render } from "mustache";
-
-const getRequestContractType = (ed: EndpointDescription) => {
+import { Maybe, Nothing, Just } from "purify-ts";
+const getRequestContractType = (ed: EndpointDescription): Maybe<string> => {
   if (
     ed.pathObject.post &&
     ed.pathObject.post.requestBody?.content["application/json"]
   ) {
     const ref =
       ed.pathObject.post.requestBody.content["application/json"].schema;
-    console.log(ed.pathObject);
-
-    return ref.$ref?.split("/").reverse()[0];
+    return Maybe.fromNullable(ref.$ref?.split("/").reverse()[0]).chain((v) =>
+      Just(`requestContract: ${v}`)
+    );
   }
-  return "any";
+  return Nothing;
 };
 
 export const generateServices = (swagger: SwaggerSchema) => {
   const endpoints = getEndpointsDescriptions(swagger);
   const view = endpoints
     .map((e) => {
+      const requestContractType = getRequestContractType(e);
+      const contractParameter = requestContractType.orDefault("");
       const view = {
         name: e.name,
-        requestContractType: getRequestContractType(e),
+        contractParameter,
       };
 
       return render(
-        "export const {{name}} = (requestContract: {{requestContractType}}): Promise<any> => {return any}",
+        "export const {{name}} = ({{contractParameter}}): Promise<any> => {return any}",
         view
       );
     })
