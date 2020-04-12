@@ -3,14 +3,14 @@ import * as opt from "optimist";
 // import https from "https";
 // const rootCas = require("ssl-root-cas/latest").create();
 import SwaggerParser from "@apidevtools/swagger-parser";
-import { generateDescription } from "./generators/ApiDescriptionGenerator";
+import { generateDescription } from "./lib/generators/ApiDescriptionGenerator";
 import fs from "fs-extra";
-import { renderDescription } from "./renderers/ApiDescriptionRender";
-import { generateContracts } from "./generators/ContractGenerator";
-import { SwaggerSchema } from "./models/SwaggerSchema";
+import { renderDescription } from "./lib/renderers/ApiDescriptionRender";
+import { generateContracts } from "./lib/generators/ContractGenerator";
+import { SwaggerSchema } from "./lib/models/SwaggerSchema";
 import { render } from "mustache";
-import { infrastructureTemplate } from "./renderers/InfrastructureTemplates";
-import { generateServices } from "./generators/ServiceGenerator";
+import { infrastructureTemplate } from "./lib/renderers/InfrastructureTemplates";
+import { generateServices } from "./lib/generators/ServiceGenerator";
 
 type ProgramProps = {
   source: string | undefined;

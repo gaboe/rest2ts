@@ -5,7 +5,7 @@
   "main": "index.ts",
   "scripts": {
     "start": "tsc -w",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "ava"
   },
   "repository": {
     "url": "git://github.com/gaboe/rest2ts.git",
@@ -30,6 +30,7 @@
     "@types/fs-extra": "^8.1.0",
     "@types/mustache": "^4.0.1",
     "@types/swagger-schema-official": "^2.0.19",
+    "ava": "^3.6.0",
     "swagger-schema-official": "^2.0.0-bab6bed"
   }
 }
