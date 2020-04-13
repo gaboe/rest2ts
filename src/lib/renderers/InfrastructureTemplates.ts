@@ -32,15 +32,20 @@ function apiPost<TResponse, TRequest>(
   return fetchJson<TResponse>(url, requestOptions as any);
 }
 
-function apiGet<TResponse>(url: string, headers: Headers, ...params: string[]) {
+type ParamsObject = {
+  [ket: string]: any;
+};
+
+function apiGet<TResponse>(
+  url: string,
+  headers: Headers,
+  paramsObject: ParamsObject = {}
+) {
   headers.append("Content-Type", "application/json");
-  var queryString = Object.keys(params)
-    .map((key) => {
-      return (
-        encodeURIComponent(key) + "=" + encodeURIComponent(params[key as any])
-      );
-    })
+  const queryString = Object.entries(paramsObject)
+    .map(([key, val]) => \`\${key}=\${val}\`)
     .join("&");
+
   return fetchJson<TResponse>(url + queryString);
 }
 // ARCHITECTURE END

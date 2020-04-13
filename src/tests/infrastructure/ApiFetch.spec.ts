@@ -35,15 +35,20 @@ function apiPost<TResponse, TRequest>(
   return fetchJson<TResponse>(url, requestOptions as any);
 }
 
-function apiGet<TResponse>(url: string, headers: Headers, ...params: string[]) {
+type ParamsObject = {
+  [ket: string]: any;
+};
+
+function apiGet<TResponse>(
+  url: string,
+  headers: Headers,
+  paramsObject: ParamsObject = {}
+) {
   headers.append("Content-Type", "application/json");
-  var queryString = Object.keys(params)
-    .map((key) => {
-      return (
-        encodeURIComponent(key) + "=" + encodeURIComponent(params[key as any])
-      );
-    })
+  const queryString = Object.entries(paramsObject)
+    .map(([key, val]) => `${key}=${val}`)
     .join("&");
+
   return fetchJson<TResponse>(url + queryString);
 }
 // ARCHITECTURE END
@@ -64,7 +69,8 @@ type HttpRequest = {
 test("get to web api", async (t) => {
   var response = await apiGet<HttpResponse>(
     "https://jsonplaceholder.typicode.com/todos/1",
-    new Headers()
+    new Headers(),
+    {}
   );
   t.deepEqual(response.status, 200);
   t.deepEqual(response.json.userId, 1);

@@ -112,11 +112,19 @@ const GET = (
     .filter((e) => !parametrizedUrl.usedParameters.some((x) => x === e.name))
     .map((e) => e.name);
 
+  const queryParams =
+    unusedParameters.length > 0
+      ? render("const queryParams = {\n\t\t{{{rows}}}\n\t}\n\t", {
+          rows: unusedParameters.join("\t\t,\n"),
+        })
+      : "";
+
   const apiGetParameters = [
     `\`${baseUrl}${parametrizedUrl.url}\``,
     "headers",
-    ...unusedParameters,
+    ...[unusedParameters.length > 0 ? "queryParams" : "{}"],
   ].join(", ");
+
   const paramSeparator = formattedParameters.length > 0 ? ", " : "";
 
   const view = {
@@ -124,11 +132,12 @@ const GET = (
     contractParameterName,
     contractResult,
     apiGetParameters,
+    queryParams,
     formattedParam: `${formattedParameters}${paramSeparator}headers = new Headers()`,
   };
 
   return render(
-    "export const {{name}} = ({{{formattedParam}}}): \n\tPromise<FetchResponse<{{contractResult}}>> => \n\tapiGet({{{apiGetParameters}}});\n",
+    "export const {{name}} = ({{{formattedParam}}}): \n\tPromise<FetchResponse<{{contractResult}}>> => {\n\t{{{queryParams}}}return apiGet({{{apiGetParameters}}});\n}\n",
     view
   );
 };
