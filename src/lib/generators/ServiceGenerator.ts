@@ -89,15 +89,14 @@ const GET = (
     .map((e) => `${e.name}: ${e.type}`)
     .join(", ");
 
+  const paramSeparator = parameters.length > 0 ? ", " : "";
+
   const view = {
     name: endpointDescription.name,
     contractParameterName,
     contractResult,
     url: `${baseUrl}${endpointDescription.url}`,
-    formattedParam:
-      parameters.length > 0
-        ? `${parameters}, headers = new Headers()`
-        : "headers = new Headers()",
+    formattedParam: `${parameters}${paramSeparator}headers = new Headers()`,
   };
 
   return render(
