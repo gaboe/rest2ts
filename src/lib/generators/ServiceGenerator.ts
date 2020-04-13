@@ -78,29 +78,38 @@ const GET = (
         return (schema.type || schema.allOf) as string;
     }
   };
-  const parameters = (endpointDescription.pathObject.get?.parameters || [])
-    .map((e) => {
+  const parameters = (endpointDescription.pathObject.get?.parameters || []).map(
+    (e) => {
       const param = {
         name: e.name,
         type: getType((e as any).schema),
       };
       return param;
-    })
+    }
+  );
+
+  const formattedParameters = parameters
     .map((e) => `${e.name}: ${e.type}`)
     .join(", ");
 
-  const paramSeparator = parameters.length > 0 ? ", " : "";
+  const parametrizedUrl = parameters.reduce((acc, e) => {
+    const match = `\{${e.name}\}`;
+    var index = acc.indexOf(match);
+    return index > -1 ? acc.replace(match, `\$${match}`) : acc;
+  }, endpointDescription.originalPath);
+
+  const paramSeparator = formattedParameters.length > 0 ? ", " : "";
 
   const view = {
     name: endpointDescription.name,
     contractParameterName,
     contractResult,
-    url: `${baseUrl}${endpointDescription.url}`,
-    formattedParam: `${parameters}${paramSeparator}headers = new Headers()`,
+    url: `${baseUrl}${parametrizedUrl}`,
+    formattedParam: `${formattedParameters}${paramSeparator}headers = new Headers()`,
   };
 
   return render(
-    "export const {{name}} = ({{{formattedParam}}}): \n\tPromise<FetchResponse<{{contractResult}}>> => \n\tapiGet('{{{url}}}', headers);\n",
+    "export const {{name}} = ({{{formattedParam}}}): \n\tPromise<FetchResponse<{{contractResult}}>> => \n\tapiGet(`{{{url}}}`, headers);\n",
     view
   );
 };
