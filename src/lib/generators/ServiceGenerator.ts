@@ -92,24 +92,43 @@ const GET = (
     .map((e) => `${e.name}: ${e.type}`)
     .join(", ");
 
-  const parametrizedUrl = parameters.reduce((acc, e) => {
-    const match = `\{${e.name}\}`;
-    var index = acc.indexOf(match);
-    return index > -1 ? acc.replace(match, `\$${match}`) : acc;
-  }, endpointDescription.originalPath);
+  const parametrizedUrl = parameters.reduce(
+    ({ url, usedParameters }, e) => {
+      const match = `\{${e.name}\}`;
+      var index = url.indexOf(match);
+      return index > -1
+        ? {
+            url: url.replace(match, `\$${match}`),
+            usedParameters: [...usedParameters, ...[e.name]],
+          }
+        : { url, usedParameters };
+    },
+    {
+      url: endpointDescription.originalPath,
+      usedParameters: new Array<string>(),
+    }
+  );
+  const unusedParameters = parameters
+    .filter((e) => !parametrizedUrl.usedParameters.some((x) => x === e.name))
+    .map((e) => e.name);
 
+  const apiGetParameters = [
+    `\`${baseUrl}${parametrizedUrl.url}\``,
+    "headers",
+    ...unusedParameters,
+  ].join(", ");
   const paramSeparator = formattedParameters.length > 0 ? ", " : "";
 
   const view = {
     name: endpointDescription.name,
     contractParameterName,
     contractResult,
-    url: `${baseUrl}${parametrizedUrl}`,
+    apiGetParameters,
     formattedParam: `${formattedParameters}${paramSeparator}headers = new Headers()`,
   };
 
   return render(
-    "export const {{name}} = ({{{formattedParam}}}): \n\tPromise<FetchResponse<{{contractResult}}>> => \n\tapiGet(`{{{url}}}`, headers);\n",
+    "export const {{name}} = ({{{formattedParam}}}): \n\tPromise<FetchResponse<{{contractResult}}>> => \n\tapiGet({{{apiGetParameters}}});\n",
     view
   );
 };
