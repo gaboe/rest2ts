@@ -1,5 +1,8 @@
 import test from "ava";
 import fetch from "node-fetch";
+import express, { json } from "express";
+import http from "http";
+import listen from "test-listen";
 
 (global as any).Headers = (fetch as any).Headers;
 
@@ -64,34 +67,56 @@ type HttpResponse = {
 type HttpRequest = {
   userId: number;
   title: string;
-  body: string;
+};
+
+const runExpress = (port: number) => {
+  const app = express();
+  app.use(express());
+  app.use(json());
+  app.get("/todos/:id", (req, res) =>
+    res.json({
+      userId: 1,
+    })
+  );
+
+  app.post("/todo/", (req, res) => {
+    const { userId, title } = req.body;
+
+    res.status(201);
+    return res.json({
+      userId,
+      title,
+    });
+  });
+
+  app.listen(port);
+  return app;
 };
 
 test("get to web api", async (t) => {
-  var response = await apiGet<HttpResponse>(
-    "https://jsonplaceholder.typicode.com/todos/1",
+  const url = await listen(http.createServer(runExpress(3000)));
+  const response = await apiGet<HttpResponse>(
+    `${url}/todos/1`,
     new Headers(),
     {}
   );
   t.deepEqual(response.status, 200);
   t.deepEqual(response.json.userId, 1);
-  t.pass();
 });
 
-// test("post to web api", async (t) => {
-//   var response = await apiPost<HttpResponse, HttpRequest>(
-//     "https://jsonplaceholder.typicode.com/posts",
-//     {
-//       body: "test test test",
-//       title: "test",
-//       userId: 666,
-//     },
-//     new Headers()
-//   );
+test("post to web api", async (t) => {
+  const url = await listen(http.createServer(runExpress(3001)));
+  var response = await apiPost<HttpResponse, HttpRequest>(
+    `${url}/todo`,
+    {
+      title: "test",
+      userId: 666,
+    },
+    new Headers()
+  );
 
-//   t.deepEqual(response.status, 201);
-//   t.deepEqual(response.json.userId, 666);
-//   t.deepEqual(response.json.title, "test");
-//   t.deepEqual(response.json.body, "test test test");
-//   t.pass();
-// });
+  t.deepEqual(response.status, 201);
+  t.deepEqual(response.json.userId, 666);
+  t.deepEqual(response.json.title, "test");
+  t.pass();
+});
