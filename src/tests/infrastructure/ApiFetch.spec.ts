@@ -2,6 +2,7 @@ import test from "ava";
 import fetch from "node-fetch";
 
 (global as any).Headers = (fetch as any).Headers;
+
 // ARCHITECTURE START
 type FetchResponse<T> = {
   json: T;
