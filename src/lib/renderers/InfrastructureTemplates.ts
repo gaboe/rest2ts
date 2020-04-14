@@ -46,7 +46,7 @@ function apiGet<TResponse>(
     .map(([key, val]) => \`\${key}=\${val}\`)
     .join("&");
 
-  return fetchJson<TResponse>(url + queryString);
+  return fetchJson<TResponse>(\`\${url}?\${queryString}\`);
 }
 // ARCHITECTURE END
 `;

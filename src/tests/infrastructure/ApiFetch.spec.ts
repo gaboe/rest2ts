@@ -53,7 +53,7 @@ function apiGet<TResponse>(
     .map(([key, val]) => `${key}=${val}`)
     .join("&");
 
-  return fetchJson<TResponse>(url + queryString);
+  return fetchJson<TResponse>(`${url}?${queryString}`);
 }
 // ARCHITECTURE END
 
@@ -73,6 +73,21 @@ const runExpress = (port: number) => {
   const app = express();
   app.use(express());
   app.use(json());
+
+  app.get("/language/", (req, res) => {
+    console.log(req.query);
+
+    const languageCode = req.query.languageCode;
+    if (languageCode === "cs") {
+      res.status(200);
+      return res.json({
+        language: "Czech",
+      });
+    }
+    res.status(500);
+    return res.json({ error: new Error("Language not found") });
+  });
+
   app.get("/todos/:id", (req, res) =>
     res.json({
       userId: 1,
@@ -104,8 +119,20 @@ test("get to web api", async (t) => {
   t.deepEqual(response.json.userId, 1);
 });
 
-test("post to web api", async (t) => {
+test("get with query to web api", async (t) => {
   const url = await listen(http.createServer(runExpress(3001)));
+  t.log(url);
+  const response = await apiGet<{ language: string }>(
+    `${url}/language`,
+    new Headers(),
+    { languageCode: "cs" }
+  );
+  t.deepEqual(response.status, 200);
+  t.deepEqual(response.json.language, "Czech");
+});
+
+test("post to web api", async (t) => {
+  const url = await listen(http.createServer(runExpress(3002)));
   var response = await apiPost<HttpResponse, HttpRequest>(
     `${url}/todo`,
     {
