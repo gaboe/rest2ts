@@ -35,13 +35,13 @@ export const formatUrlToCamelCase = (str: string) =>
 const getCommonPrefix = (str: string) =>
   `${formatUrlToCamelCase(str).split("_")[0]}_`;
 
-export type EndpointDescription = Readonly<{
+export type EndpointDescription = {
   name: string;
   url: string;
   pathObject: Path;
   originalPath: string;
   method: string;
-}>;
+};
 
 export const getEndpointsDescriptions = (swagger: SwaggerSchema) => {
   const commonPrefix = Object.keys(swagger.paths).reduce(

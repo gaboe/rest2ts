@@ -56,12 +56,7 @@ const getContractResult = (
   return Nothing;
 };
 
-const GET = (
-  endpointDescription: EndpointDescription,
-  contractParameterName: string,
-  contractResult: string,
-  baseUrl: string
-) => {
+const parametrizeUrl = (endpointDescription: EndpointDescription) => {
   const getType = (schema: Schema): string => {
     switch (schema.type) {
       case "integer":
@@ -88,7 +83,7 @@ const GET = (
     }
   );
 
-  const formattedParameters = parameters
+  const formattedFunctionParameters = parameters
     .map((e) => `${e.name}: ${e.type}`)
     .join(", ");
 
@@ -112,6 +107,21 @@ const GET = (
     .filter((e) => !parametrizedUrl.usedParameters.some((x) => x === e.name))
     .map((e) => e.name);
 
+  return { parametrizedUrl, formattedFunctionParameters, unusedParameters };
+};
+
+const GET = (
+  endpointDescription: EndpointDescription,
+  contractParameterName: string,
+  contractResult: string,
+  baseUrl: string
+) => {
+  const {
+    unusedParameters,
+    parametrizedUrl,
+    formattedFunctionParameters,
+  } = parametrizeUrl(endpointDescription);
+
   const queryParams =
     unusedParameters.length > 0
       ? render("const queryParams = {\n\t\t{{{rows}}}\n\t}\n\t", {
@@ -125,7 +135,7 @@ const GET = (
     ...[unusedParameters.length > 0 ? "queryParams" : "{}"],
   ].join(", ");
 
-  const paramSeparator = formattedParameters.length > 0 ? ", " : "";
+  const paramSeparator = formattedFunctionParameters.length > 0 ? ", " : "";
 
   const view = {
     name: endpointDescription.name,
@@ -133,7 +143,7 @@ const GET = (
     contractResult,
     apiGetParameters,
     queryParams,
-    formattedParam: `${formattedParameters}${paramSeparator}headers = new Headers()`,
+    formattedParam: `${formattedFunctionParameters}${paramSeparator}headers = new Headers()`,
   };
 
   return render(
