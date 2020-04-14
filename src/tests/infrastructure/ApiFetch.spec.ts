@@ -75,8 +75,6 @@ const runExpress = (port: number) => {
   app.use(json());
 
   app.get("/language/", (req, res) => {
-    console.log(req.query);
-
     const languageCode = req.query.languageCode;
     if (languageCode === "cs") {
       res.status(200);
@@ -145,5 +143,4 @@ test("post to web api", async (t) => {
   t.deepEqual(response.status, 201);
   t.deepEqual(response.json.userId, 666);
   t.deepEqual(response.json.title, "test");
-  t.pass();
 });
