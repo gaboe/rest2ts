@@ -73,15 +73,20 @@ const parametrizeUrl = (endpointDescription: EndpointDescription) => {
         return (schema.type || schema.allOf) as string;
     }
   };
-  const parameters = (endpointDescription.pathObject.get?.parameters || []).map(
-    (e) => {
-      const param = {
-        name: e.name,
-        type: getType((e as any).schema),
-      };
-      return param;
-    }
-  );
+  const pathObject = endpointDescription.pathObject;
+  const parameters = (
+    pathObject.get?.parameters ||
+    pathObject.post?.parameters ||
+    pathObject.put?.parameters ||
+    pathObject.delete?.parameters ||
+    []
+  ).map((e) => {
+    const param = {
+      name: e.name,
+      type: getType((e as any).schema),
+    };
+    return param;
+  });
 
   const formattedFunctionParameters = parameters
     .map((e) => `${e.name}: ${e.type}`)
@@ -154,38 +159,50 @@ const GET = (
 
 const POST = (
   endpointDescription: EndpointDescription,
-  formattedParam: string,
+  formattedRequestContractType: string,
   contractParameterName: string,
   contractResult: string,
   baseUrl: string
 ) => {
+  const { parametrizedUrl, formattedFunctionParameters } = parametrizeUrl(
+    endpointDescription
+  );
+  const paramSeparator = formattedFunctionParameters.length > 0 ? ", " : "";
+  const comma = formattedRequestContractType.length > 0 ? ", " : "";
+
   const view = {
     name: endpointDescription.name,
-    formattedParam,
     contractParameterName,
     contractResult,
-    url: `${baseUrl}${endpointDescription.url}`,
+    url: `\`${baseUrl}${parametrizedUrl.url}\``,
+    formattedParam: `${formattedRequestContractType}${comma}${formattedFunctionParameters}${paramSeparator}headers = new Headers()`,
   };
 
   return render(
-    "export const {{name}} = ({{{formattedParam}}}): \n\tPromise<FetchResponse<{{contractResult}}>> => \n\tapiPost('{{{url}}}', {{contractParameterName}}, headers);\n",
+    "export const {{name}} = ({{{formattedParam}}}): \n\tPromise<FetchResponse<{{contractResult}}>> => \n\tapiPost({{{url}}}, {{contractParameterName}}, headers);\n",
     view
   );
 };
 
 const PUT = (
   endpointDescription: EndpointDescription,
-  formattedParam: string,
+  formattedRequestContractType: string,
   contractParameterName: string,
   contractResult: string,
   baseUrl: string
 ) => {
+  const { parametrizedUrl, formattedFunctionParameters } = parametrizeUrl(
+    endpointDescription
+  );
+  const paramSeparator = formattedFunctionParameters.length > 0 ? ", " : "";
+  const comma = formattedRequestContractType.length > 0 ? ", " : "";
+
   const view = {
     name: endpointDescription.name,
-    formattedParam,
     contractParameterName,
     contractResult,
-    url: `${baseUrl}${endpointDescription.url}`,
+    url: `\`${baseUrl}${parametrizedUrl.url}\``,
+    formattedParam: `${formattedRequestContractType}${comma}${formattedFunctionParameters}${paramSeparator}headers = new Headers()`,
   };
 
   return render(
@@ -205,16 +222,15 @@ export const generateServices = (swagger: SwaggerSchema, baseUrl: string) => {
         formattedParam: "",
         contractParameterName: "{}",
       });
-      const comma = formattedRequestContractType.length > 0 ? ", " : "";
 
       const contractResult = getContractResult(endpointDescription).orDefault(
         "any"
       );
-      const formattedParam = `${formattedRequestContractType}${comma}headers = new Headers()`;
+
       if (endpointDescription.pathObject.post) {
         return POST(
           endpointDescription,
-          formattedParam,
+          formattedRequestContractType,
           contractParameterName,
           contractResult,
           baseUrl
@@ -231,7 +247,7 @@ export const generateServices = (swagger: SwaggerSchema, baseUrl: string) => {
       if (endpointDescription.pathObject.put) {
         return PUT(
           endpointDescription,
-          formattedParam,
+          formattedRequestContractType,
           contractParameterName,
           contractResult,
           baseUrl
