@@ -18,7 +18,7 @@ const optimist = opt
   .alias("s", "source")
   .alias("t", "target")
   .describe("s", "Path to the swagger file")
-  .describe("s", "Target path");
+  .describe("t", "Target path");
 
 const { help, source, target } = optimist.argv as ProgramProps;
 
