@@ -24,7 +24,6 @@ function apiPost<TResponse, TRequest>(
   request: TRequest,
   headers: Headers
 ) {
-  var headers = new Headers();
   headers.append("Content-Type", "application/json");
 
   var raw = JSON.stringify(request);
@@ -61,7 +60,6 @@ function apiPut<TResponse, TRequest>(
   request: TRequest,
   headers: Headers
 ) {
-  var headers = new Headers();
   headers.append("Content-Type", "application/json");
 
   var raw = JSON.stringify(request);
