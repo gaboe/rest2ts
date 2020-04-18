@@ -72,9 +72,12 @@ export const generateContracts = (swaggerSchema: SwaggerSchema) => {
         properties: rp(o),
       };
       if (o.type === "object") {
-        return render(`interface {{ name }} {\n\t{{ properties }}\n}\n`, view);
+        return render(
+          `export interface {{ name }} {\n\t{{ properties }}\n}\n`,
+          view
+        );
       }
-      return render(`const {{ name }} = {{ properties }};\n`, view);
+      return render(`export const {{ name }} = {{ properties }};\n`, view);
     })
     .join("\n");
 
