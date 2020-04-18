@@ -48,5 +48,25 @@ function apiGet<TResponse>(
 
   return fetchJson<TResponse>(\`\${url}?\${queryString}\`);
 }
+
+function apiPut<TResponse, TRequest>(
+  url: string,
+  request: TRequest,
+  headers: Headers
+) {
+  var headers = new Headers();
+  headers.append("Content-Type", "application/json");
+
+  var raw = JSON.stringify(request);
+
+  var requestOptions = {
+    method: "PUT",
+    headers,
+    body: raw,
+    redirect: "follow",
+  };
+
+  return fetchJson<TResponse>(url, requestOptions as any);
+}
 // ARCHITECTURE END
 `;

@@ -55,6 +55,26 @@ function apiGet<TResponse>(
 
   return fetchJson<TResponse>(`${url}?${queryString}`);
 }
+
+function apiPut<TResponse, TRequest>(
+  url: string,
+  request: TRequest,
+  headers: Headers
+) {
+  var headers = new Headers();
+  headers.append("Content-Type", "application/json");
+
+  var raw = JSON.stringify(request);
+
+  var requestOptions = {
+    method: "PUT",
+    headers,
+    body: raw,
+    redirect: "follow",
+  };
+
+  return fetchJson<TResponse>(url, requestOptions as any);
+}
 // ARCHITECTURE END
 
 type HttpResponse = {
@@ -91,6 +111,15 @@ const runExpress = (port: number) => {
       userId: 1,
     })
   );
+
+  app.put("/todo/", (req, res) => {
+    const { userId, title } = req.body;
+
+    return res.json({
+      userId,
+      title: `${title}++`,
+    });
+  });
 
   app.post("/todo/", (req, res) => {
     const { userId, title } = req.body;
@@ -143,4 +172,20 @@ test("post to web api", async (t) => {
   t.deepEqual(response.status, 201);
   t.deepEqual(response.json.userId, 666);
   t.deepEqual(response.json.title, "test");
+});
+
+test("put to web api", async (t) => {
+  const url = await listen(http.createServer(runExpress(3003)));
+  var response = await apiPut<HttpResponse, HttpRequest>(
+    `${url}/todo`,
+    {
+      title: "test",
+      userId: 666,
+    },
+    new Headers()
+  );
+
+  t.deepEqual(response.status, 200);
+  t.deepEqual(response.json.userId, 666);
+  t.deepEqual(response.json.title, "test++");
 });

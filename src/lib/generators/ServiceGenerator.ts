@@ -173,6 +173,27 @@ const POST = (
   );
 };
 
+const PUT = (
+  endpointDescription: EndpointDescription,
+  formattedParam: string,
+  contractParameterName: string,
+  contractResult: string,
+  baseUrl: string
+) => {
+  const view = {
+    name: endpointDescription.name,
+    formattedParam,
+    contractParameterName,
+    contractResult,
+    url: `${baseUrl}${endpointDescription.url}`,
+  };
+
+  return render(
+    "export const {{name}} = ({{{formattedParam}}}): \n\tPromise<FetchResponse<{{contractResult}}>> => \n\tapiPut('{{{url}}}', {{contractParameterName}}, headers);\n",
+    view
+  );
+};
+
 export const generateServices = (swagger: SwaggerSchema, baseUrl: string) => {
   const endpoints = getEndpointsDescriptions(swagger);
   const view = endpoints
@@ -202,6 +223,15 @@ export const generateServices = (swagger: SwaggerSchema, baseUrl: string) => {
       if (endpointDescription.pathObject.get) {
         return GET(
           endpointDescription,
+          contractParameterName,
+          contractResult,
+          baseUrl
+        );
+      }
+      if (endpointDescription.pathObject.put) {
+        return PUT(
+          endpointDescription,
+          formattedParam,
           contractParameterName,
           contractResult,
           baseUrl
