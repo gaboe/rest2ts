@@ -257,5 +257,9 @@ export const generateServices = (swagger: SwaggerSchema, baseUrl: string) => {
     })
     .join("\n");
 
-  return view;
+  const API = render(`export const API = { \n\t{{{ rows }}}\n}\n`, {
+    rows: endpoints.map((e) => e.name).join(",\n\t"),
+  });
+
+  return `${view}\n${API}`;
 };
