@@ -68,12 +68,11 @@ export const getEndpointsDescriptions = (swagger: SwaggerSchema) => {
   return endpoints;
 };
 
-export const generateDescription = (swagger: SwaggerSchema) => {
-  const api: ApiDescription = {};
-
-  getEndpointsDescriptions(swagger).forEach((e) => {
+export const generateRoutes = (swagger: SwaggerSchema) => {
+  const routes = getEndpointsDescriptions(swagger).reduce((api, e) => {
     api[e.name] = e.url;
-  });
+    return api;
+  }, {} as ApiDescription);
 
-  return api;
+  return routes;
 };
