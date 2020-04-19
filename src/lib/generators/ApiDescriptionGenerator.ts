@@ -8,6 +8,9 @@ const trimLast = (s: string, c: string) =>
 const trimStart = (s: string, c: string) =>
   s[0] === c ? s.substring(1, s.length) : s;
 
+const snakeToCamel = (str: string) =>
+  str.replace(/([-_]\w)/g, (g) => g[1].toUpperCase());
+
 const getMethodType = (path: Path) => {
   if (path.get) {
     return "GET";
@@ -57,7 +60,9 @@ export const getEndpointsDescriptions = (swagger: SwaggerSchema) => {
       const paramIndex = e.indexOf("{");
       const path = paramIndex > 1 ? e.substring(0, paramIndex - 1) : e;
       return {
-        name: `${prop}_${getMethodType(pathObject)}`,
+        name: snakeToCamel(
+          `${getMethodType(pathObject).toLowerCase()}_${prop}`
+        ),
         url: path,
         pathObject,
         originalPath: e,
