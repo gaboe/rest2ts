@@ -20,7 +20,7 @@ const renderProperties = (swagger: SwaggerSchema) => (
       .join("\n\t");
     return properties;
   } else if (schema.enum) {
-    return schema.enum.map((e) => e).join(" | ");
+    return schema.enum.map((e) => e).join(",\n\t\t");
   } else if (schema.allOf && schema.allOf[0]) {
     const allOf = schema.allOf[0];
     if (allOf.$ref) {
@@ -38,7 +38,7 @@ const renderProperties = (swagger: SwaggerSchema) => (
       return "any";
     }
     return "any";
-  } else {
+  } else if (schema.type) {
     switch (schema.type) {
       case "integer":
         return "number";
@@ -57,6 +57,10 @@ const renderProperties = (swagger: SwaggerSchema) => (
       default:
         return (schema.type || schema.allOf) as string;
     }
+  } else if (schema.$ref) {
+    return schema.$ref.split("/").reverse()[0];
+  } else {
+    return "any";
   }
 };
 
@@ -71,13 +75,21 @@ export const generateContracts = (swaggerSchema: SwaggerSchema) => {
         name: k,
         properties: rp(o),
       };
-      if (o.type === "object") {
+      if (o.enum) {
         return render(
-          `export interface {{ name }} {\n\t{{ properties }}\n}\n`,
+          `export enum {{ name }} {\n\t\t{{ properties }}\n\t}\n`,
           view
         );
       }
-      return render(`export const {{ name }} = {{ properties }};\n`, view);
+
+      if (o.type === "object") {
+        return render(
+          `export interface {{ name }} {\n\t{{{ properties }}}\n}\n`,
+          view
+        );
+      }
+
+      return render(`export const {{ name }} = {{{ properties }}};\n`, view);
     })
     .join("\n");
 
