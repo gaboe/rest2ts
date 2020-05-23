@@ -1,7 +1,10 @@
-const disclaimer = `// THIS FILE WAS GENERATED
+const disclaimer = `
+/* eslint-disable */
+// THIS FILE WAS GENERATED
 // ALL CHANGES WILL BE OVERWRITTEN\n\n`;
 
 export const infrastructureTemplate = `${disclaimer}// ARCHITECTURE START
+
 type FetchResponse<T> = {
   json: T;
   status: number;
