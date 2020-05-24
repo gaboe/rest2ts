@@ -2,14 +2,15 @@ import { SwaggerSchema } from "../models/SwaggerSchema";
 import { renderRoutes } from "../renderers/ApiRoutesRender";
 import { generateRoutes } from "./ApiDescriptionGenerator";
 import { generateContracts } from "./ContractGenerator";
-import { infrastructureTemplate } from "../renderers/InfrastructureTemplates";
+import { getInfrastructureTemplate } from "../renderers/InfrastructureTemplates";
 import { generateServices } from "./ServiceGenerator";
 import { render } from "mustache";
 
 export const generate = (
   api: any,
   baseUrl: string,
-  generatedCodeBaseUrl: string | undefined
+  generatedCodeBaseUrl: string | undefined,
+  tokenKey: string | undefined
 ) => {
   const swaggerSchema = api as SwaggerSchema;
   const routes = renderRoutes(generateRoutes(swaggerSchema));
@@ -20,7 +21,7 @@ export const generate = (
   const view = {
     routes,
     contracts,
-    infrastructure: infrastructureTemplate,
+    infrastructure: getInfrastructureTemplate(tokenKey),
     services: generateServices(swaggerSchema),
     baseApiUrl,
     // raw: JSON.stringify(api, null, 2),

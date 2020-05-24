@@ -12,6 +12,8 @@ type FetchResponse<T> = {
   status: number;
 };
 
+const jwtKey: string | undefined = undefined;
+
 async function fetchJson<T>(...args: any): Promise<FetchResponse<T>> {
   const res: Response = await (fetch as any)(...args);
   const json = await res.json();
@@ -19,15 +21,23 @@ async function fetchJson<T>(...args: any): Promise<FetchResponse<T>> {
   return { json: json, status: res.status };
 }
 
+const updateHeaders = (headers: Headers) => {
+  if (!headers.has("Content-Type")) {
+    headers.append("Content-Type", "application/json");
+  }
+  const token = jwtKey ? localStorage.getItem(jwtKey as any) : undefined;
+  if (!headers.has("Authorization") && token) {
+    headers.append("Authorization", token);
+  }
+};
+
 function apiPost<TResponse, TRequest>(
   url: string,
   request: TRequest,
   headers: Headers
 ) {
-  headers.append("Content-Type", "application/json");
-
   var raw = JSON.stringify(request);
-
+  updateHeaders(headers);
   var requestOptions = {
     method: "POST",
     headers,
@@ -39,7 +49,7 @@ function apiPost<TResponse, TRequest>(
 }
 
 type ParamsObject = {
-  [ket: string]: any;
+  [key: string]: any;
 };
 
 function apiGet<TResponse>(
@@ -47,7 +57,7 @@ function apiGet<TResponse>(
   headers: Headers,
   paramsObject: ParamsObject = {}
 ) {
-  headers.append("Content-Type", "application/json");
+  updateHeaders(headers);
   const queryString = Object.entries(paramsObject)
     .map(([key, val]) => `${key}=${val}`)
     .join("&");
@@ -60,7 +70,7 @@ function apiPut<TResponse, TRequest>(
   request: TRequest,
   headers: Headers
 ) {
-  headers.append("Content-Type", "application/json");
+  updateHeaders(headers);
 
   var raw = JSON.stringify(request);
 

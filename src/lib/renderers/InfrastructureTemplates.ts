@@ -3,12 +3,16 @@ const disclaimer = `
 // THIS FILE WAS GENERATED
 // ALL CHANGES WILL BE OVERWRITTEN\n\n`;
 
-export const infrastructureTemplate = `${disclaimer}// ARCHITECTURE START
+export const getInfrastructureTemplate = (tokenKey: string | undefined) => {
+  const keyValue = tokenKey ? `"${tokenKey}"` : "undefined";
 
+  return `${disclaimer}// ARCHITECTURE START
 type FetchResponse<T> = {
   json: T;
   status: number;
 };
+
+const jwtKey: string | undefined = ${keyValue};
 
 async function fetchJson<T>(...args: any): Promise<FetchResponse<T>> {
   const res: Response = await (fetch as any)(...args);
@@ -17,15 +21,23 @@ async function fetchJson<T>(...args: any): Promise<FetchResponse<T>> {
   return { json: json, status: res.status };
 }
 
+const updateHeaders = (headers: Headers) => {
+  if (!headers.has("Content-Type")) {
+    headers.append("Content-Type", "application/json");
+  }
+  const token = jwtKey ? localStorage.getItem(jwtKey as any) : undefined;
+  if (!headers.has("Authorization") && token) {
+    headers.append("Authorization", token);
+  }
+};
+
 function apiPost<TResponse, TRequest>(
   url: string,
   request: TRequest,
   headers: Headers
 ) {
-  headers.append("Content-Type", "application/json");
-
   var raw = JSON.stringify(request);
-
+  updateHeaders(headers);
   var requestOptions = {
     method: "POST",
     headers,
@@ -37,7 +49,7 @@ function apiPost<TResponse, TRequest>(
 }
 
 type ParamsObject = {
-  [ket: string]: any;
+  [key: string]: any;
 };
 
 function apiGet<TResponse>(
@@ -45,7 +57,7 @@ function apiGet<TResponse>(
   headers: Headers,
   paramsObject: ParamsObject = {}
 ) {
-  headers.append("Content-Type", "application/json");
+  updateHeaders(headers);
   const queryString = Object.entries(paramsObject)
     .map(([key, val]) => \`\${key}=\${val}\`)
     .join("&");
@@ -58,7 +70,7 @@ function apiPut<TResponse, TRequest>(
   request: TRequest,
   headers: Headers
 ) {
-  headers.append("Content-Type", "application/json");
+  updateHeaders(headers);
 
   var raw = JSON.stringify(request);
 
@@ -73,3 +85,4 @@ function apiPut<TResponse, TRequest>(
 }
 // ARCHITECTURE END
 `;
+};

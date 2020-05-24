@@ -6,7 +6,7 @@ test("parse calculation list", async (t) => {
   var api = await SwaggerParser.parse(
     "./src/tests/generators/calculation-list/swagger.json"
   );
-  const content = generate(api, "baseUrl", undefined);
+  const content = generate(api, "baseUrl", undefined, undefined);
 
   t.snapshot(content);
 });
