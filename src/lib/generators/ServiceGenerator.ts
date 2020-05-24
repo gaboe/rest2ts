@@ -118,8 +118,7 @@ const parametrizeUrl = (endpointDescription: EndpointDescription) => {
 const GET = (
   endpointDescription: EndpointDescription,
   contractParameterName: string,
-  contractResult: string,
-  baseUrl: string
+  contractResult: string
 ) => {
   const {
     unusedParameters,
@@ -135,7 +134,7 @@ const GET = (
       : "";
 
   const apiGetParameters = [
-    `\`${baseUrl}${parametrizedUrl.url}\``,
+    `\`\$\{API_URL\}${parametrizedUrl.url}\``,
     "headers",
     ...[unusedParameters.length > 0 ? "queryParams" : "{}"],
   ].join(", ");
@@ -161,8 +160,7 @@ const POST = (
   endpointDescription: EndpointDescription,
   formattedRequestContractType: string,
   contractParameterName: string,
-  contractResult: string,
-  baseUrl: string
+  contractResult: string
 ) => {
   const { parametrizedUrl, formattedFunctionParameters } = parametrizeUrl(
     endpointDescription
@@ -174,7 +172,7 @@ const POST = (
     name: endpointDescription.name,
     contractParameterName,
     contractResult,
-    url: `\`${baseUrl}${parametrizedUrl.url}\``,
+    url: `\`\$\{API_URL\}${parametrizedUrl.url}\``,
     formattedParam: `${formattedRequestContractType}${comma}${formattedFunctionParameters}${paramSeparator}headers = new Headers()`,
   };
 
@@ -188,8 +186,7 @@ const PUT = (
   endpointDescription: EndpointDescription,
   formattedRequestContractType: string,
   contractParameterName: string,
-  contractResult: string,
-  baseUrl: string
+  contractResult: string
 ) => {
   const { parametrizedUrl, formattedFunctionParameters } = parametrizeUrl(
     endpointDescription
@@ -201,7 +198,7 @@ const PUT = (
     name: endpointDescription.name,
     contractParameterName,
     contractResult,
-    url: `\`${baseUrl}${parametrizedUrl.url}\``,
+    url: `\`\$\{API_URL\}${parametrizedUrl.url}\``,
     formattedParam: `${formattedRequestContractType}${comma}${formattedFunctionParameters}${paramSeparator}headers = new Headers()`,
   };
 
@@ -211,7 +208,7 @@ const PUT = (
   );
 };
 
-export const generateServices = (swagger: SwaggerSchema, baseUrl: string) => {
+export const generateServices = (swagger: SwaggerSchema) => {
   const endpoints = getEndpointsDescriptions(swagger);
   const view = endpoints
     .map((endpointDescription) => {
@@ -232,25 +229,18 @@ export const generateServices = (swagger: SwaggerSchema, baseUrl: string) => {
           endpointDescription,
           formattedRequestContractType,
           contractParameterName,
-          contractResult,
-          baseUrl
+          contractResult
         );
       }
       if (endpointDescription.pathObject.get) {
-        return GET(
-          endpointDescription,
-          contractParameterName,
-          contractResult,
-          baseUrl
-        );
+        return GET(endpointDescription, contractParameterName, contractResult);
       }
       if (endpointDescription.pathObject.put) {
         return PUT(
           endpointDescription,
           formattedRequestContractType,
           contractParameterName,
-          contractResult,
-          baseUrl
+          contractResult
         );
       }
       return `// ${endpointDescription.name}\n`;

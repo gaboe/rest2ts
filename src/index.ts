@@ -9,6 +9,7 @@ import { generate } from "./lib/generators";
 type ProgramProps = {
   source: string | undefined;
   target: string | undefined;
+  urlValue: string | undefined;
   help: never;
 };
 
@@ -17,10 +18,16 @@ const optimist = opt
   .alias("h", "help")
   .alias("s", "source")
   .alias("t", "target")
+  .alias("v", "urlValue")
   .describe("s", "Path to the swagger file")
-  .describe("t", "Target path");
+  .describe("t", "Target path")
+  .describe(
+    "b",
+    "Base url value used in generated code, can be string, or node global value"
+  );
+const { help, source, target, urlValue } = optimist.argv as ProgramProps;
 
-const { help, source, target } = optimist.argv as ProgramProps;
+console.log(urlValue);
 
 if (help) {
   optimist.showHelp();
@@ -48,7 +55,7 @@ SwaggerParser.parse(source, (err, api) => {
     console.error(err);
     process.exit(1);
   } else if (api) {
-    const content = generate(api, baseUrl);
+    const content = generate(api, baseUrl, urlValue);
 
     fs.outputFile(`${target}/Api.ts`, content).catch((err) => {
       console.error(err);

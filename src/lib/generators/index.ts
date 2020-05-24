@@ -6,20 +6,27 @@ import { infrastructureTemplate } from "../renderers/InfrastructureTemplates";
 import { generateServices } from "./ServiceGenerator";
 import { render } from "mustache";
 
-export const generate = (api: any, baseUrl: string) => {
+export const generate = (
+  api: any,
+  baseUrl: string,
+  generatedCodeBaseUrl: string | undefined
+) => {
   const swaggerSchema = api as SwaggerSchema;
   const routes = renderRoutes(generateRoutes(swaggerSchema));
   const contracts = generateContracts(swaggerSchema);
-
+  const baseApiUrl = generatedCodeBaseUrl
+    ? `const API_URL = ${generatedCodeBaseUrl};`
+    : `const API_URL = "${baseUrl}";`;
   const view = {
     routes,
     contracts,
     infrastructure: infrastructureTemplate,
-    services: generateServices(swaggerSchema, baseUrl),
+    services: generateServices(swaggerSchema),
+    baseApiUrl,
     // raw: JSON.stringify(api, null, 2),
   };
   const content = render(
-    "{{{ infrastructure }}}\n{{{ routes }}}\n{{{ contracts }}}\n{{{ services }}}\n{{{ raw }}}",
+    "{{{ infrastructure }}}\n{{{ routes }}}\n{{{ contracts }}}\n{{{ baseApiUrl }}}\n\n{{{ services }}}\n{{{ raw }}}",
     view
   );
   return content;
