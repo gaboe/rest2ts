@@ -11,7 +11,9 @@ const trimStart = (s: string, c: string) =>
 const snakeToCamel = (str: string) =>
   str.replace(/([-_]\w)/g, (g) => g[1].toUpperCase());
 
-const getMethodType = (path: Path) => {
+export type MethodType = "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | "";
+
+const getMethodType = (path: Path): MethodType => {
   if (path.get) {
     return "GET";
   }
@@ -43,7 +45,7 @@ export type EndpointDescription = {
   url: string;
   pathObject: Path;
   originalPath: string;
-  method: string;
+  methodType: MethodType;
 };
 
 export const getEndpointsDescriptions = (swagger: SwaggerSchema) => {
@@ -52,25 +54,42 @@ export const getEndpointsDescriptions = (swagger: SwaggerSchema) => {
     getCommonPrefix(Object.keys(swagger.paths)[0])
   );
 
-  const endpoints: EndpointDescription[] = Object.keys(swagger.paths).map(
+  const endpoints: EndpointDescription[][] = Object.keys(swagger.paths).map(
     (e) => {
       const pathObject = swagger.paths[e];
       const prop = formatUrlToCamelCase(e).replace(commonPrefix, "");
 
       const paramIndex = e.indexOf("{");
       const path = paramIndex > 1 ? e.substring(0, paramIndex - 1) : e;
-      return {
-        name: snakeToCamel(
-          `${getMethodType(pathObject).toLowerCase()}_${prop}`
-        ),
-        url: path,
-        pathObject,
-        originalPath: e,
-        method: getMethodType(pathObject),
+      const methods = [];
+      const generate = (methodType: MethodType) => {
+        return {
+          name: snakeToCamel(`${methodType.toLowerCase()}_${prop}`),
+          url: path,
+          pathObject,
+          originalPath: e,
+          methodType,
+        };
       };
+      if (pathObject.get) {
+        methods.push(generate("GET"));
+      }
+      if (pathObject.delete) {
+        methods.push(generate("DELETE"));
+      }
+      if (pathObject.post) {
+        methods.push(generate("POST"));
+      }
+      if (pathObject.put) {
+        methods.push(generate("PUT"));
+      }
+      if (pathObject.patch) {
+        methods.push(generate("PATCH"));
+      }
+      return methods;
     }
   );
-  return endpoints;
+  return endpoints.flat();
 };
 
 export const generateRoutes = (swagger: SwaggerSchema) => {

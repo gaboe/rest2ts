@@ -83,6 +83,24 @@ function apiPut<TResponse, TRequest>(
 
   return fetchJson<TResponse>(url, requestOptions as any);
 }
+
+function apiDelete<TResponse>(
+  url: string,
+  headers: Headers,
+  paramsObject: ParamsObject = {}
+) {
+  updateHeaders(headers);
+  const queryString = Object.entries(paramsObject)
+    .map(([key, val]) => `${key}=${val}`)
+    .join("&");
+
+  var requestOptions = {
+    method: "DELETE",
+    headers,
+    redirect: "follow",
+  };
+  return fetchJson<TResponse>(`${url}?${queryString}`, requestOptions);
+}
 // ARCHITECTURE END
 
 type HttpResponse = {
@@ -117,6 +135,12 @@ const runExpress = (port: number) => {
   app.get("/todos/:id", (req, res) =>
     res.json({
       userId: 1,
+    })
+  );
+
+  app.delete("/todos/:id", (req, res) =>
+    res.json({
+      userId: 0,
     })
   );
 
@@ -196,4 +220,15 @@ test("put to web api", async (t) => {
   t.deepEqual(response.status, 200);
   t.deepEqual(response.json.userId, 666);
   t.deepEqual(response.json.title, "test++");
+});
+
+test("delete with query to web api", async (t) => {
+  const url = await listen(http.createServer(runExpress(3004)));
+  const response = await apiDelete<HttpResponse>(
+    `${url}/todos/1`,
+    new Headers(),
+    {}
+  );
+  t.deepEqual(response.status, 200);
+  t.deepEqual(response.json.userId, 0);
 });

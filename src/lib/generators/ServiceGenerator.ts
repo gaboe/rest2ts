@@ -2,6 +2,7 @@ import { SwaggerSchema, Operation, Schema } from "../models/SwaggerSchema";
 import {
   getEndpointsDescriptions,
   EndpointDescription,
+  MethodType,
 } from "./ApiDescriptionGenerator";
 import { render } from "mustache";
 import { Maybe, Nothing, Just } from "purify-ts";
@@ -51,6 +52,16 @@ const getContractResult = (
   const get = endpointDescription.pathObject.get;
   if (get && get.responses["200"]?.content?.["application/json"]) {
     return getTypeFromOperation(get);
+  }
+
+  const put = endpointDescription.pathObject.put;
+  if (put && put.responses["200"]?.content?.["application/json"]) {
+    return getTypeFromOperation(put);
+  }
+
+  const deleteOp = endpointDescription.pathObject.delete;
+  if (deleteOp && deleteOp.responses["200"]?.content?.["application/json"]) {
+    return getTypeFromOperation(deleteOp);
   }
 
   return Nothing;
@@ -115,7 +126,7 @@ const parametrizeUrl = (endpointDescription: EndpointDescription) => {
   return { parametrizedUrl, formattedFunctionParameters, unusedParameters };
 };
 
-const GET = (
+const parametrizedMethod = (
   endpointDescription: EndpointDescription,
   contractParameterName: string,
   contractResult: string
@@ -125,6 +136,9 @@ const GET = (
     parametrizedUrl,
     formattedFunctionParameters,
   } = parametrizeUrl(endpointDescription);
+  const method =
+    endpointDescription.methodType.charAt(0) +
+    endpointDescription.methodType.substring(1).toLowerCase();
 
   const queryParams =
     unusedParameters.length > 0
@@ -133,7 +147,7 @@ const GET = (
         })
       : "";
 
-  const apiGetParameters = [
+  const parameters = [
     `\`\$\{API_URL\}${parametrizedUrl.url}\``,
     "headers",
     ...[unusedParameters.length > 0 ? "queryParams" : "{}"],
@@ -145,13 +159,14 @@ const GET = (
     name: endpointDescription.name,
     contractParameterName,
     contractResult,
-    apiGetParameters,
+    parameters,
     queryParams,
     formattedParam: `${formattedFunctionParameters}${paramSeparator}headers = new Headers()`,
+    method,
   };
 
   return render(
-    "export const {{name}} = ({{{formattedParam}}}): \n\tPromise<FetchResponse<{{contractResult}}>> => {\n\t{{{queryParams}}}return apiGet({{{apiGetParameters}}});\n}\n",
+    "export const {{name}} = ({{{formattedParam}}}): \n\tPromise<FetchResponse<{{contractResult}}>> => {\n\t{{{queryParams}}}return api{{method}}({{{parameters}}});\n}\n",
     view
   );
 };
@@ -208,6 +223,32 @@ const PUT = (
   );
 };
 
+const DELETE = (
+  endpointDescription: EndpointDescription,
+  formattedRequestContractType: string,
+  contractParameterName: string,
+  contractResult: string
+) => {
+  const { parametrizedUrl, formattedFunctionParameters } = parametrizeUrl(
+    endpointDescription
+  );
+  const paramSeparator = formattedFunctionParameters.length > 0 ? ", " : "";
+  const comma = formattedRequestContractType.length > 0 ? ", " : "";
+
+  const view = {
+    name: endpointDescription.name,
+    contractParameterName,
+    contractResult,
+    url: `\`\$\{API_URL\}${parametrizedUrl.url}\``,
+    formattedParam: `${formattedRequestContractType}${comma}${formattedFunctionParameters}${paramSeparator}headers = new Headers()`,
+  };
+
+  return render(
+    "export const {{name}} = ({{{formattedParam}}}): \n\tPromise<FetchResponse<{{contractResult}}>> => \n\tapiDelete({{{url}}}, {{contractParameterName}}, headers);\n",
+    view
+  );
+};
+
 export const generateServices = (swagger: SwaggerSchema) => {
   const endpoints = getEndpointsDescriptions(swagger);
   const view = endpoints
@@ -224,7 +265,7 @@ export const generateServices = (swagger: SwaggerSchema) => {
         "any"
       );
 
-      if (endpointDescription.pathObject.post) {
+      if (endpointDescription.methodType === "POST") {
         return POST(
           endpointDescription,
           formattedRequestContractType,
@@ -232,8 +273,15 @@ export const generateServices = (swagger: SwaggerSchema) => {
           contractResult
         );
       }
-      if (endpointDescription.pathObject.get) {
-        return GET(endpointDescription, contractParameterName, contractResult);
+      if (
+        endpointDescription.methodType === "GET" ||
+        endpointDescription.methodType === "DELETE"
+      ) {
+        return parametrizedMethod(
+          endpointDescription,
+          contractParameterName,
+          contractResult
+        );
       }
       if (endpointDescription.pathObject.put) {
         return PUT(
@@ -243,6 +291,7 @@ export const generateServices = (swagger: SwaggerSchema) => {
           contractResult
         );
       }
+
       return `// ${endpointDescription.name}\n`;
     })
     .join("\n");
