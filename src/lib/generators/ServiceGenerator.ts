@@ -11,9 +11,8 @@ import { getTypeNameFromRef } from "./Common";
 const getRequestContractType = (
   endpointDescription: EndpointDescription
 ): Maybe<{ contractParameterName: string; formattedParam: string }> => {
-  const post = endpointDescription.pathObject.post;
-  if (post && post.requestBody?.content["application/json"]) {
-    const schema = post.requestBody.content["application/json"].schema;
+  const getContractType = (op: Operation) => {
+    const schema = op.requestBody.content["application/json"].schema;
     return Maybe.fromNullable(schema.$ref)
       .chain((e) => Just(getTypeNameFromRef(e)))
       .chain((v) =>
@@ -22,6 +21,15 @@ const getRequestContractType = (
           formattedParam: `requestContract: ${v}`,
         })
       );
+  };
+
+  const post = endpointDescription.pathObject.post;
+  if (post && post.requestBody?.content["application/json"]) {
+    return getContractType(post);
+  }
+  const put = endpointDescription.pathObject.put;
+  if (put && put.requestBody?.content["application/json"]) {
+    return getContractType(put);
   }
   return Nothing;
 };
@@ -208,6 +216,7 @@ const PUT = (
   );
   const paramSeparator = formattedFunctionParameters.length > 0 ? ", " : "";
   const comma = formattedRequestContractType.length > 0 ? ", " : "";
+  console.log(contractParameterName);
 
   const view = {
     name: endpointDescription.name,
