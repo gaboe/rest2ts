@@ -61,8 +61,14 @@ function apiGet<TResponse>(
   const queryString = Object.entries(paramsObject)
     .map(([key, val]) => `${key}=${val}`)
     .join("&");
+  const maybeQueryString = queryString.length > 0 ? `?${queryString}` : "";
 
-  return fetchJson<TResponse>(`${url}?${queryString}`);
+  const requestOptions = {
+    method: "GET",
+    headers,
+    redirect: "follow",
+  };
+  return fetchJson<TResponse>(`${url}${maybeQueryString}`, requestOptions);
 }
 
 function apiPut<TResponse, TRequest>(
@@ -93,13 +99,13 @@ function apiDelete<TResponse>(
   const queryString = Object.entries(paramsObject)
     .map(([key, val]) => `${key}=${val}`)
     .join("&");
-
-  var requestOptions = {
+  const maybeQueryString = queryString.length > 0 ? `?${queryString}` : "";
+  const requestOptions = {
     method: "DELETE",
     headers,
     redirect: "follow",
   };
-  return fetchJson<TResponse>(`${url}?${queryString}`, requestOptions);
+  return fetchJson<TResponse>(`${url}${maybeQueryString}`, requestOptions);
 }
 // ARCHITECTURE END
 
