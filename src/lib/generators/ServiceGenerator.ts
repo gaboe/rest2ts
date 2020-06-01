@@ -227,7 +227,7 @@ const PUT = (
   };
 
   return render(
-    "export const {{name}} = ({{{formattedParam}}}): \n\tPromise<FetchResponse<{{contractResult}}>> => \n\tapiPut('{{{url}}}', {{contractParameterName}}, headers);\n",
+    "export const {{name}} = ({{{formattedParam}}}): \n\tPromise<FetchResponse<{{contractResult}}>> => \n\tapiPut({{{url}}}, {{contractParameterName}}, headers);\n",
     view
   );
 };
