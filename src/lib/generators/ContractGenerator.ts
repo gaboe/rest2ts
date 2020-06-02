@@ -83,10 +83,12 @@ export const generateContracts = (swaggerSchema: SwaggerSchema) => {
       }
 
       if (o.type === "object") {
-        return render(
-          `export interface {{ name }} {\n\t{{{ properties }}}\n}\n`,
-          view
-        );
+        return view.properties.length > 2
+          ? render(
+              `export interface {{ name }} {\n\t{{{ properties }}}\n}\n`,
+              view
+            )
+          : render(`export interface {{ name }} {}\n`, view);
       }
 
       return render(`export const {{ name }} = {{{ properties }}};\n`, view);
