@@ -216,7 +216,6 @@ const PUT = (
   );
   const paramSeparator = formattedFunctionParameters.length > 0 ? ", " : "";
   const comma = formattedRequestContractType.length > 0 ? ", " : "";
-  console.log(contractParameterName);
 
   const view = {
     name: endpointDescription.name,

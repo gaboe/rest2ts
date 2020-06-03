@@ -20,7 +20,7 @@ const renderProperties = (swagger: SwaggerSchema) => (
       .join("\n\t");
     return properties;
   } else if (schema.enum) {
-    return schema.enum.map((e) => e).join(",\n\t");
+    return schema.enum.map((e) => `${e} = "${e}"`).join(",\n\t");
   } else if (schema.allOf && schema.allOf[0]) {
     const allOf = schema.allOf[0];
     if (allOf.$ref) {
@@ -43,7 +43,7 @@ const renderProperties = (swagger: SwaggerSchema) => (
       case "integer":
         return "number";
       case "object":
-        return "{}";
+        return "unknown";
       case "array":
         const arrayTypeSchema = Maybe.fromNullable(schema.items)
           .chain((e) => (e instanceof Array ? Just(e[0]) : Just(e)))
@@ -77,13 +77,13 @@ export const generateContracts = (swaggerSchema: SwaggerSchema) => {
       };
       if (o.enum) {
         return render(
-          `export enum {{ name }} {\n\t{{ properties }}\n}\n`,
+          `export enum {{ name }} {\n\t{{{ properties }}}\n}\n`,
           view
         );
       }
 
       if (o.type === "object") {
-        return view.properties.length > 2
+        return view.properties.length > 0 && view.properties !== "unknown"
           ? render(
               `export interface {{ name }} {\n\t{{{ properties }}}\n}\n`,
               view
