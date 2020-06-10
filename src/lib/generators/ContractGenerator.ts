@@ -11,9 +11,14 @@ const renderProperties = (swagger: SwaggerSchema) => (
     const properties = Object.keys(schema.properties)
       .map((op) => {
         const childProp = (schema.properties as any)[op] as Schema;
+
+        const type = renderProperties(swagger)(childProp);
+        const isNullable: boolean =
+          (childProp as any).nullable && type !== "string";
+
         const view = {
-          name: op,
-          type: renderProperties(swagger)(childProp),
+          name: isNullable ? `${op}?` : op,
+          type: type,
         };
         return render("{{ name }}: {{ type }};", view);
       })
