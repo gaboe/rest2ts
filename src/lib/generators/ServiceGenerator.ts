@@ -191,7 +191,7 @@ const bodyBasedMethod = (
   );
   const paramSeparator = formattedFunctionParameters.length > 0 ? ", " : "";
   const comma = formattedRequestContractType.length > 0 ? ", " : "";
-  const infrastructureFunction = methodType === "PUT" ? "Put" : "Post";
+  const method = methodType === "PUT" ? "Put" : "Post";
 
   const view = {
     name: endpointDescription.name,
@@ -199,11 +199,11 @@ const bodyBasedMethod = (
     contractResult,
     url: `\`\$\{API_URL\}${parametrizedUrl.url}\``,
     formattedParam: `${formattedRequestContractType}${comma}${formattedFunctionParameters}${paramSeparator}headers = new Headers()`,
-    infrastructureFunction,
+    method,
   };
 
   return render(
-    "export const {{name}} = ({{{formattedParam}}}): \n\tPromise<FetchResponse<{{contractResult}}>> => \n\tapi{{infrastructureFunction}}({{{url}}}, {{contractParameterName}}, headers);\n",
+    "export const {{name}} = ({{{formattedParam}}}): \n\tPromise<FetchResponse<{{contractResult}}>> => \n\tapi{{method}}({{{url}}}, {{contractParameterName}}, headers);\n",
     view
   );
 };
