@@ -53,22 +53,38 @@ const getContractResult = (
     );
   };
   const post = endpointDescription.pathObject.post;
-  if (post && post.responses["200"]?.content?.["application/json"]) {
+  if (
+    endpointDescription.methodType === "POST" &&
+    post &&
+    post.responses["200"]?.content?.["application/json"]
+  ) {
     return getTypeFromOperation(post);
   }
 
   const get = endpointDescription.pathObject.get;
-  if (get && get.responses["200"]?.content?.["application/json"]) {
+  if (
+    endpointDescription.methodType === "GET" &&
+    get &&
+    get.responses["200"]?.content?.["application/json"]
+  ) {
     return getTypeFromOperation(get);
   }
 
   const put = endpointDescription.pathObject.put;
-  if (put && put.responses["200"]?.content?.["application/json"]) {
+  if (
+    endpointDescription.methodType === "PUT" &&
+    put &&
+    put.responses["200"]?.content?.["application/json"]
+  ) {
     return getTypeFromOperation(put);
   }
 
   const deleteOp = endpointDescription.pathObject.delete;
-  if (deleteOp && deleteOp.responses["200"]?.content?.["application/json"]) {
+  if (
+    endpointDescription.methodType === "DELETE" &&
+    deleteOp &&
+    deleteOp.responses["200"]?.content?.["application/json"]
+  ) {
     return getTypeFromOperation(deleteOp);
   }
 
