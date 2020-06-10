@@ -179,17 +179,19 @@ const parametrizedMethod = (
   );
 };
 
-const POST = (
+const bodyBasedMethod = (
   endpointDescription: EndpointDescription,
   formattedRequestContractType: string,
   contractParameterName: string,
-  contractResult: string
+  contractResult: string,
+  methodType: MethodType
 ) => {
   const { parametrizedUrl, formattedFunctionParameters } = parametrizeUrl(
     endpointDescription
   );
   const paramSeparator = formattedFunctionParameters.length > 0 ? ", " : "";
   const comma = formattedRequestContractType.length > 0 ? ", " : "";
+  const infrastructureFunction = methodType === "PUT" ? "Put" : "Post";
 
   const view = {
     name: endpointDescription.name,
@@ -197,62 +199,11 @@ const POST = (
     contractResult,
     url: `\`\$\{API_URL\}${parametrizedUrl.url}\``,
     formattedParam: `${formattedRequestContractType}${comma}${formattedFunctionParameters}${paramSeparator}headers = new Headers()`,
+    infrastructureFunction,
   };
 
   return render(
-    "export const {{name}} = ({{{formattedParam}}}): \n\tPromise<FetchResponse<{{contractResult}}>> => \n\tapiPost({{{url}}}, {{contractParameterName}}, headers);\n",
-    view
-  );
-};
-
-const PUT = (
-  endpointDescription: EndpointDescription,
-  formattedRequestContractType: string,
-  contractParameterName: string,
-  contractResult: string
-) => {
-  const { parametrizedUrl, formattedFunctionParameters } = parametrizeUrl(
-    endpointDescription
-  );
-  const paramSeparator = formattedFunctionParameters.length > 0 ? ", " : "";
-  const comma = formattedRequestContractType.length > 0 ? ", " : "";
-
-  const view = {
-    name: endpointDescription.name,
-    contractParameterName,
-    contractResult,
-    url: `\`\$\{API_URL\}${parametrizedUrl.url}\``,
-    formattedParam: `${formattedRequestContractType}${comma}${formattedFunctionParameters}${paramSeparator}headers = new Headers()`,
-  };
-
-  return render(
-    "export const {{name}} = ({{{formattedParam}}}): \n\tPromise<FetchResponse<{{contractResult}}>> => \n\tapiPut({{{url}}}, {{contractParameterName}}, headers);\n",
-    view
-  );
-};
-
-const DELETE = (
-  endpointDescription: EndpointDescription,
-  formattedRequestContractType: string,
-  contractParameterName: string,
-  contractResult: string
-) => {
-  const { parametrizedUrl, formattedFunctionParameters } = parametrizeUrl(
-    endpointDescription
-  );
-  const paramSeparator = formattedFunctionParameters.length > 0 ? ", " : "";
-  const comma = formattedRequestContractType.length > 0 ? ", " : "";
-
-  const view = {
-    name: endpointDescription.name,
-    contractParameterName,
-    contractResult,
-    url: `\`\$\{API_URL\}${parametrizedUrl.url}\``,
-    formattedParam: `${formattedRequestContractType}${comma}${formattedFunctionParameters}${paramSeparator}headers = new Headers()`,
-  };
-
-  return render(
-    "export const {{name}} = ({{{formattedParam}}}): \n\tPromise<FetchResponse<{{contractResult}}>> => \n\tapiDelete({{{url}}}, {{contractParameterName}}, headers);\n",
+    "export const {{name}} = ({{{formattedParam}}}): \n\tPromise<FetchResponse<{{contractResult}}>> => \n\tapi{{infrastructureFunction}}({{{url}}}, {{contractParameterName}}, headers);\n",
     view
   );
 };
@@ -273,12 +224,16 @@ export const generateServices = (swagger: SwaggerSchema) => {
         "any"
       );
 
-      if (endpointDescription.methodType === "POST") {
-        return POST(
+      if (
+        endpointDescription.methodType === "POST" ||
+        endpointDescription.methodType === "PUT"
+      ) {
+        return bodyBasedMethod(
           endpointDescription,
           formattedRequestContractType,
           contractParameterName,
-          contractResult
+          contractResult,
+          endpointDescription.methodType
         );
       }
       if (
@@ -287,14 +242,6 @@ export const generateServices = (swagger: SwaggerSchema) => {
       ) {
         return parametrizedMethod(
           endpointDescription,
-          contractParameterName,
-          contractResult
-        );
-      }
-      if (endpointDescription.pathObject.put) {
-        return PUT(
-          endpointDescription,
-          formattedRequestContractType,
           contractParameterName,
           contractResult
         );
