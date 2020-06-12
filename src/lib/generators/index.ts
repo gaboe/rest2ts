@@ -9,8 +9,7 @@ import { render } from "mustache";
 export const generate = (
   api: any,
   baseUrl: string,
-  generatedCodeBaseUrl: string | undefined,
-  tokenKey: string | undefined
+  generatedCodeBaseUrl: string | undefined
 ) => {
   const swaggerSchema = api as SwaggerSchema;
   const routes = renderRoutes(generateRoutes(swaggerSchema));
@@ -21,7 +20,7 @@ export const generate = (
   const view = {
     routes,
     contracts,
-    infrastructure: getInfrastructureTemplate(tokenKey),
+    infrastructure: getInfrastructureTemplate(),
     services: generateServices(swaggerSchema),
     baseApiUrl,
     // raw: JSON.stringify(api, null, 2),

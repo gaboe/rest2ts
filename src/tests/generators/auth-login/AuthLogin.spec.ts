@@ -6,7 +6,7 @@ test("parse auth login", async (t) => {
   var api = await SwaggerParser.parse(
     "./src/tests/generators/auth-login/swagger.json"
   );
-  const content = generate(api, "baseUrl", undefined, undefined);
+  const content = generate(api, "baseUrl", undefined);
 
   t.snapshot(content);
 });

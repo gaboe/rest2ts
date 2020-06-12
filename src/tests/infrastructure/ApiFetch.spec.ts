@@ -12,20 +12,35 @@ type FetchResponse<T> = {
   status: number;
 };
 
-const jwtKey: string | undefined = undefined;
+type Configuration = {
+  jwtKey: string | undefined;
+  onResponse?: (response: FetchResponse<any>) => void;
+};
+
+let CONFIG: Configuration = {
+  jwtKey: undefined,
+  onResponse: () => {},
+};
+
+export function configureApiCalls(configuration: Configuration) {
+  CONFIG = { ...CONFIG, ...configuration };
+}
 
 async function fetchJson<T>(...args: any): Promise<FetchResponse<T>> {
   const res: Response = await (fetch as any)(...args);
   const json = await res.json();
-
-  return { json: json, status: res.status };
+  const response = { json: json, status: res.status };
+  CONFIG.onResponse && CONFIG.onResponse(response);
+  return response;
 }
 
 const updateHeaders = (headers: Headers) => {
   if (!headers.has("Content-Type")) {
     headers.append("Content-Type", "application/json");
   }
-  const token = jwtKey ? localStorage.getItem(jwtKey as any) : undefined;
+  const token = CONFIG.jwtKey
+    ? localStorage.getItem(CONFIG.jwtKey as any)
+    : undefined;
   if (!headers.has("Authorization") && token) {
     headers.append("Authorization", token);
   }

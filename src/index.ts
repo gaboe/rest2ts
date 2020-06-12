@@ -10,7 +10,6 @@ type ProgramProps = {
   source: string | undefined;
   target: string | undefined;
   urlValue: string | undefined;
-  tokenKey: string | undefined;
   help: never;
 };
 
@@ -20,7 +19,6 @@ const optimist = opt
   .alias("s", "source")
   .alias("t", "target")
   .alias("v", "urlValue")
-  .alias("k", "tokenKey")
   .describe(
     "t",
     "If set, jwt token will be set to local storage with key as value of this param"
@@ -31,13 +29,7 @@ const optimist = opt
     "b",
     "Base url value used in generated code, can be string, or node global value"
   );
-const {
-  help,
-  source,
-  target,
-  urlValue,
-  tokenKey,
-} = optimist.argv as ProgramProps;
+const { help, source, target, urlValue } = optimist.argv as ProgramProps;
 
 if (help) {
   optimist.showHelp();
@@ -65,7 +57,7 @@ SwaggerParser.parse(source, (err, api) => {
     console.error(err);
     process.exit(1);
   } else if (api) {
-    const content = generate(api, baseUrl, urlValue, tokenKey);
+    const content = generate(api, baseUrl, urlValue);
 
     fs.outputFile(`${target}/Api.ts`, content).catch((err) => {
       console.error(err);
