@@ -26,10 +26,17 @@ export const getInfrastructureTemplate = () => {
   
   async function fetchJson<T>(...args: any): Promise<FetchResponse<T>> {
     const res: Response = await (fetch as any)(...args);
-    const json = await res.json();
-    const response = { json: json, status: res.status };
-    CONFIG.onResponse && CONFIG.onResponse(response);
-    return response;
+    try{
+      const json = await res.json();
+      const response = { json: json, status: res.status };
+      CONFIG.onResponse && CONFIG.onResponse(response);
+      return response;
+    }
+    catch{
+      const errorResponse = { status: res.status, json: null as any };
+      CONFIG.onResponse && CONFIG.onResponse(errorResponse);
+      return errorResponse;
+    }
   }
   
   const updateHeaders = (headers: Headers) => {
