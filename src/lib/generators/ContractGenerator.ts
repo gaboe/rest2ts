@@ -3,18 +3,25 @@ import { render } from "mustache";
 import { getTypeNameFromRef } from "./Common";
 import { Maybe, Just } from "purify-ts";
 
-const renderProperties = (swagger: SwaggerSchema) => (
-  // schemaName: string,
-  schema: Schema
-): string => {
+const renderProperties = (
+  swagger: SwaggerSchema,
+  areNullableStringsEnabled: boolean
+) => (schema: Schema): string => {
   if (schema.type === "object" && schema.properties) {
     const properties = Object.keys(schema.properties)
       .map((op) => {
         const childProp = (schema.properties as any)[op] as Schema;
 
-        const type = renderProperties(swagger)(childProp);
+        const type = renderProperties(
+          swagger,
+          areNullableStringsEnabled
+        )(childProp);
+
         const isNullable: boolean =
-          (childProp as any).nullable && type !== "string";
+          (childProp as any).nullable &&
+          //TODO rest of condition will be remove, when areNullableStringsEnabled will be deprecated
+          (type !== "string" ||
+            (type === "string" && areNullableStringsEnabled));
 
         const view = {
           name: isNullable ? `${op}?` : op,
@@ -54,7 +61,9 @@ const renderProperties = (swagger: SwaggerSchema) => (
           .chain((e) => (e instanceof Array ? Just(e[0]) : Just(e)))
           .chain((e) =>
             Just(
-              e.$ref ? getTypeNameFromRef(e.$ref) : renderProperties(swagger)(e)
+              e.$ref
+                ? getTypeNameFromRef(e.$ref)
+                : renderProperties(swagger, areNullableStringsEnabled)(e)
             )
           )
           .orDefault("");
@@ -69,8 +78,11 @@ const renderProperties = (swagger: SwaggerSchema) => (
   }
 };
 
-export const generateContracts = (swaggerSchema: SwaggerSchema) => {
-  const rp = renderProperties(swaggerSchema);
+export const generateContracts = (
+  swaggerSchema: SwaggerSchema,
+  areNullableStringsEnabled: boolean
+) => {
+  const rp = renderProperties(swaggerSchema, areNullableStringsEnabled);
 
   const rows = Object.keys(swaggerSchema.components?.schemas || [])
     .map((k) => {

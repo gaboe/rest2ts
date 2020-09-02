@@ -9,11 +9,12 @@ import { render } from "mustache";
 export const generate = (
   api: any,
   baseUrl: string,
-  generatedCodeBaseUrl: string | undefined
+  generatedCodeBaseUrl: string | undefined,
+  areNullableStringsEnabled: boolean = false
 ) => {
   const swaggerSchema = api as SwaggerSchema;
   const routes = renderRoutes(generateRoutes(swaggerSchema));
-  const contracts = generateContracts(swaggerSchema);
+  const contracts = generateContracts(swaggerSchema, areNullableStringsEnabled);
   const baseApiUrl = generatedCodeBaseUrl
     ? `const API_URL = ${generatedCodeBaseUrl};`
     : `const API_URL = "${baseUrl}";`;

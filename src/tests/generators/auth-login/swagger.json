@@ -84,11 +84,11 @@
         "properties": {
           "login": {
             "type": "string",
-            "nullable": true
+            "nullable": false
           },
           "password": {
             "type": "string",
-            "nullable": true
+            "nullable": false
           }
         },
         "additionalProperties": false

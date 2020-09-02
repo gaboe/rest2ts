@@ -11,6 +11,7 @@ type ProgramProps = {
   target: string | undefined;
   urlValue: string | undefined;
   help: never;
+  areNullableStringsEnabled: boolean;
 };
 
 const optimist = opt
@@ -19,6 +20,7 @@ const optimist = opt
   .alias("s", "source")
   .alias("t", "target")
   .alias("v", "urlValue")
+  .alias("nullstr", "areNullableStringsEnabled")
   .describe(
     "t",
     "If set, jwt token will be set to local storage with key as value of this param"
@@ -28,13 +30,22 @@ const optimist = opt
   .describe(
     "b",
     "Base url value used in generated code, can be string, or node global value"
-  );
-const { help, source, target, urlValue } = optimist.argv as ProgramProps;
+  )
+  .describe("nullstr", "Are nullable strings enabled");
+const {
+  help,
+  source,
+  target,
+  urlValue,
+  areNullableStringsEnabled,
+} = optimist.argv as ProgramProps;
 
 if (help) {
   optimist.showHelp();
   process.exit(0);
 }
+
+console.log("areNullableStringsEnabled", areNullableStringsEnabled);
 
 if (source === undefined) {
   console.error("Source -s not set");
@@ -57,7 +68,7 @@ SwaggerParser.parse(source, (err, api) => {
     console.error(err);
     process.exit(1);
   } else if (api) {
-    const content = generate(api, baseUrl, urlValue);
+    const content = generate(api, baseUrl, urlValue, areNullableStringsEnabled);
 
     fs.outputFile(`${target}/Api.ts`, content).catch((err) => {
       console.error(err);
