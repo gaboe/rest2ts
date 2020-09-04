@@ -216,7 +216,7 @@
           },
           "detail": {
             "type": "string",
-            "nullable": true
+            "nullable": false
           },
           "instance": {
             "type": "string",

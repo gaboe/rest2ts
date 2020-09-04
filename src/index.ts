@@ -31,7 +31,7 @@ const optimist = opt
     "b",
     "Base url value used in generated code, can be string, or node global value"
   )
-  .describe("nullstr", "Are nullable strings enabled");
+  .describe("nullstr", "Are nullable strings enabled. Values 0/1");
 const {
   help,
   source,
@@ -44,8 +44,6 @@ if (help) {
   optimist.showHelp();
   process.exit(0);
 }
-
-console.log("areNullableStringsEnabled", areNullableStringsEnabled);
 
 if (source === undefined) {
   console.error("Source -s not set");
@@ -68,7 +66,12 @@ SwaggerParser.parse(source, (err, api) => {
     console.error(err);
     process.exit(1);
   } else if (api) {
-    const content = generate(api, baseUrl, urlValue, areNullableStringsEnabled);
+    const content = generate(
+      api,
+      baseUrl,
+      urlValue,
+      areNullableStringsEnabled == true
+    );
 
     fs.outputFile(`${target}/Api.ts`, content).catch((err) => {
       console.error(err);
