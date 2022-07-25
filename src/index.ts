@@ -61,12 +61,12 @@ process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = "0";
 
 const baseUrl = source.substring(0, source.indexOf("/swagger/"));
 
-SwaggerParser.parse(source, (err, api) => {
+SwaggerParser.parse(source, async (err, api) => {
   if (err) {
     console.error(err);
     process.exit(1);
   } else if (api) {
-    const content = generate(
+    const content = await generate(
       api,
       baseUrl,
       urlValue,

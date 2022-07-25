@@ -2,11 +2,11 @@ import test from "ava";
 import SwaggerParser from "@apidevtools/swagger-parser";
 import { generate } from "../../../lib/generators";
 
-test("parse calculation", async (t) => {
+test("parse swagger 2.0", async (t) => {
   var api = await SwaggerParser.parse(
-    "./src/tests/generators/calculation/swagger.json"
+    "./src/tests/generators/swagger_2_0/swagger.json"
   );
-  const content = await generate(api, "baseUrl", undefined, true);
+  const content = await generate(api, "", undefined, true);
 
   t.snapshot(content);
 });
