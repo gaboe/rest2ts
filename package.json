@@ -19,6 +19,7 @@
   },
   "rejectUnauthorized": false,
   "dependencies": {
+    "axios": "^0.27.2",
     "fs-extra": "^9.0.0",
     "mustache": "^4.0.1",
     "optimist": "^0.6.1",
