@@ -221,6 +221,10 @@
           "instance": {
             "type": "string",
             "nullable": true
+          },
+          "additionalInformation": {
+            "type": "object",
+            "properties": {}
           }
         },
         "additionalProperties": {
