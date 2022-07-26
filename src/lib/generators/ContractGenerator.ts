@@ -6,8 +6,8 @@ import { Maybe, Just } from "purify-ts";
 const renderProperties =
   (swagger: SwaggerSchema, areNullableStringsEnabled: boolean) =>
   (schema: Schema): string => {
-    if (schema.type === "object" && schema.properties) {
-      const properties = Object.keys(schema.properties)
+    if (schema.type === "object" && !!Object.keys(schema?.properties ?? {}).length) {
+      const properties = Object.keys(schema.properties ?? {})
         .map((op) => {
           const childProp = (schema.properties as any)[op] as Schema;
 
