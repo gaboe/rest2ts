@@ -127,6 +127,25 @@ function apiDelete<TResponse>(
   };
   return fetchJson<TResponse>(\`\${url}\${maybeQueryString}\`, requestOptions);
 }
+
+function apiPatch<TResponse, TRequest>(
+  url: string,
+  request: TRequest,
+  headers: Headers
+) {
+  updateHeaders(headers);
+
+  var raw = JSON.stringify(request);
+
+  var requestOptions = {
+    method: "PATCH",
+    headers,
+    body: raw,
+    redirect: "follow",
+  };
+
+  return fetchJson<TResponse>(url, requestOptions as any);
+}
 // ARCHITECTURE END
 `;
 };
