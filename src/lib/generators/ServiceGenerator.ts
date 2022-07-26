@@ -27,9 +27,15 @@ const getRequestContractType = (
   if (post && post.requestBody?.content["application/json"]) {
     return getContractType(post);
   }
+
   const put = endpointDescription.pathObject.put;
   if (put && put.requestBody?.content["application/json"]) {
     return getContractType(put);
+  }
+
+  const patch = endpointDescription.pathObject.patch;
+  if (patch && patch.requestBody?.content["application/json"]) {
+    return getContractType(patch);
   }
   return Nothing;
 };
@@ -88,6 +94,15 @@ const getContractResult = (
     return getTypeFromOperation(deleteOp);
   }
 
+  const patch = endpointDescription.pathObject.patch;
+  if (
+    endpointDescription.methodType === "PATCH" &&
+    patch &&
+    patch.responses["200"]?.content?.["application/json"]
+  ) {
+    return getTypeFromOperation(patch);
+  }
+
   return Nothing;
 };
 
@@ -114,6 +129,7 @@ const parametrizeUrl = (endpointDescription: EndpointDescription) => {
     pathObject.post?.parameters ||
     pathObject.put?.parameters ||
     pathObject.delete?.parameters ||
+    pathObject.patch?.parameters ||
     []
   ).map((e) => {
     const param = {
@@ -133,9 +149,9 @@ const parametrizeUrl = (endpointDescription: EndpointDescription) => {
       var index = url.indexOf(match);
       return index > -1
         ? {
-            url: url.replace(match, `\$${match}`),
-            usedParameters: [...usedParameters, ...[e.name]],
-          }
+          url: url.replace(match, `\$${match}`),
+          usedParameters: [...usedParameters, ...[e.name]],
+        }
         : { url, usedParameters };
     },
     {
@@ -167,8 +183,8 @@ const parametrizedMethod = (
   const queryParams =
     unusedParameters.length > 0
       ? render("const queryParams = {\n\t\t{{{rows}}}\n\t}\n\t", {
-          rows: unusedParameters.join("\t\t,\n"),
-        })
+        rows: unusedParameters.join("\t\t,\n"),
+      })
       : "";
 
   const parameters = [
@@ -202,12 +218,23 @@ const bodyBasedMethod = (
   contractResult: string,
   methodType: MethodType
 ) => {
+  const getMethodType = () => {
+    switch (methodType) {
+      case "PUT":
+        return "Put";
+      case "PATCH":
+        return "Patch";
+      default:
+        return "Post";
+    }
+  }
+
   const { parametrizedUrl, formattedFunctionParameters } = parametrizeUrl(
     endpointDescription
   );
   const paramSeparator = formattedFunctionParameters.length > 0 ? ", " : "";
   const comma = formattedRequestContractType.length > 0 ? ", " : "";
-  const method = methodType === "PUT" ? "Put" : "Post";
+  const method = getMethodType();
 
   const view = {
     name: endpointDescription.name,
@@ -242,7 +269,8 @@ export const generateServices = (swagger: SwaggerSchema) => {
 
       if (
         endpointDescription.methodType === "POST" ||
-        endpointDescription.methodType === "PUT"
+        endpointDescription.methodType === "PUT" ||
+        endpointDescription.methodType === "PATCH"
       ) {
         return bodyBasedMethod(
           endpointDescription,

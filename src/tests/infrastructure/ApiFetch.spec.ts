@@ -19,7 +19,7 @@ type Configuration = {
 
 let CONFIG: Configuration = {
   jwtKey: undefined,
-  onResponse: () => {},
+  onResponse: () => { },
 };
 
 export function configureApiCalls(configuration: Configuration) {
@@ -97,6 +97,25 @@ function apiPut<TResponse, TRequest>(
 
   var requestOptions = {
     method: "PUT",
+    headers,
+    body: raw,
+    redirect: "follow",
+  };
+
+  return fetchJson<TResponse>(url, requestOptions as any);
+}
+
+function apiPatch<TResponse, TRequest>(
+  url: string,
+  request: TRequest,
+  headers: Headers
+) {
+  updateHeaders(headers);
+
+  var raw = JSON.stringify(request);
+
+  var requestOptions = {
+    method: "PATCH",
     headers,
     body: raw,
     redirect: "follow",
@@ -184,6 +203,16 @@ const runExpress = (port: number) => {
     });
   });
 
+  app.patch("/todo/", (req, res) => {
+    const { userId, title } = req.body;
+
+    res.status(200);
+    return res.json({
+      userId,
+      title: `${title}_patch`,
+    });
+  });
+
   app.listen(port);
   return app;
 };
@@ -252,4 +281,20 @@ test("delete with query to web api", async (t) => {
   );
   t.deepEqual(response.status, 200);
   t.deepEqual(response.json.userId, 0);
+});
+
+test("patch to web api", async (t) => {
+  const url = await listen(http.createServer(runExpress(3005)));
+  var response = await apiPatch<HttpResponse, HttpRequest>(
+    `${url}/todo`,
+    {
+      title: "test",
+      userId: 666,
+    },
+    new Headers()
+  );
+
+  t.deepEqual(response.status, 200);
+  t.deepEqual(response.json.userId, 666);
+  t.deepEqual(response.json.title, "test_patch");
 });
