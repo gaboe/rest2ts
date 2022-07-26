@@ -74,6 +74,43 @@
           }
         }
       }
+    },
+    "/api/Case/UpdateCaseType/{caseNo}/{caseType}": {
+      "patch": {
+        "tags": ["Case"],
+        "operationId": "Case_UpdateCaseType",
+        "consumes": [],
+        "produces": ["application/json", "text/json", "application/xml", "text/xml"],
+        "parameters": [
+          {
+            "name": "caseNo",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "caseType",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "access token",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
