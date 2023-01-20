@@ -1,4 +1,4 @@
-import { SwaggerSchema, Path } from "../models/SwaggerSchema";
+import { SwaggerSchema, Path, Operation } from "../models/SwaggerSchema";
 
 export type ApiDescription = { [pathName: string]: string };
 
@@ -71,19 +71,28 @@ export const getEndpointsDescriptions = (swagger: SwaggerSchema) => {
           methodType,
         };
       };
+      const filterHeaderParameters = (operation: Operation) => {
+        operation.parameters = (operation.parameters ?? []).filter(x => x.in !== 'header');
+      }
+
       if (pathObject.get) {
+        filterHeaderParameters(pathObject.get);
         methods.push(generate("GET"));
       }
       if (pathObject.delete) {
+        filterHeaderParameters(pathObject.delete);
         methods.push(generate("DELETE"));
       }
       if (pathObject.post) {
+        filterHeaderParameters(pathObject.post);
         methods.push(generate("POST"));
       }
       if (pathObject.put) {
+        filterHeaderParameters(pathObject.put);
         methods.push(generate("PUT"));
       }
       if (pathObject.patch) {
+        filterHeaderParameters(pathObject.patch);
         methods.push(generate("PATCH"));
       }
       return methods;
