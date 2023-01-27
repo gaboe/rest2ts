@@ -13,12 +13,15 @@ const getRequestContractType = (
 ): Maybe<{ contractParameterName: string; formattedParam: string }> => {
   const getContractType = (op: Operation) => {
     const schema = op.requestBody.content["application/json"].schema;
-    return Maybe.fromNullable(schema.$ref)
+    const isRequestParamArray = schema.type === 'array' && !!schema.items
+    const refName = isRequestParamArray ? (schema.items as Schema).$ref : schema.$ref;
+
+    return Maybe.fromNullable(refName)
       .chain((e) => Just(getTypeNameFromRef(e)))
       .chain((v) =>
         Just({
           contractParameterName: "requestContract",
-          formattedParam: `requestContract: ${v}`,
+          formattedParam: `requestContract: ${v}${isRequestParamArray ? '[]' : ''}`,
         })
       );
   };
