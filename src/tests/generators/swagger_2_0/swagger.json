@@ -75,6 +75,55 @@
         }
       }
     },
+    "/api/Contract/EditContractSignatures": {
+      "post": {
+        "tags": [
+          "Contract"
+        ],
+        "operationId": "Contract_EditContractSignatures",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml",
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "signatureList",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/IPA_PlexDbContext_ContractSignature"
+              }
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "access token",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
     "/api/Case/UpdateCaseType/{caseNo}/{caseType}": {
       "patch": {
         "tags": ["Case"],
@@ -211,6 +260,33 @@
         },
         "EV_InsertUser": {
           "type": "string"
+        }
+      }
+    },
+    "IPA_PlexDbContext_ContractSignature": {
+      "type": "object",
+      "properties": {
+        "ID": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "ContractNo": {
+          "type": "string"
+        },
+        "RoleProviderId": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "Signature": {
+          "type": "string"
+        },
+        "UP_Id": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "SignatureType": {
+          "format": "int32",
+          "type": "integer"
         }
       }
     },
