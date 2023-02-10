@@ -1,4 +1,9 @@
-import { SwaggerSchema, Operation, Schema } from "../models/SwaggerSchema";
+import {
+  SwaggerSchema,
+  Operation,
+  Schema,
+  Parameter,
+} from "../models/SwaggerSchema";
 import {
   getEndpointsDescriptions,
   EndpointDescription,
@@ -114,10 +119,11 @@ const getContractResult = (
 };
 
 const parametrizeUrl = (endpointDescription: EndpointDescription) => {
-  const getType = (schema: Schema): string => {
-    const nullability = (schema as { nullable?: boolean }).nullable
-      ? " | undefined | null"
-      : "";
+  const getType = (parameter: Parameter, schema: Schema): string => {
+    const nullability =
+      !parameter.required && (schema as { nullable?: boolean }).nullable
+        ? " | undefined | null"
+        : "";
 
     switch (schema.type) {
       case "integer":
@@ -127,7 +133,9 @@ const parametrizeUrl = (endpointDescription: EndpointDescription) => {
       case "array":
         const arrayTypeSchema = Maybe.fromNullable(schema.items)
           .chain((e) => (e instanceof Array ? Just(e[0]) : Just(e)))
-          .chain((e) => Just(e.$ref ? getTypeNameFromRef(e.$ref) : getType(e)))
+          .chain((e) =>
+            Just(e.$ref ? getTypeNameFromRef(e.$ref) : getType(parameter, e))
+          )
           .orDefault("");
         return `${arrayTypeSchema}[]{nullability}`;
       default:
@@ -145,7 +153,7 @@ const parametrizeUrl = (endpointDescription: EndpointDescription) => {
   ).map((e) => {
     const param = {
       name: e.name,
-      type: getType((e as any).schema),
+      type: getType(e, (e as any).schema),
     };
     return param;
   });

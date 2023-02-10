@@ -57,6 +57,36 @@
           }
         }
       }
+    },
+    "/api/Transaction/detail/{externalID}": {
+      "get": {
+        "tags": ["Transaction"],
+        "operationId": "Transaction_GetTransactionDetail",
+        "parameters": [
+          {
+            "name": "externalID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetTransactionDetailQueryResult"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -130,6 +160,83 @@
         "description": "",
         "x-enumNames": ["Visible", "Hidden", "Promoted"],
         "enum": ["Visible", "Hidden", "Promoted"]
+      },
+      "GetTransactionDetailQueryResult": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "detail": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TransactionDetailDto"
+              }
+            ]
+          }
+        }
+      },
+      "TransactionDetailDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "externalID": {
+            "type": "string"
+          },
+          "cleanPrice": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "cleanAmount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "currencyCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "currencyName": {
+            "type": "string"
+          },
+          "recipientAddress": {
+            "type": "string",
+            "nullable": true
+          },
+          "blockchainTransactionID": {
+            "type": "string",
+            "nullable": true
+          },
+          "fee": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "dateChanged": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "orderFee": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "orderPrice": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "orderAskAmount": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "orderAskCurrencyCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "orderBidCurrencyCode": {
+            "type": "string",
+            "nullable": true
+          }
+        }
       }
     },
     "securitySchemes": {

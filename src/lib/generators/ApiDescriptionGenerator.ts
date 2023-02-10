@@ -72,8 +72,10 @@ export const getEndpointsDescriptions = (swagger: SwaggerSchema) => {
         };
       };
       const filterHeaderParameters = (operation: Operation) => {
-        operation.parameters = (operation.parameters ?? []).filter(x => x.in !== 'header');
-      }
+        operation.parameters = (operation.parameters ?? []).filter(
+          (x) => x.in !== "header"
+        );
+      };
 
       if (pathObject.get) {
         filterHeaderParameters(pathObject.get);
