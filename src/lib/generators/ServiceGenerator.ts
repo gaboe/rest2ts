@@ -13,15 +13,19 @@ const getRequestContractType = (
 ): Maybe<{ contractParameterName: string; formattedParam: string }> => {
   const getContractType = (op: Operation) => {
     const schema = op.requestBody.content["application/json"].schema;
-    const isRequestParamArray = schema.type === 'array' && !!schema.items
-    const refName = isRequestParamArray ? (schema.items as Schema).$ref : schema.$ref;
+    const isRequestParamArray = schema.type === "array" && !!schema.items;
+    const refName = isRequestParamArray
+      ? (schema.items as Schema).$ref
+      : schema.$ref;
 
     return Maybe.fromNullable(refName)
       .chain((e) => Just(getTypeNameFromRef(e)))
       .chain((v) =>
         Just({
           contractParameterName: "requestContract",
-          formattedParam: `requestContract: ${v}${isRequestParamArray ? '[]' : ''}`,
+          formattedParam: `requestContract: ${v}${
+            isRequestParamArray ? "[]" : ""
+          }`,
         })
       );
   };
@@ -111,19 +115,23 @@ const getContractResult = (
 
 const parametrizeUrl = (endpointDescription: EndpointDescription) => {
   const getType = (schema: Schema): string => {
+    const nullability = (schema as { nullable?: boolean }).nullable
+      ? " | undefined | null"
+      : "";
+
     switch (schema.type) {
       case "integer":
-        return "number";
+        return `number${nullability}`;
       case "object":
-        return "{}";
+        return `{}${nullability}`;
       case "array":
         const arrayTypeSchema = Maybe.fromNullable(schema.items)
           .chain((e) => (e instanceof Array ? Just(e[0]) : Just(e)))
           .chain((e) => Just(e.$ref ? getTypeNameFromRef(e.$ref) : getType(e)))
           .orDefault("");
-        return `${arrayTypeSchema}[]`;
+        return `${arrayTypeSchema}[]{nullability}`;
       default:
-        return (schema.type || schema.allOf) as string;
+        return `${schema.type || schema.allOf}${nullability}`;
     }
   };
   const pathObject = endpointDescription.pathObject;
@@ -152,9 +160,9 @@ const parametrizeUrl = (endpointDescription: EndpointDescription) => {
       var index = url.indexOf(match);
       return index > -1
         ? {
-          url: url.replace(match, `\$${match}`),
-          usedParameters: [...usedParameters, ...[e.name]],
-        }
+            url: url.replace(match, `\$${match}`),
+            usedParameters: [...usedParameters, ...[e.name]],
+          }
         : { url, usedParameters };
     },
     {
@@ -174,11 +182,8 @@ const parametrizedMethod = (
   contractParameterName: string,
   contractResult: string
 ) => {
-  const {
-    unusedParameters,
-    parametrizedUrl,
-    formattedFunctionParameters,
-  } = parametrizeUrl(endpointDescription);
+  const { unusedParameters, parametrizedUrl, formattedFunctionParameters } =
+    parametrizeUrl(endpointDescription);
   const method =
     endpointDescription.methodType.charAt(0) +
     endpointDescription.methodType.substring(1).toLowerCase();
@@ -186,8 +191,8 @@ const parametrizedMethod = (
   const queryParams =
     unusedParameters.length > 0
       ? render("const queryParams = {\n\t\t{{{rows}}}\n\t}\n\t", {
-        rows: unusedParameters.join("\t\t,\n"),
-      })
+          rows: unusedParameters.join("\t\t,\n"),
+        })
       : "";
 
   const parameters = [
@@ -230,11 +235,10 @@ const bodyBasedMethod = (
       default:
         return "Post";
     }
-  }
+  };
 
-  const { parametrizedUrl, formattedFunctionParameters } = parametrizeUrl(
-    endpointDescription
-  );
+  const { parametrizedUrl, formattedFunctionParameters } =
+    parametrizeUrl(endpointDescription);
   const paramSeparator = formattedFunctionParameters.length > 0 ? ", " : "";
   const comma = formattedRequestContractType.length > 0 ? ", " : "";
   const method = getMethodType();
@@ -266,9 +270,8 @@ export const generateServices = (swagger: SwaggerSchema) => {
         contractParameterName: "{}",
       });
 
-      const contractResult = getContractResult(endpointDescription).orDefault(
-        "any"
-      );
+      const contractResult =
+        getContractResult(endpointDescription).orDefault("any");
 
       if (
         endpointDescription.methodType === "POST" ||
