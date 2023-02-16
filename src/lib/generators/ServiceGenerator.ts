@@ -137,7 +137,7 @@ const parametrizeUrl = (endpointDescription: EndpointDescription) => {
             Just(e.$ref ? getTypeNameFromRef(e.$ref) : getType(parameter, e))
           )
           .orDefault("");
-        return `${arrayTypeSchema}[]{nullability}`;
+        return `${arrayTypeSchema}[]${nullability}`;
       default:
         return `${schema.type || schema.allOf}${nullability}`;
     }
