@@ -12,17 +12,17 @@ Rest2ts is a simple npm library that generates TypeScript client code from a Swa
 
 To install the library, run the following command:
 
-\`\`\`bash
+```bash
 npm install -g rest2ts
-\`\`\`
+```
 
 ## Usage
 
 To generate TypeScript code from a Swagger/OpenAPI definition file, use the following command:
 
-\`\`\`bash
+```bash
 rest2ts -s path/to/swagger.json -t target/path
-\`\`\`
+```
 
 ### Command-line Options
 
@@ -34,9 +34,9 @@ rest2ts -s path/to/swagger.json -t target/path
 
 ### Example
 
-\`\`\`bash
+```bash
 rest2ts -s https://api.example.com/swagger.json -t ./src/api
-\`\`\`
+```
 
 ## Generated Code
 
