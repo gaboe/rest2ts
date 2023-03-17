@@ -26,11 +26,11 @@ rest2ts -s path/to/swagger.json -t target/path
 
 ### Command-line Options
 
-- \`-h, --help\`: Displays help information
-- \`-s, --source\`: Path to the Swagger/OpenAPI definition file
-- \`-t, --target\`: Target path for generated TypeScript code
-- \`-v, --urlValue\`: Base URL value used in generated code, can be a string or a node global value
-- \`--nullstr, --areNullableStringsEnabled\`: Enable or disable nullable strings. Set to 1 to enable and 0 to disable.
+- `-h, --help`: Displays help information
+- `-s, --source`: Path to the Swagger/OpenAPI definition file
+- `-t, --target`: Target path for generated TypeScript code
+- `-v, --urlValue`: Base URL value used in generated code, can be a string or a node global value
+- `--nullstr, --areNullableStringsEnabled`: Enable or disable nullable strings. Set to 1 to enable and 0 to disable.
 
 ### Example
 
