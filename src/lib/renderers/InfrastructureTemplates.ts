@@ -157,3 +157,70 @@ function apiPatch<TResponse, TRequest>(
 // ARCHITECTURE END
 `;
 };
+
+export const getAngularInfrastructureTemplate = () => {
+  return `${disclaimer}// ARCHITECTURE START
+
+  import { mergeMap, catchError } from 'rxjs/operators';
+  import { Observable, throwError as _observableThrow, of as _observableOf } from 'rxjs';
+  import { Injectable, Inject, Optional, InjectionToken } from '@angular/core';
+  import { HttpClient, HttpHeaders, HttpResponse, HttpResponseBase, HttpContext } from '@angular/common/http';
+
+  function createQueryUrl<K extends object>(url: string, paramsObject: K) {
+    const queryString = Object.entries(paramsObject)
+      .map(([key, val]) => \`\${key}=\${val}\`)
+      .join("&");
+    const maybeQueryString = queryString.length > 0 ? \`?\${queryString}\` : "";
+    return \`\${url}\${maybeQueryString}\`;
+}
+
+  function apiGet<T, U extends object = object>(
+    httpClient: HttpClient,
+    url: string,
+    params?: U,
+  ): Observable<T | never> {
+    const queryUrl = !!params ? createQueryUrl<U>(url, params) : url;
+    return httpClient.get<T>(queryUrl);
+  }
+  
+  function apiPost<T, U = unknown>(
+    httpClient: HttpClient,
+    url: string,
+    body: U,
+    headers?: HttpHeaders,
+  ): Observable<T | never> {
+    return httpClient.post<T>(url, body, {
+      headers: headers,
+    });
+  }
+  
+  function apiPut<T, U = unknown>(
+    httpClient: HttpClient,
+    url: string,
+    body: U,
+    headers?: HttpHeaders,
+  ): Observable<T | never> {
+    return httpClient.put<T>(url, body, {
+      headers: headers,
+    });
+  }
+
+  function apiDelete<T, U extends object = object>(httpClient: HttpClient, url: string, params?: U) {
+    const queryUrl = !!params ? createQueryUrl<U>(url, params) : url;
+    return httpClient.delete<T>(queryUrl);
+  }
+
+  function apiPatch<T, U = unknown>(
+    httpClient: HttpClient,
+    url: string,
+    body: U,
+    headers?: HttpHeaders,
+  ): Observable<T | never> {
+    return httpClient.patch<T>(url, body, {
+      headers: headers,
+    });
+  }
+
+  // ARCHITECTURE END
+  `;
+};

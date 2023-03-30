@@ -8,21 +8,25 @@ import { render } from "mustache";
 import { Maybe, Nothing, Just } from "purify-ts";
 import { getTypeNameFromRef } from "./Common";
 
-const getRequestContractType = (
-  endpointDescription: EndpointDescription
+export const getRequestContractType = (
+  endpointDescription: EndpointDescription,
 ): Maybe<{ contractParameterName: string; formattedParam: string }> => {
   const getContractType = (op: Operation) => {
     const schema = op.requestBody.content["application/json"].schema;
-    const isRequestParamArray = schema.type === 'array' && !!schema.items
-    const refName = isRequestParamArray ? (schema.items as Schema).$ref : schema.$ref;
+    const isRequestParamArray = schema.type === "array" && !!schema.items;
+    const refName = isRequestParamArray
+      ? (schema.items as Schema).$ref
+      : schema.$ref;
 
     return Maybe.fromNullable(refName)
-      .chain((e) => Just(getTypeNameFromRef(e)))
-      .chain((v) =>
+      .chain(e => Just(getTypeNameFromRef(e)))
+      .chain(v =>
         Just({
           contractParameterName: "requestContract",
-          formattedParam: `requestContract: ${v}${isRequestParamArray ? '[]' : ''}`,
-        })
+          formattedParam: `requestContract: ${v}${
+            isRequestParamArray ? "[]" : ""
+          }`,
+        }),
       );
   };
 
@@ -43,22 +47,22 @@ const getRequestContractType = (
   return Nothing;
 };
 
-const getContractResult = (
-  endpointDescription: EndpointDescription
+export const getContractResult = (
+  endpointDescription: EndpointDescription,
 ): Maybe<string> => {
   const getTypeFromOperation = (operation: Operation) => {
     const schema =
       operation.responses["200"].content["application/json"].schema;
     if (schema.type === "array") {
       const typeName = Maybe.fromNullable(schema.items)
-        .chain((e) => (e instanceof Array ? Just(e[0]) : Just(e)))
-        .chain((e) => (e.$ref ? Just(e.$ref) : Nothing))
-        .chain((e) => Just(getTypeNameFromRef(e)))
+        .chain(e => (e instanceof Array ? Just(e[0]) : Just(e)))
+        .chain(e => (e.$ref ? Just(e.$ref) : Nothing))
+        .chain(e => Just(getTypeNameFromRef(e)))
         .orDefault("");
       return Just(`${typeName}[]`);
     }
-    return Maybe.fromNullable(schema.$ref).chain((e) =>
-      Just(getTypeNameFromRef(e))
+    return Maybe.fromNullable(schema.$ref).chain(e =>
+      Just(getTypeNameFromRef(e)),
     );
   };
   const post = endpointDescription.pathObject.post;
@@ -109,7 +113,7 @@ const getContractResult = (
   return Nothing;
 };
 
-const parametrizeUrl = (endpointDescription: EndpointDescription) => {
+export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
   const getType = (schema: Schema): string => {
     switch (schema.type) {
       case "integer":
@@ -118,8 +122,8 @@ const parametrizeUrl = (endpointDescription: EndpointDescription) => {
         return "{}";
       case "array":
         const arrayTypeSchema = Maybe.fromNullable(schema.items)
-          .chain((e) => (e instanceof Array ? Just(e[0]) : Just(e)))
-          .chain((e) => Just(e.$ref ? getTypeNameFromRef(e.$ref) : getType(e)))
+          .chain(e => (e instanceof Array ? Just(e[0]) : Just(e)))
+          .chain(e => Just(e.$ref ? getTypeNameFromRef(e.$ref) : getType(e)))
           .orDefault("");
         return `${arrayTypeSchema}[]`;
       default:
@@ -134,7 +138,7 @@ const parametrizeUrl = (endpointDescription: EndpointDescription) => {
     pathObject.delete?.parameters ||
     pathObject.patch?.parameters ||
     []
-  ).map((e) => {
+  ).map(e => {
     const param = {
       name: e.name,
       type: getType((e as any).schema),
@@ -143,7 +147,7 @@ const parametrizeUrl = (endpointDescription: EndpointDescription) => {
   });
 
   const formattedFunctionParameters = parameters
-    .map((e) => `${e.name}: ${e.type}`)
+    .map(e => `${e.name}: ${e.type}`)
     .join(", ");
 
   const parametrizedUrl = parameters.reduce(
@@ -152,19 +156,19 @@ const parametrizeUrl = (endpointDescription: EndpointDescription) => {
       var index = url.indexOf(match);
       return index > -1
         ? {
-          url: url.replace(match, `\$${match}`),
-          usedParameters: [...usedParameters, ...[e.name]],
-        }
+            url: url.replace(match, `\$${match}`),
+            usedParameters: [...usedParameters, ...[e.name]],
+          }
         : { url, usedParameters };
     },
     {
       url: endpointDescription.originalPath,
       usedParameters: new Array<string>(),
-    }
+    },
   );
   const unusedParameters = parameters
-    .filter((e) => !parametrizedUrl.usedParameters.some((x) => x === e.name))
-    .map((e) => e.name);
+    .filter(e => !parametrizedUrl.usedParameters.some(x => x === e.name))
+    .map(e => e.name);
 
   return { parametrizedUrl, formattedFunctionParameters, unusedParameters };
 };
@@ -172,13 +176,10 @@ const parametrizeUrl = (endpointDescription: EndpointDescription) => {
 const parametrizedMethod = (
   endpointDescription: EndpointDescription,
   contractParameterName: string,
-  contractResult: string
+  contractResult: string,
 ) => {
-  const {
-    unusedParameters,
-    parametrizedUrl,
-    formattedFunctionParameters,
-  } = parametrizeUrl(endpointDescription);
+  const { unusedParameters, parametrizedUrl, formattedFunctionParameters } =
+    parametrizeUrl(endpointDescription);
   const method =
     endpointDescription.methodType.charAt(0) +
     endpointDescription.methodType.substring(1).toLowerCase();
@@ -186,8 +187,8 @@ const parametrizedMethod = (
   const queryParams =
     unusedParameters.length > 0
       ? render("const queryParams = {\n\t\t{{{rows}}}\n\t}\n\t", {
-        rows: unusedParameters.join("\t\t,\n"),
-      })
+          rows: unusedParameters.join("\t\t,\n"),
+        })
       : "";
 
   const parameters = [
@@ -210,7 +211,7 @@ const parametrizedMethod = (
 
   return render(
     "export const {{name}} = ({{{formattedParam}}}): \n\tPromise<FetchResponse<{{contractResult}}>> => {\n\t{{{queryParams}}}return api{{method}}({{{parameters}}});\n}\n",
-    view
+    view,
   );
 };
 
@@ -219,7 +220,7 @@ const bodyBasedMethod = (
   formattedRequestContractType: string,
   contractParameterName: string,
   contractResult: string,
-  methodType: MethodType
+  methodType: MethodType,
 ) => {
   const getMethodType = () => {
     switch (methodType) {
@@ -230,11 +231,10 @@ const bodyBasedMethod = (
       default:
         return "Post";
     }
-  }
+  };
 
-  const { parametrizedUrl, formattedFunctionParameters } = parametrizeUrl(
-    endpointDescription
-  );
+  const { parametrizedUrl, formattedFunctionParameters } =
+    parametrizeUrl(endpointDescription);
   const paramSeparator = formattedFunctionParameters.length > 0 ? ", " : "";
   const comma = formattedRequestContractType.length > 0 ? ", " : "";
   const method = getMethodType();
@@ -250,14 +250,14 @@ const bodyBasedMethod = (
 
   return render(
     "export const {{name}} = ({{{formattedParam}}}): \n\tPromise<FetchResponse<{{contractResult}}>> => \n\tapi{{method}}({{{url}}}, {{contractParameterName}}, headers);\n",
-    view
+    view,
   );
 };
 
 export const generateServices = (swagger: SwaggerSchema) => {
   const endpoints = getEndpointsDescriptions(swagger);
   const view = endpoints
-    .map((endpointDescription) => {
+    .map(endpointDescription => {
       const {
         formattedParam: formattedRequestContractType,
         contractParameterName,
@@ -266,9 +266,8 @@ export const generateServices = (swagger: SwaggerSchema) => {
         contractParameterName: "{}",
       });
 
-      const contractResult = getContractResult(endpointDescription).orDefault(
-        "any"
-      );
+      const contractResult =
+        getContractResult(endpointDescription).orDefault("any");
 
       if (
         endpointDescription.methodType === "POST" ||
@@ -280,7 +279,7 @@ export const generateServices = (swagger: SwaggerSchema) => {
           formattedRequestContractType,
           contractParameterName,
           contractResult,
-          endpointDescription.methodType
+          endpointDescription.methodType,
         );
       }
       if (
@@ -290,7 +289,7 @@ export const generateServices = (swagger: SwaggerSchema) => {
         return parametrizedMethod(
           endpointDescription,
           contractParameterName,
-          contractResult
+          contractResult,
         );
       }
 
@@ -299,7 +298,7 @@ export const generateServices = (swagger: SwaggerSchema) => {
     .join("\n");
 
   const API = render(`export const API = { \n\t{{{ rows }}}\n}\n`, {
-    rows: endpoints.map((e) => e.name).join(",\n\t"),
+    rows: endpoints.map(e => e.name).join(",\n\t"),
   });
 
   return `${view}\n${API}`;
