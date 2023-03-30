@@ -8,6 +8,7 @@ export const getInfrastructureTemplate = () => {
   type FetchResponse<T> = {
     json: T;
     status: number;
+    args: any;
   };
   
   type Configuration = {
@@ -25,8 +26,8 @@ export const getInfrastructureTemplate = () => {
   }
   
   async function fetchJson<T>(...args: any): Promise<FetchResponse<T>> {
-    const errorResponse = (status: number) => {
-      const errorResponse = { status: status, json: null as any };
+    const errorResponse = (status: number, args: any) => {
+      const errorResponse = { status: status, json: null as any, args };
       CONFIG.onResponse && CONFIG.onResponse(errorResponse);
       return errorResponse;
     }
@@ -35,15 +36,15 @@ export const getInfrastructureTemplate = () => {
       const res: Response = await (fetch as any)(...args);
       try {
         const json = await res.json();
-        const response = { json: json, status: res.status };
+        const response = { json: json, status: res.status, args };
         CONFIG.onResponse && CONFIG.onResponse(response);
         return response;
       }
       catch {
-        return errorResponse(res.status)
+        return errorResponse(res.status, args)
       }
     } catch {
-      return errorResponse(503);
+      return errorResponse(503, args);
     }
   }
   
