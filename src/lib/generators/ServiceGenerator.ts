@@ -1,4 +1,9 @@
-import { SwaggerSchema, Operation, Schema } from "../models/SwaggerSchema";
+import {
+  SwaggerSchema,
+  Operation,
+  Schema,
+  Parameter,
+} from "../models/SwaggerSchema";
 import {
   getEndpointsDescriptions,
   EndpointDescription,
@@ -114,20 +119,27 @@ export const getContractResult = (
 };
 
 export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
-  const getType = (schema: Schema): string => {
+  const getType = (parameter: Parameter, schema: Schema): string => {
+    const nullability =
+      !parameter.required && (schema as { nullable?: boolean }).nullable
+        ? " | undefined | null"
+        : "";
+
     switch (schema.type) {
       case "integer":
-        return "number";
+        return `number${nullability}`;
       case "object":
-        return "{}";
+        return `{}${nullability}`;
       case "array":
         const arrayTypeSchema = Maybe.fromNullable(schema.items)
           .chain(e => (e instanceof Array ? Just(e[0]) : Just(e)))
-          .chain(e => Just(e.$ref ? getTypeNameFromRef(e.$ref) : getType(e)))
+          .chain(e =>
+            Just(e.$ref ? getTypeNameFromRef(e.$ref) : getType(parameter, e)),
+          )
           .orDefault("");
-        return `${arrayTypeSchema}[]`;
+        return `${arrayTypeSchema}[]${nullability}`;
       default:
-        return (schema.type || schema.allOf) as string;
+        return `${schema.type || schema.allOf}${nullability}`;
     }
   };
   const pathObject = endpointDescription.pathObject;
@@ -141,7 +153,7 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
   ).map(e => {
     const param = {
       name: e.name,
-      type: getType((e as any).schema),
+      type: getType(e, (e as any).schema),
     };
     return param;
   });

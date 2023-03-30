@@ -87,6 +87,7 @@ function apiGet<TResponse>(
 ) {
   updateHeaders(headers);
   const queryString = Object.entries(paramsObject)
+    .filter(([_, val]) => val !== undefined && val !== null)
     .map(([key, val]) => \`\${key}=\${val}\`)
     .join("&");
   const maybeQueryString = queryString.length > 0 ? \`?\${queryString}\` : "";
@@ -124,6 +125,7 @@ function apiDelete<TResponse>(
 ) {
   updateHeaders(headers);
   const queryString = Object.entries(paramsObject)
+    .filter(([_, val]) => val !== undefined && val !== null)
     .map(([key, val]) => \`\${key}=\${val}\`)
     .join("&");
   const maybeQueryString = queryString.length > 0 ? \`?\${queryString}\` : "";
