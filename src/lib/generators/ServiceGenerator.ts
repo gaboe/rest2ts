@@ -52,7 +52,7 @@ export const getRequestContractType = (
   return Nothing;
 };
 
-export const getContractResult = (
+const getContractResult = (
   endpointDescription: EndpointDescription,
 ): Maybe<string> => {
   const getTypeFromOperation = (operation: Operation) => {
