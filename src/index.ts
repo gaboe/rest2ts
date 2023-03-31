@@ -13,6 +13,7 @@ type ProgramProps = {
   help: never;
   areNullableStringsEnabled: boolean;
   generateForAngular: boolean;
+  fileName: string | undefined;
 };
 
 const optimist = opt
@@ -21,27 +22,33 @@ const optimist = opt
   .alias("s", "source")
   .alias("t", "target")
   .alias("v", "urlValue")
+  .alias("f", "fileName")
   .alias("nullstr", "areNullableStringsEnabled")
   .alias("ng", "generateForAngular")
   .describe(
     "t",
-    "If set, jwt token will be set to local storage with key as value of this param"
+    "If set, jwt token will be set to local storage with key as value of this param",
   )
   .describe("s", "Path to the swagger file")
   .describe("t", "Target path")
   .describe(
     "b",
-    "Base url value used in generated code, can be string, or node global value"
+    "Base url value used in generated code, can be string, or node global value",
   )
   .describe("nullstr", "Are nullable strings enabled. Values 0/1")
-  .describe("ng", "Generates output for angular with HttpClient and Rxjs. Values 0/1");
+  .describe(
+    "ng",
+    "Generates output for angular with HttpClient and Rxjs. Values 0/1",
+  )
+  .describe("f", "Output file name. Default file name is Api.ts");
 const {
   help,
   source,
   target,
   urlValue,
   areNullableStringsEnabled,
-  generateForAngular
+  generateForAngular,
+  fileName,
 } = optimist.argv as ProgramProps;
 
 if (help) {
@@ -75,10 +82,10 @@ SwaggerParser.parse(source, async (err, api) => {
       baseUrl,
       urlValue,
       areNullableStringsEnabled == true,
-      generateForAngular === true
+      generateForAngular == true,
     );
 
-    fs.outputFile(`${target}/Api.ts`, content).catch((err) => {
+    fs.outputFile(`${target}/${fileName ?? "Api.ts"}`, content).catch(err => {
       console.error(err);
       process.exit(1);
     });
