@@ -69,7 +69,7 @@ const parametrizedMethod = (
       : "";
 
   const parameters = [
-    `\`\$\{API_URL\}${parametrizedUrl.url}\``,
+    `\`\$\{this.baseUrl\}${parametrizedUrl.url}\``,
     ...[unusedParameters.length > 0 ? "queryParams" : ""],
   ]
     .filter(x => !!x)
