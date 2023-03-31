@@ -1,12 +1,13 @@
 {
   "name": "rest2ts",
-  "version": "1.9.0",
+  "version": "2.0.0",
   "description": "",
   "main": "index.ts",
   "scripts": {
     "dev": "run-p start test",
     "start": "tsc -w",
-    "test": "ava -w"
+    "test": "ava -w",
+    "build": "tsc"
   },
   "repository": {
     "url": "git://github.com/gaboe/rest2ts.git",
