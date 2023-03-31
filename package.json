@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "run-p start test",
     "start": "tsc -w",
-    "test": "ava -w"
+    "test": "ava -w",
+    "build": "tsc"
   },
   "repository": {
     "url": "git://github.com/gaboe/rest2ts.git",
