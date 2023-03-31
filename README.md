@@ -30,6 +30,7 @@ rest2ts -s path/to/swagger.json -t target/path
 - `-s, --source`: Path to the Swagger/OpenAPI definition file
 - `-t, --target`: Target path for generated TypeScript code
 - `-v, --urlValue`: Base URL value used in generated code, can be a string or a node global value
+- `-f, --fileName`: Output file name. Default file name is Api.ts.
 - `--nullstr, --areNullableStringsEnabled`: Enable or disable nullable strings. Set to 1 to enable and 0 to disable.
 - `--ng, --generateForAngular`: Set to 1 to generate Typescript code for Angular with HttpClient and Rxjs. UrlValue is provided by API_BASE_URL InjectionToken.
 
