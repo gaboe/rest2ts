@@ -19,6 +19,15 @@
               "type": "integer",
               "format": "int32"
             }
+          },
+          {
+            "name": "Calculation.ID",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
           }
         ],
         "responses": {

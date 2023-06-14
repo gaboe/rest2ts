@@ -159,7 +159,7 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
   });
 
   const formattedFunctionParameters = parameters
-    .map(e => `${e.name}: ${e.type}`)
+    .map(e => `${e.name.split(".").join("")}: ${e.type}`)
     .join(", ");
 
   const parametrizedUrl = parameters.reduce(
@@ -180,7 +180,7 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
   );
   const unusedParameters = parameters
     .filter(e => !parametrizedUrl.usedParameters.some(x => x === e.name))
-    .map(e => e.name);
+    .map(e => `"${e.name}": ${e.name.split(".").join("")}`);
 
   return { parametrizedUrl, formattedFunctionParameters, unusedParameters };
 };
