@@ -7,7 +7,9 @@
   "paths": {
     "/api/CodeList/list": {
       "get": {
-        "tags": ["CodeList"],
+        "tags": [
+          "CodeList"
+        ],
         "parameters": [
           {
             "name": "languageCode",
@@ -137,6 +139,32 @@
           "type": "object",
           "additionalProperties": false
         }
+      },
+      "BankDto": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CodeListItemBase"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "CodeListItemBase": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       }
     }
   }

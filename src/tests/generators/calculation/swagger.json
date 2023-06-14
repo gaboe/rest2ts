@@ -7,12 +7,23 @@
   "paths": {
     "/api/Calculation/{id}": {
       "get": {
-        "tags": ["Calculation"],
+        "tags": [
+          "Calculation"
+        ],
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "Calculation.ID",
+            "in": "query",
+            "style": "form",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -63,7 +74,9 @@
         }
       },
       "delete": {
-        "tags": ["Calculation"],
+        "tags": [
+          "Calculation"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -112,6 +125,41 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Calculation/{id}/overview": {
+      "get": {
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/pdf": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
                 }
               }
             }

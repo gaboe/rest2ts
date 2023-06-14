@@ -6,14 +6,17 @@ import { Maybe, Just } from "purify-ts";
 const renderProperties =
   (swagger: SwaggerSchema, areNullableStringsEnabled: boolean) =>
   (schema: Schema): string => {
-    if (schema.type === "object" && !!Object.keys(schema?.properties ?? {}).length) {
+    if (
+      schema.type === "object" &&
+      !!Object.keys(schema?.properties ?? {}).length
+    ) {
       const properties = Object.keys(schema.properties ?? {})
-        .map((op) => {
+        .map(op => {
           const childProp = (schema.properties as any)[op] as Schema;
 
           const type = renderProperties(
             swagger,
-            areNullableStringsEnabled
+            areNullableStringsEnabled,
           )(childProp);
 
           const isNullable: boolean =
@@ -31,19 +34,21 @@ const renderProperties =
         .join("\n\t");
       return properties;
     } else if (schema.enum) {
-      return schema.enum.map((e) => `${e} = "${e}"`).join(",\n\t");
+      return schema.enum.map(e => `${e} = "${e}"`).join(",\n\t");
     } else if (schema.allOf && schema.allOf[0]) {
       const allOf = schema.allOf[0];
       if (allOf.$ref) {
         const typeName = getTypeNameFromRef(allOf.$ref);
         const tt = swagger.components.schemas[typeName];
-        if (tt.type === "object") {
+        if (schema.type === "object") {
+          return renderProperties(swagger, areNullableStringsEnabled)(tt);
+        } else if (tt.type === "object") {
           return typeName;
         }
         return `typeof ${typeName}`;
       }
       if (allOf.enum) {
-        return allOf.enum.map((e) => e).join(" | ");
+        return allOf.enum.map(e => e).join(" | ");
       }
       if (allOf.type === "object") {
         return "any";
@@ -57,13 +62,13 @@ const renderProperties =
           return "unknown";
         case "array":
           const arrayTypeSchema = Maybe.fromNullable(schema.items)
-            .chain((e) => (e instanceof Array ? Just(e[0]) : Just(e)))
-            .chain((e) =>
+            .chain(e => (e instanceof Array ? Just(e[0]) : Just(e)))
+            .chain(e =>
               Just(
                 e.$ref
                   ? getTypeNameFromRef(e.$ref)
-                  : renderProperties(swagger, areNullableStringsEnabled)(e)
-              )
+                  : renderProperties(swagger, areNullableStringsEnabled)(e),
+              ),
             )
             .orDefault("");
           return `${arrayTypeSchema}[]`;
@@ -79,12 +84,12 @@ const renderProperties =
 
 export const generateContracts = (
   swaggerSchema: SwaggerSchema,
-  areNullableStringsEnabled: boolean
+  areNullableStringsEnabled: boolean,
 ) => {
   const rp = renderProperties(swaggerSchema, areNullableStringsEnabled);
 
   const rows = Object.keys(swaggerSchema.components?.schemas || [])
-    .map((k) => {
+    .map(k => {
       const o = swaggerSchema.components.schemas[k];
 
       const view = {
@@ -94,7 +99,7 @@ export const generateContracts = (
       if (o.enum) {
         return render(
           `export enum {{ name }} {\n\t{{{ properties }}}\n}\n`,
-          view
+          view,
         );
       }
 
@@ -102,7 +107,7 @@ export const generateContracts = (
         return view.properties.length > 0 && view.properties !== "unknown"
           ? render(
               `export interface {{ name }} {\n\t{{{ properties }}}\n}\n`,
-              view
+              view,
             )
           : render(`export interface {{ name }} {}\n`, view);
       }
