@@ -9,7 +9,7 @@ const trimStart = (s: string, c: string) =>
   s[0] === c ? s.substring(1, s.length) : s;
 
 const snakeToCamel = (str: string) =>
-  str.replace(/([-_]\w)/g, (g) => g[1].toUpperCase());
+  str.replace(/([-_]\w)/g, g => g[1].toUpperCase());
 
 export type MethodType = "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | "";
 
@@ -46,59 +46,63 @@ export type EndpointDescription = {
   pathObject: Path;
   originalPath: string;
   methodType: MethodType;
+  isFileResponse: boolean;
 };
 
 export const getEndpointsDescriptions = (swagger: SwaggerSchema) => {
   const commonPrefix = Object.keys(swagger.paths).reduce(
     (acc, e) => (getCommonPrefix(e) === acc ? acc : ""),
-    getCommonPrefix(Object.keys(swagger.paths)[0])
+    getCommonPrefix(Object.keys(swagger.paths)[0]),
   );
 
   const endpoints: EndpointDescription[][] = Object.keys(swagger.paths).map(
-    (e) => {
+    e => {
       const pathObject = swagger.paths[e];
       const prop = formatUrlToCamelCase(e).replace(commonPrefix, "");
 
       const paramIndex = e.indexOf("{");
       const path = paramIndex > 1 ? e.substring(0, paramIndex - 1) : e;
       const methods = [];
-      const generate = (methodType: MethodType) => {
+      const generate = (methodType: MethodType, operation: Operation) => {
         return {
           name: snakeToCamel(`${methodType.toLowerCase()}_${prop}`),
           url: path,
           pathObject,
           originalPath: e,
           methodType,
+          isFileResponse:
+            operation.responses?.[200]?.content?.["application/json"]?.schema
+              .format === "binary",
         };
       };
       const filterHeaderParameters = (operation: Operation) => {
         operation.parameters = (operation.parameters ?? []).filter(
-          (x) => x.in !== "header"
+          x => x.in !== "header",
         );
       };
 
       if (pathObject.get) {
         filterHeaderParameters(pathObject.get);
-        methods.push(generate("GET"));
+        methods.push(generate("GET", pathObject.get));
       }
       if (pathObject.delete) {
         filterHeaderParameters(pathObject.delete);
-        methods.push(generate("DELETE"));
+        methods.push(generate("DELETE", pathObject.delete));
       }
       if (pathObject.post) {
         filterHeaderParameters(pathObject.post);
-        methods.push(generate("POST"));
+        methods.push(generate("POST", pathObject.post));
       }
       if (pathObject.put) {
         filterHeaderParameters(pathObject.put);
-        methods.push(generate("PUT"));
+        methods.push(generate("PUT", pathObject.put));
       }
       if (pathObject.patch) {
         filterHeaderParameters(pathObject.patch);
-        methods.push(generate("PATCH"));
+        methods.push(generate("PATCH", pathObject.patch));
       }
       return methods;
-    }
+    },
   );
   return endpoints.flat();
 };

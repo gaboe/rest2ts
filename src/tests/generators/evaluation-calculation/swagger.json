@@ -7,7 +7,9 @@
   "paths": {
     "/api/Evaluation/calculation/{enterpriseCode}/{calculationCode}": {
       "post": {
-        "tags": ["Evaluation"],
+        "tags": [
+          "Evaluation"
+        ],
         "parameters": [
           {
             "name": "enterpriseCode",
