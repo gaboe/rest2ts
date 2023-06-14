@@ -57,9 +57,11 @@ const parametrizedMethod = (
 ) => {
   const { unusedParameters, parametrizedUrl, formattedFunctionParameters } =
     parametrizeUrl(endpointDescription);
-  const method =
-    endpointDescription.methodType.charAt(0) +
-    endpointDescription.methodType.substring(1).toLowerCase();
+  const method = `${endpointDescription.methodType.charAt(
+    0,
+  )}${endpointDescription.methodType.substring(1).toLowerCase()}${
+    endpointDescription.isFileResponse ? "File" : ""
+  }`;
 
   const queryParams =
     unusedParameters.length > 0
@@ -85,10 +87,12 @@ const parametrizedMethod = (
   };
 
   return render(
-    `{{name}}({{{formattedParam}}}): Observable<{{{contractResult}}}> {
+    `
+    {{name}}({{{formattedParam}}}): Observable<{{{contractResult}}}> {
       {{{queryParams}}}
       return api{{method}}<{{{contractResult}}}>(this.httpClient, {{{parameters}}});
-    }`,
+    }
+    `,
     view,
   );
 };
@@ -107,17 +111,21 @@ const getContractResult = (
   const getTypeFromOperation = (schemas: ReturnType<typeof getSchemas>) => {
     const type = schemas
       .map(({ schema, status }) => {
+        const isFileSchema = schema.format === "binary";
+
         if (schema.type === "array") {
           const typeName = Maybe.fromNullable(schema.items)
             .chain(e => (e instanceof Array ? Just(e[0]) : Just(e)))
             .chain(e => (e.$ref ? Just(e.$ref) : Nothing))
-            .chain(e => Just(getTypeNameFromRef(e)))
+            .chain(e =>
+              Just(isFileSchema ? "FileResponse" : getTypeNameFromRef(e)),
+            )
             .orDefault("");
           return `ResponseResult<${typeName}[], ${status}>`;
         }
-        return `ResponseResult<${getTypeNameFromRef(
-          schema.$ref ?? "",
-        )}, ${status}>`;
+        return `ResponseResult<${
+          isFileSchema ? "FileResponse" : getTypeNameFromRef(schema.$ref ?? "")
+        }, ${status}>`;
       })
       .join(" | ");
 
@@ -163,7 +171,6 @@ export const generateAngularServices = (swagger: SwaggerSchema) => {
         contractParameterName: "{}",
       });
 
-      debugger;
       const contractResult =
         getContractResult(endpointDescription).orDefault("any");
 
