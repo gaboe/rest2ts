@@ -142,15 +142,25 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
         return `${schema.type || schema.allOf}${nullability}`;
     }
   };
-  const pathObject = endpointDescription.pathObject;
-  const parameters = (
-    pathObject.get?.parameters ||
-    pathObject.post?.parameters ||
-    pathObject.put?.parameters ||
-    pathObject.delete?.parameters ||
-    pathObject.patch?.parameters ||
-    []
-  ).map(e => {
+
+  const getParameters = () => {
+    switch (endpointDescription.methodType) {
+      case "DELETE":
+        return endpointDescription.pathObject.delete?.parameters;
+      case "GET":
+        return endpointDescription.pathObject.get?.parameters;
+      case "PATCH":
+        return endpointDescription.pathObject.patch?.parameters;
+      case "POST":
+        return endpointDescription.pathObject.post?.parameters;
+      case "PUT":
+        return endpointDescription.pathObject.put?.parameters;
+      default:
+        return [];
+    }
+  };
+
+  const parameters = (getParameters() ?? []).map(e => {
     const param = {
       name: e.name,
       type: getType(e, (e as any).schema),
