@@ -139,7 +139,11 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
           .orDefault("");
         return `${arrayTypeSchema}[]${nullability}`;
       default:
-        return `${schema.type || schema.allOf}${nullability}`;
+        return `${
+          schema.type ||
+          schema.allOf ||
+          (schema.$ref && getTypeNameFromRef(schema.$ref))
+        }${nullability}`;
     }
   };
 

@@ -19,13 +19,20 @@
         "operationId": "Coinback_GetOffers",
         "parameters": [
           {
+            "name": "instrumentClass",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "$ref": "#/components/schemas/InstrumentClass"
+            }
+          },
+          {
             "name": "offset",
             "in": "query",
             "schema": {
               "type": "integer",
               "format": "int32"
-            },
-            "x-position": 1
+            }
           },
           {
             "name": "limit",
@@ -33,8 +40,7 @@
             "schema": {
               "type": "integer",
               "format": "int32"
-            },
-            "x-position": 2
+            }
           },
           {
             "name": "categoryCode",
@@ -42,8 +48,7 @@
             "schema": {
               "type": "string",
               "nullable": true
-            },
-            "x-position": 3
+            }
           }
         ],
         "responses": {
@@ -255,6 +260,20 @@
             "nullable": true
           }
         }
+      },
+      "InstrumentClass": {
+        "enum": [
+          "Financial",
+          "Stock",
+          "Bond",
+          "Commodity",
+          "RealEstate",
+          "Index",
+          "Alternative",
+          "Mixed",
+          "Other"
+        ],
+        "type": "string"
       }
     },
     "securitySchemes": {
