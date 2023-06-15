@@ -13,7 +13,9 @@
   "paths": {
     "/api/Coinback/offers": {
       "get": {
-        "tags": ["Coinback"],
+        "tags": [
+          "Coinback"
+        ],
         "operationId": "Coinback_GetOffers",
         "parameters": [
           {
@@ -60,7 +62,9 @@
     },
     "/api/Transaction/detail/{externalID}": {
       "get": {
-        "tags": ["Transaction"],
+        "tags": [
+          "Transaction"
+        ],
         "operationId": "Transaction_GetTransactionDetail",
         "parameters": [
           {
@@ -152,14 +156,28 @@
       "CommissionType": {
         "type": "string",
         "description": "",
-        "x-enumNames": ["Percents", "Fiat"],
-        "enum": ["Percents", "Fiat"]
+        "x-enumNames": [
+          "Percents",
+          "Fiat"
+        ],
+        "enum": [
+          "Percents",
+          "Fiat"
+        ]
       },
       "OfferVisibility": {
         "type": "string",
         "description": "",
-        "x-enumNames": ["Visible", "Hidden", "Promoted"],
-        "enum": ["Visible", "Hidden", "Promoted"]
+        "x-enumNames": [
+          "Visible",
+          "Hidden",
+          "Promoted"
+        ],
+        "enum": [
+          "Visible",
+          "Hidden",
+          "Promoted"
+        ]
       },
       "GetTransactionDetailQueryResult": {
         "type": "object",
