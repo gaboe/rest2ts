@@ -37,7 +37,9 @@ const bodyBasedMethod = (
     contractParameterName,
     contractResult,
     url: `\`\$\{this.baseUrl\}${parametrizedUrl.url}\``,
-    formattedParam: `${formattedRequestContractType}${comma}${formattedFunctionParameters}`,
+    formattedParam: `${formattedRequestContractType}${
+      formattedFunctionParameters ? comma : ""
+    }${formattedFunctionParameters}`,
     method,
   };
 
