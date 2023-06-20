@@ -168,12 +168,15 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
     const param = {
       name: e.name,
       type: getType(e, (e as any).schema),
+      required: !!e.required,
     };
     return param;
   });
 
   const formattedFunctionParameters = parameters
-    .map(e => `${e.name.split(".").join("")}: ${e.type}`)
+    .map(
+      e => `${e.name.split(".").join("")}${e.required ? "" : "?"}: ${e.type}`,
+    )
     .join(", ");
 
   const parametrizedUrl = parameters.reduce(
