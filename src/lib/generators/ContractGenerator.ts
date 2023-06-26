@@ -33,6 +33,26 @@ const renderProperties =
         })
         .join("\n\t");
       return properties;
+    } else if (
+      schema.type === "object" &&
+      !!Object.keys(schema?.additionalProperties ?? {}).length
+    ) {
+      const type = renderProperties(
+        swagger,
+        areNullableStringsEnabled,
+      )(schema.additionalProperties as Schema);
+
+      const isNullable: boolean =
+        (schema.additionalProperties as any).nullable &&
+        //TODO rest of condition will be remove, when areNullableStringsEnabled will be deprecated
+        (type !== "string" || (type === "string" && areNullableStringsEnabled));
+
+      return render(
+        isNullable
+          ? "{[key: string | number]: {{{type}}}} | null"
+          : "{[key: string | number]: {{{type}}}}",
+        { type },
+      );
     } else if (schema.enum) {
       return schema.enum.map(e => `${e} = "${e}"`).join(",\n\t");
     } else if (schema.allOf && schema.allOf[0]) {
@@ -96,6 +116,7 @@ export const generateContracts = (
         name: k,
         properties: rp(o),
       };
+
       if (o.enum) {
         return render(
           `export enum {{ name }} {\n\t{{{ properties }}}\n}\n`,
