@@ -128,6 +128,16 @@
             },
             "nullable": true
           },
+          "otherParameters": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/CalculationFromCodesRequest"
+              }
+            },
+            "nullable": true
+          },
           "warnings": {
             "type": "array",
             "items": {
