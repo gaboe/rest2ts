@@ -110,6 +110,19 @@ const getContractResult = (
       }))
       .filter(e => !!e.schema);
 
+  const getTypeName = (schema: Schema, isArray: boolean) => {
+    if (schema.oneOf) {
+      const typeNames = schema.oneOf
+        .map(s => getTypeNameFromRef(s.$ref ?? s.type ?? "") || "any")
+        .join(" | ");
+      return isArray ? `(${typeNames})[]` : typeNames;
+    }
+
+    const typeName =
+      getTypeNameFromRef(schema.$ref ?? schema.type ?? "") || "any";
+    return isArray ? `${typeName}[]` : typeName;
+  };
+
   const getTypeFromOperation = (schemas: ReturnType<typeof getSchemas>) => {
     const type = schemas
       .map(({ schema, status }) => {
@@ -118,15 +131,14 @@ const getContractResult = (
         if (schema.type === "array") {
           const typeName = Maybe.fromNullable(schema.items)
             .chain(e => (e instanceof Array ? Just(e[0]) : Just(e)))
-            .chain(e => (e.$ref ? Just(e.$ref) : Nothing))
             .chain(e =>
-              Just(isFileSchema ? "FileResponse" : getTypeNameFromRef(e)),
+              Just(isFileSchema ? "FileResponse" : getTypeName(e, true)),
             )
             .orDefault("");
-          return `ResponseResult<${typeName}[], ${status}>`;
+          return `ResponseResult<${typeName}, ${status}>`;
         }
         return `ResponseResult<${
-          isFileSchema ? "FileResponse" : getTypeNameFromRef(schema.$ref ?? "")
+          isFileSchema ? "FileResponse" : getTypeName(schema, false)
         }, ${status}>`;
       })
       .join(" | ");
