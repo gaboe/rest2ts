@@ -128,6 +128,23 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ProblemDetails"
+                    },
+                    {
+                      "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                    }
+                  ]
+                }
+              }
+            }
           }
         }
       }
@@ -301,6 +318,27 @@
           "type": "object",
           "additionalProperties": false
         }
+      },
+      "HttpValidationProblemDetails": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ProblemDetails"
+          }
+        ],
+        "properties": {
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "readOnly": true
+          }
+        },
+        "additionalProperties": {}
       }
     }
   }

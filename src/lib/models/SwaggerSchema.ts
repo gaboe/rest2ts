@@ -162,6 +162,7 @@ export interface XML {
 export interface Schema extends BaseSchema {
   $ref?: string;
   allOf?: Schema[];
+  oneOf?: Schema[];
   additionalProperties?: Schema | boolean;
   properties?: { [propertyName: string]: Schema };
   discriminator?: string;
