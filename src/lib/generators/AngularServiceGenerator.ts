@@ -126,7 +126,9 @@ const getContractResult = (
           return `ResponseResult<${typeName}[], ${status}>`;
         }
         return `ResponseResult<${
-          isFileSchema ? "FileResponse" : getTypeNameFromRef(schema.$ref ?? "")
+          isFileSchema
+            ? "FileResponse"
+            : getTypeNameFromRef(schema.$ref ?? schema.type ?? "")
         }, ${status}>`;
       })
       .join(" | ");

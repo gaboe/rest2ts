@@ -66,7 +66,7 @@ const getContractResult = (
         .orDefault("");
       return Just(`${typeName}[]`);
     }
-    return Maybe.fromNullable(schema.$ref).chain(e =>
+    return Maybe.fromNullable(schema.$ref ?? schema.type).chain(e =>
       Just(getTypeNameFromRef(e)),
     );
   };
