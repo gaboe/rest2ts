@@ -176,9 +176,18 @@ type ResponseResult<T, U extends number = 0> = {
 
 function createQueryUrl<K extends object>(url: string, paramsObject: K) {
   const queryString = Object.entries(paramsObject)
-    .map(([key, val]) => key && val !== null && val !== undefined ? \`\${encodeURIComponent(key)}=\${encodeURIComponent(val)}\`: '')
+    .map(([key, val]) => {
+			
+			if (key && val !== null && val !== undefined) {
+				return Array.isArray(val) 
+					? val.map((item) => \`\${encodeURIComponent(key)}=\${encodeURIComponent(item)}\`).join('&') 
+					: \`\${encodeURIComponent(key)}=\${encodeURIComponent(val)}\`;
+			}
+			return null;
+		})
 		.filter(p => !!p)
     .join("&");
+
   const maybeQueryString = queryString.length > 0 ? \`?\${queryString}\` : "";
   return \`\${url}\${maybeQueryString}\`;
 }
