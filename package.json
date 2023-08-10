@@ -1,6 +1,6 @@
 {
   "name": "rest2ts",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "",
   "main": "index.ts",
   "scripts": {
@@ -25,7 +25,9 @@
     "mustache": "^4.0.1",
     "optimist": "^0.6.1",
     "purify-ts": "^0.14.1",
-    "swagger-parser": "^9.0.1"
+    "swagger-parser": "^9.0.1",
+    "tsc": "^2.0.4",
+    "typescript": "^5.1.6"
   },
   "devDependencies": {
     "@ava/typescript": "^1.1.1",
