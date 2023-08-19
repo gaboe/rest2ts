@@ -103,12 +103,10 @@ const getContractResult = (
   endpointDescription: EndpointDescription,
 ): Maybe<string> => {
   const getSchemas = (operation: Operation) =>
-    Object.entries(operation.responses)
-      .map(e => ({
-        status: e[0],
-        schema: e[1]?.content?.["application/json"]?.schema as Schema,
-      }))
-      .filter(e => !!e.schema);
+    Object.entries(operation.responses).map(e => ({
+      status: e[0],
+      schema: e[1]?.content?.["application/json"]?.schema ?? null,
+    }));
 
   const getTypeName = (schema: Schema, isArray: boolean) => {
     if (schema.oneOf) {
@@ -126,6 +124,10 @@ const getContractResult = (
   const getTypeFromOperation = (schemas: ReturnType<typeof getSchemas>) => {
     const type = schemas
       .map(({ schema, status }) => {
+        if (!schema) {
+          return `ResponseResult<void, ${status}>`;
+        }
+
         const isFileSchema = schema.format === "binary";
 
         if (schema.type === "array") {
