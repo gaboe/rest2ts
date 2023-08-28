@@ -3,6 +3,27 @@ import { render } from "mustache";
 import { getTypeNameFromRef } from "./Common";
 import { Maybe, Just } from "purify-ts";
 
+const addSchemaAllOf = (
+  allOf: Schema[] | null,
+  swagger: SwaggerSchema,
+  areNullableStringsEnabled: boolean,
+): string => {
+  if (!allOf?.length) {
+    return "";
+  }
+
+  const properties = allOf
+    .filter(x => !!x.$ref)
+    .map(({ $ref }) => {
+      const typeName = getTypeNameFromRef($ref!);
+      const t = swagger.components.schemas[typeName];
+      return renderProperties(swagger, areNullableStringsEnabled)(t);
+    })
+    .join("\n\t");
+
+  return `\n\t${properties}`;
+};
+
 const renderProperties =
   (swagger: SwaggerSchema, areNullableStringsEnabled: boolean) =>
   (schema: Schema): string => {
@@ -32,7 +53,13 @@ const renderProperties =
           return render("{{ name }}: {{ type }};", view);
         })
         .join("\n\t");
-      return properties;
+      return properties.concat(
+        addSchemaAllOf(
+          schema.allOf ?? null,
+          swagger,
+          areNullableStringsEnabled,
+        ),
+      );
     } else if (
       schema.type === "object" &&
       !!Object.keys(schema?.additionalProperties ?? {}).length
