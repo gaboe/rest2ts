@@ -7,7 +7,9 @@
   "paths": {
     "/api/Calculation/list": {
       "post": {
-        "tags": ["Calculation"],
+        "tags": [
+          "Calculation"
+        ],
         "requestBody": {
           "content": {
             "application/json-patch+json": {
@@ -197,6 +199,49 @@
           "type": "object",
           "additionalProperties": false
         }
+      },
+      "DocumentDto": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/DocumentBaseDto"
+          }
+        ],
+        "properties": {
+          "documentID": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "DocumentBaseDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "documentType": {
+            "$ref": "#/components/schemas/DocumentType"
+          }
+        },
+        "additionalProperties": false
+      },
+      "DocumentType": {
+        "enum": [
+          "Unspecified",
+          "Contract",
+          "MeetingRecord",
+          "InvestmentQuestionnaire",
+          "ClientIdentification",
+          "Modelation",
+          "Kiid",
+          "GeneralConditions",
+          "Orders",
+          "StaticFile"
+        ],
+        "type": "string"
       }
     }
   }
