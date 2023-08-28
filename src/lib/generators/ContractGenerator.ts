@@ -124,6 +124,12 @@ const renderProperties =
       }
     } else if (schema.$ref) {
       return schema.$ref.split("/").reverse()[0];
+    } else if ((schema as any).oneOf) {
+      const oneOf = (schema as any).oneOf as Schema[];
+
+      return oneOf
+        .map(e => renderProperties(swagger, areNullableStringsEnabled)(e))
+        .join(" | ");
     } else {
       return "any";
     }
