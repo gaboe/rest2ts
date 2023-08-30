@@ -5,10 +5,11 @@ const disclaimer = `
 
 export const getInfrastructureTemplate = () => {
   return `${disclaimer}// ARCHITECTURE START
-  type FetchResponse<T> = {
+  export type FetchResponse<T> = {
     json: T;
     status: number;
     args: any;
+    error: any;
   };
   
   type Configuration = {
@@ -26,8 +27,14 @@ export const getInfrastructureTemplate = () => {
   }
   
   async function fetchJson<T>(...args: any): Promise<FetchResponse<T>> {
-    const errorResponse = (status: number, args: any) => {
-      const errorResponse = { status: status, json: null as any, args };
+    const errorResponse = (response: Response, args: any) => {
+      const errorResponse = { status: response.status, json: null as any, args, error: response };
+      CONFIG.onResponse && CONFIG.onResponse(errorResponse);
+      return errorResponse;
+    }
+
+    const errorStatus = (status: number, args: any) => {
+      const errorResponse = { status: status, json: null as any, args, error: new Error("Network error", {cause: status}) };
       CONFIG.onResponse && CONFIG.onResponse(errorResponse);
       return errorResponse;
     }
@@ -36,15 +43,16 @@ export const getInfrastructureTemplate = () => {
       const res: Response = await (fetch as any)(...args);
       try {
         const json = await res.json();
-        const response = { json: json, status: res.status, args };
+       const isSuccess = res.status >= 200 && res.status < 300;
+        const response = { json: isSuccess ? json : null, status: res.status, args, error: isSuccess ? null : json };
         CONFIG.onResponse && CONFIG.onResponse(response);
         return response;
       }
       catch {
-        return errorResponse(res.status, args)
+        return errorResponse(res, args)
       }
     } catch {
-      return errorResponse(503, args);
+      return errorStatus(503, args);
     }
   }
   
