@@ -177,13 +177,51 @@ import { Inject, Injectable, InjectionToken, Optional } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
+type FlattenableValue =
+  | string
+  | number
+  | boolean
+  | null
+  | undefined
+  | Date
+  | FlattenableValue[]
+  | {
+      [prop: string]: FlattenableValue;
+    };
+
+type FlattenableObject = { [key: string]: FlattenableValue } | null | undefined;
+
+function flattenQueryParams(data: FlattenableObject) {
+  const params: Record<string, any> = {};
+  flatten(params, data, '');
+  return params;
+}
+
+function flatten(params: any, data: FlattenableValue, path: string) {
+  for (const key of Object.keys(data)) {
+    if (data[key] instanceof Array) {
+      data[key].forEach((item: FlattenableValue, index: number) => {
+        if (item instanceof Object) {
+          flatten(params, item, \`\${path}\${key}[\${index}].\`);
+        } else {
+          params[\`\${path}\${key}[\${index}]\`] = item;
+        }
+      });
+    } else if (data[key]?.constructor === Object) {
+      flatten(params, data[key], \`\${path}\${key}.\`);
+    } else {
+      params[\`\${path}\${key}\`] = data[key];
+    }
+  }
+}
+
 type ResponseResult<T, U extends number = 0> = {
   status: U;
   response: U extends 0 ? unknown : T;
 };
 
-function createQueryUrl<K extends object>(url: string, paramsObject: K) {
-  const queryString = Object.entries(paramsObject)
+function createQueryUrl(url: string, paramsObject: FlattenableObject) {
+  const queryString = Object.entries(flattenQueryParams(paramsObject))
     .map(([key, val]) => {
 			
 			if (key && val !== null && val !== undefined) {
@@ -200,12 +238,12 @@ function createQueryUrl<K extends object>(url: string, paramsObject: K) {
   return \`\${url}\${maybeQueryString}\`;
 }
 
-function apiGet<T extends ResponseResult<unknown, number>, U extends object = object>(
+function apiGet<T extends ResponseResult<unknown, number>>(
 	httpClient: HttpClient,
 	url: string,
-	params?: U,
+	params?: FlattenableObject,
 ): Observable<T | never> {
-	const queryUrl = !!params ? createQueryUrl<U>(url, params) : url;
+	const queryUrl = !!params ? createQueryUrl(url, params) : url;
 	return httpClient
 		.get<HttpResponse<T['response']>>(queryUrl, { observe: 'response' })
 		.pipe(
@@ -225,10 +263,10 @@ function apiGet<T extends ResponseResult<unknown, number>, U extends object = ob
 		);
 }
 
-function apiGetFile<T extends ResponseResult<unknown, number>, U extends object = object>(
+function apiGetFile<T extends ResponseResult<unknown, number>>(
 	httpClient: HttpClient,
 	url: string,
-	params?: U,
+	params?: FlattenableObject,
 ): Observable<T | never> {
 	const mapResult = (response: HttpResponse<Blob>) => {
 		const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
@@ -243,7 +281,7 @@ function apiGetFile<T extends ResponseResult<unknown, number>, U extends object 
 		return { data: response.body, fileName: fileName };
 	}
 
-	const queryUrl = !!params ? createQueryUrl<U>(url, params) : url;
+	const queryUrl = !!params ? createQueryUrl(url, params) : url;
 	return httpClient
 		.get(queryUrl, { observe: 'response', responseType: "blob" })
 		.pipe(
@@ -315,12 +353,12 @@ function apiPut<T extends ResponseResult<unknown, number>, U = unknown>(
 		);
 }
 
-function apiDelete<T extends ResponseResult<unknown, number>, U extends object = object>(
+function apiDelete<T extends ResponseResult<unknown, number>>(
 	httpClient: HttpClient,
 	url: string,
-	params?: U,
+	params?: FlattenableObject,
 ) {
-	const queryUrl = !!params ? createQueryUrl<U>(url, params) : url;
+	const queryUrl = !!params ? createQueryUrl(url, params) : url;
 	return httpClient
 		.delete<HttpResponse<T['response']>>(queryUrl, { observe: 'response' })
 		.pipe(
