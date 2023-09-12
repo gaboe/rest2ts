@@ -163,7 +163,7 @@ export const generateContracts = (
               `export type {{ name }} = {\n\t{{{ properties }}}\n};\n`,
               view,
             )
-          : render(`export type {{ name }} {};\n`, view);
+          : render(`export type {{ name }} = {};\n`, view);
       }
 
       return render(`export const {{ name }} = {{{ properties }}};\n`, view);
