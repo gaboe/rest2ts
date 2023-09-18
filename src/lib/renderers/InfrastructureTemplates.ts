@@ -189,9 +189,9 @@ type FlattenableValue =
       [prop: string]: FlattenableValue;
     };
 
-type FlattenableObject = { [key: string]: FlattenableValue } | null | undefined;
+type QueryParams = { [key: string]: FlattenableValue } | null | undefined;
 
-function flattenQueryParams(data: FlattenableObject) {
+function flattenQueryParams(data: QueryParams) {
   const params: Record<string, any> = {};
   flatten(params, data, '');
   return params;
@@ -220,7 +220,7 @@ type ResponseResult<T, U extends number = 0> = {
   response: U extends 0 ? unknown : T;
 };
 
-function createQueryUrl(url: string, paramsObject: FlattenableObject) {
+function createQueryUrl(url: string, paramsObject: QueryParams) {
   const queryString = Object.entries(flattenQueryParams(paramsObject))
     .map(([key, val]) => {
 			
@@ -241,7 +241,7 @@ function createQueryUrl(url: string, paramsObject: FlattenableObject) {
 function apiGet<T extends ResponseResult<unknown, number>>(
 	httpClient: HttpClient,
 	url: string,
-	params?: FlattenableObject,
+	params?: QueryParams,
 ): Observable<T | never> {
 	const queryUrl = !!params ? createQueryUrl(url, params) : url;
 	return httpClient
@@ -266,7 +266,7 @@ function apiGet<T extends ResponseResult<unknown, number>>(
 function apiGetFile<T extends ResponseResult<unknown, number>>(
 	httpClient: HttpClient,
 	url: string,
-	params?: FlattenableObject,
+	params?: QueryParams,
 ): Observable<T | never> {
 	const mapResult = (response: HttpResponse<Blob>) => {
 		const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
@@ -356,7 +356,7 @@ function apiPut<T extends ResponseResult<unknown, number>, U = unknown>(
 function apiDelete<T extends ResponseResult<unknown, number>>(
 	httpClient: HttpClient,
 	url: string,
-	params?: FlattenableObject,
+	params?: QueryParams,
 ) {
 	const queryUrl = !!params ? createQueryUrl(url, params) : url;
 	return httpClient
