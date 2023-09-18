@@ -36,19 +36,34 @@ export const getRequestContractType = (
   };
 
   const post = endpointDescription.pathObject.post;
-  if (post && post.requestBody?.content["application/json"]) {
+  const methodType = endpointDescription.methodType;
+
+  if (
+    methodType === "POST" &&
+    !!post &&
+    post.requestBody?.content["application/json"]
+  ) {
     return getContractType(post);
   }
 
   const put = endpointDescription.pathObject.put;
-  if (put && put.requestBody?.content["application/json"]) {
+  if (
+    methodType === "PUT" &&
+    !!put &&
+    put.requestBody?.content["application/json"]
+  ) {
     return getContractType(put);
   }
 
   const patch = endpointDescription.pathObject.patch;
-  if (patch && patch.requestBody?.content["application/json"]) {
+  if (
+    methodType === "PATCH" &&
+    !!patch &&
+    patch.requestBody?.content["application/json"]
+  ) {
     return getContractType(patch);
   }
+
   return Nothing;
 };
 
