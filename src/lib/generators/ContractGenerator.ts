@@ -160,10 +160,10 @@ export const generateContracts = (
       if (o.type === "object") {
         return view.properties.length > 0 && view.properties !== "unknown"
           ? render(
-              `export interface {{ name }} {\n\t{{{ properties }}}\n}\n`,
+              `export type {{ name }} = {\n\t{{{ properties }}}\n};\n`,
               view,
             )
-          : render(`export interface {{ name }} {}\n`, view);
+          : render(`export type {{ name }} = {};\n`, view);
       }
 
       return render(`export const {{ name }} = {{{ properties }}};\n`, view);
