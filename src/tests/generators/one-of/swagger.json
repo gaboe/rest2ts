@@ -41,10 +41,194 @@
           }
         }
       }
+    },
+    "/api/product/list": {
+      "get": {
+        "tags": [
+          "Product"
+        ],
+        "operationId": "Product_List",
+        "parameters": [
+          {
+            "name": "contractTypeCode",
+            "in": "query",
+            "schema": {
+              "nullable": true,
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/ContractTypeCode"
+                }
+              ]
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductItemDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
     }
   },
   "components": {
     "schemas": {
+      "ContractTypeCode": {
+        "type": "string",
+        "description": "",
+        "x-enumNames": [
+          "BEN",
+          "CONSIGNMENT",
+          "DYN",
+          "FCG",
+          "LIBERO_RS",
+          "OKP",
+          "OKS_FKI",
+          "OKS_Investor",
+          "OKS_LC",
+          "OKS_LC_EX",
+          "OKS_LC_EX_",
+          "OKSP_LC",
+          "OKSP_LC_EX",
+          "OKSP_LC_EX_",
+          "RS_INVCZK",
+          "RS_INVCZKSELF",
+          "RS_INVEUR",
+          "RS_INVEURSELF",
+          "RS_INVPROFICZK",
+          "RS_OKSmartFondy",
+          "RS_OKSmartFondy_EX",
+          "RS_OKSmartFondy_EX_",
+          "RS_OKSmartProdukty",
+          "RS_OKSmartProdukty_EX",
+          "RS_OKSmartProdukty_EX_"
+        ],
+        "enum": [
+          "BEN",
+          "CONSIGNMENT",
+          "DYN",
+          "FCG",
+          "LIBERO_RS",
+          "OKP",
+          "OKS_FKI",
+          "OKS_Investor",
+          "OKS_LC",
+          "OKS_LC_EX",
+          "OKS_LC_EX_",
+          "OKSP_LC",
+          "OKSP_LC_EX",
+          "OKSP_LC_EX_",
+          "RS_INVCZK",
+          "RS_INVCZKSELF",
+          "RS_INVEUR",
+          "RS_INVEURSELF",
+          "RS_INVPROFICZK",
+          "RS_OKSmartFondy",
+          "RS_OKSmartFondy_EX",
+          "RS_OKSmartFondy_EX_",
+          "RS_OKSmartProdukty",
+          "RS_OKSmartProdukty_EX",
+          "RS_OKSmartProdukty_EX_"
+        ]
+      },
+      "ProductItemDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "className": {
+            "type": "string",
+            "nullable": true
+          },
+          "order": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "singleMinInvestment": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "singleMaxInvestment": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "singleDefaultInvestment": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "periodicalMinInvestment": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "periodicalMaxInvestment": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "periodicalDefaultInvestment": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "color": {
+            "type": "string",
+            "nullable": true
+          },
+          "hasPeriodicalRedemption": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "minPerformance": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "maxPerformance": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "productCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "isin": {
+            "type": "string",
+            "nullable": true
+          },
+          "productName": {
+            "type": "string",
+            "nullable": true
+          },
+          "productSingleSS": {
+            "type": "string",
+            "nullable": true
+          },
+          "productPeriodicalSS": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
       "ProcessBankIDVerificationCommandResult": {
         "type": "object",
         "additionalProperties": false,

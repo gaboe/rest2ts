@@ -154,6 +154,17 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
           .orDefault("");
         return `${arrayTypeSchema}[]${nullability}`;
       default:
+        const oneOf = (schema as any).oneOf as Schema[];
+
+        if (!!oneOf) {
+          const types = oneOf
+            .filter(e => !!e.$ref)
+            .map(e => getTypeNameFromRef(e.$ref!))
+            .join(" | ");
+
+          return `${types}${nullability}`;
+        }
+
         return `${
           schema.type ||
           schema.allOf ||
