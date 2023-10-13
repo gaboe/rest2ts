@@ -1,12 +1,12 @@
 {
   "name": "rest2ts",
-  "version": "3.1.0",
+  "version": "4.0.8",
   "description": "",
   "main": "index.ts",
   "scripts": {
     "dev": "run-p start test",
     "start": "tsc -w",
-    "test": "ava -w",
+    "test": "ava -w --verbose",
     "build": "tsc"
   },
   "repository": {
