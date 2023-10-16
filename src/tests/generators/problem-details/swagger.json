@@ -11,7 +11,7 @@
     }
   ],
   "paths": {
-    "/api/Auth/sign-up": {
+    "/api/v1/auth/sign-up": {
       "post": {
         "tags": [
           "Auth"

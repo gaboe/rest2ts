@@ -1,6 +1,6 @@
 {
   "name": "rest2ts",
-  "version": "4.0.8",
+  "version": "4.1.0",
   "description": "",
   "main": "index.ts",
   "scripts": {

@@ -58,14 +58,26 @@ export const getEndpointsDescriptions = (swagger: SwaggerSchema) => {
   const endpoints: EndpointDescription[][] = Object.keys(swagger.paths).map(
     e => {
       const pathObject = swagger.paths[e];
+
       const prop = formatUrlToCamelCase(e).replace(commonPrefix, "");
+
+      const versionPattern = /^v\d+(\.\d+)?/;
+      const versionMatch = prop.match(versionPattern);
+      const version = (versionMatch?.[0] ?? "").toUpperCase();
 
       const paramIndex = e.indexOf("{");
       const path = paramIndex > 1 ? e.substring(0, paramIndex - 1) : e;
       const methods = [];
       const generate = (methodType: MethodType, operation: Operation) => {
+        const formattedName = snakeToCamel(
+          `${methodType.toLowerCase()}_${prop}`,
+        );
+        const name = `${formattedName.replace(version, "")}${
+          version === "V1" ? "" : version
+        }`;
+
         return {
-          name: snakeToCamel(`${methodType.toLowerCase()}_${prop}`),
+          name,
           url: path,
           pathObject,
           originalPath: e,
