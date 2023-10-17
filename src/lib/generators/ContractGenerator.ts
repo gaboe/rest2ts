@@ -152,7 +152,7 @@ export const generateContracts = (
 
       if (o.enum) {
         return render(
-          `export enum {{ name }} {\n\t{{{ properties }}}\n}\n`,
+          `export enum {{ name }} {\n\t{{{ properties }}}\n};\n`,
           view,
         );
       }
