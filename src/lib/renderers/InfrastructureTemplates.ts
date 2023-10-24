@@ -238,6 +238,14 @@ function createQueryUrl(url: string, paramsObject: QueryParams) {
   return \`\${url}\${maybeQueryString}\`;
 }
 
+function parseErrorResponse<T>(error: unknown): T | unknown {
+	try {
+		return JSON.parse(error as string) as T;
+	} catch (e) {
+		return error;
+	}
+}
+
 function apiGet<T extends ResponseResult<unknown, number>>(
 	httpClient: HttpClient,
 	url: string,
@@ -256,7 +264,7 @@ function apiGet<T extends ResponseResult<unknown, number>>(
 			),
 			catchError((err) => {
 				if (err instanceof HttpErrorResponse) {
-					return of({ status: err.status, response: err.error }) as Observable<T>;
+					return of({ status: err.status, response: parseErrorResponse<T>(err.error) }) as Observable<T>;
 				}
 				return throwError(() => err);
 			}),
@@ -294,7 +302,7 @@ function apiGetFile<T extends ResponseResult<unknown, number>>(
 			),
 			catchError((err) => {
 				if (err instanceof HttpErrorResponse) {
-					return of({ status: err.status, response: err.error }) as Observable<T>;
+					return of({ status: err.status, response: parseErrorResponse<T>(err.error) }) as Observable<T>;
 				}
 				return throwError(() => err);
 			}),
@@ -320,7 +328,7 @@ function apiPost<T extends ResponseResult<unknown, number>, U = unknown>(
 			),
 			catchError((err) => {
 				if (err instanceof HttpErrorResponse) {
-					return of({ status: err.status, response: err.error }) as Observable<T>;
+					return of({ status: err.status, response: parseErrorResponse<T>(err.error) }) as Observable<T>;
 				}
 				return throwError(() => err);
 			}),
@@ -346,7 +354,7 @@ function apiPut<T extends ResponseResult<unknown, number>, U = unknown>(
 			),
 			catchError((err) => {
 				if (err instanceof HttpErrorResponse) {
-					return of({ status: err.status, response: err.error }) as Observable<T>;
+					return of({ status: err.status, response: parseErrorResponse<T>(err.error) }) as Observable<T>;
 				}
 				return throwError(() => err);
 			}),
@@ -371,7 +379,7 @@ function apiDelete<T extends ResponseResult<unknown, number>>(
 			),
 			catchError((err) => {
 				if (err instanceof HttpErrorResponse) {
-					return of({ status: err.status, response: err.error }) as Observable<T>;
+					return of({ status: err.status, response: parseErrorResponse<T>(err.error) }) as Observable<T>;
 				}
 				return throwError(() => err);
 			}),
@@ -397,7 +405,7 @@ function apiPatch<T extends ResponseResult<unknown, number>, U = unknown>(
 			),
 			catchError((err) => {
 				if (err instanceof HttpErrorResponse) {
-					return of({ status: err.status, response: err.error }) as Observable<T>;
+					return of({ status: err.status, response: parseErrorResponse<T>(err.error) }) as Observable<T>;
 				}
 				return throwError(() => err);
 			}),
