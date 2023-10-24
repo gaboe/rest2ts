@@ -70,64 +70,75 @@ export const getRequestContractType = (
 const getContractResult = (
   endpointDescription: EndpointDescription,
 ): Maybe<string> => {
-  const getTypeFromOperation = (operation: Operation) => {
-    const schema =
-      operation.responses["200"].content["application/json"].schema;
-    if (schema.type === "array") {
-      const typeName = Maybe.fromNullable(schema.items)
-        .chain(e => (e instanceof Array ? Just(e[0]) : Just(e)))
-        .chain(e => (e.$ref ? Just(e.$ref) : Nothing))
-        .chain(e => Just(getTypeNameFromRef(e)))
-        .orDefault("");
-      return Just(`${typeName}[]`);
+  const getSchemas = (operation: Operation) =>
+    Object.entries(operation.responses).map(e => ({
+      status: e[0],
+      schema: e[1]?.content?.["application/json"]?.schema ?? null,
+    }));
+
+  const getTypeName = (schema: Schema, isArray: boolean) => {
+    if (schema.oneOf) {
+      const typeNames = schema.oneOf
+        .map(s => getTypeNameFromRef(s.$ref ?? s.type ?? "") || "any")
+        .join(" | ");
+      return isArray ? `(${typeNames})[]` : typeNames;
     }
-    return Maybe.fromNullable(schema.$ref ?? schema.type).chain(e =>
-      Just(getTypeNameFromRef(e)),
-    );
+
+    const typeName =
+      getTypeNameFromRef(schema.$ref ?? schema.type ?? "") || "any";
+    return isArray ? `${typeName}[]` : typeName;
   };
+
+  const getTypeFromOperation = (schemas: ReturnType<typeof getSchemas>) => {
+    const type = schemas
+      .map(({ schema, status }) => {
+        if (!schema) {
+          return `FetchResponse<void, ${status}>`;
+        }
+
+        const isFileSchema = schema.format === "binary";
+
+        if (schema.type === "array") {
+          const typeName = Maybe.fromNullable(schema.items)
+            .chain(e => (e instanceof Array ? Just(e[0]) : Just(e)))
+            .chain(e =>
+              Just(isFileSchema ? "FileResponse" : getTypeName(e, true)),
+            )
+            .orDefault("");
+          return `FetchResponse<${typeName}, ${status}>`;
+        }
+        return `FetchResponse<${
+          isFileSchema ? "FileResponse" : getTypeName(schema, false)
+        }, ${status}>`;
+      })
+      .join(" \n| ");
+
+    return Just(`${type} \n| ErrorResponse`);
+  };
+
   const post = endpointDescription.pathObject.post;
-  if (
-    endpointDescription.methodType === "POST" &&
-    post &&
-    post.responses["200"]?.content?.["application/json"]
-  ) {
-    return getTypeFromOperation(post);
+  if (endpointDescription.methodType === "POST" && post) {
+    return getTypeFromOperation(getSchemas(post));
   }
 
   const get = endpointDescription.pathObject.get;
-  if (
-    endpointDescription.methodType === "GET" &&
-    get &&
-    get.responses["200"]?.content?.["application/json"]
-  ) {
-    return getTypeFromOperation(get);
+  if (endpointDescription.methodType === "GET" && get) {
+    return getTypeFromOperation(getSchemas(get));
   }
 
   const put = endpointDescription.pathObject.put;
-  if (
-    endpointDescription.methodType === "PUT" &&
-    put &&
-    put.responses["200"]?.content?.["application/json"]
-  ) {
-    return getTypeFromOperation(put);
+  if (endpointDescription.methodType === "PUT" && put) {
+    return getTypeFromOperation(getSchemas(put));
   }
 
   const deleteOp = endpointDescription.pathObject.delete;
-  if (
-    endpointDescription.methodType === "DELETE" &&
-    deleteOp &&
-    deleteOp.responses["200"]?.content?.["application/json"]
-  ) {
-    return getTypeFromOperation(deleteOp);
+  if (endpointDescription.methodType === "DELETE" && deleteOp) {
+    return getTypeFromOperation(getSchemas(deleteOp));
   }
 
   const patch = endpointDescription.pathObject.patch;
-  if (
-    endpointDescription.methodType === "PATCH" &&
-    patch &&
-    patch.responses["200"]?.content?.["application/json"]
-  ) {
-    return getTypeFromOperation(patch);
+  if (endpointDescription.methodType === "PATCH" && patch) {
+    return getTypeFromOperation(getSchemas(patch));
   }
 
   return Nothing;
@@ -254,10 +265,14 @@ const parametrizedMethod = (
 
   const paramSeparator = formattedFunctionParameters.length > 0 ? ", " : "";
 
+  const name = endpointDescription.name;
+  const contractResultName = getContractResultName(name);
+
   const view = {
-    name: endpointDescription.name,
+    name: name,
     contractParameterName,
     contractResult,
+    contractResultName,
     parameters,
     queryParams,
     formattedParam: `${formattedFunctionParameters}${paramSeparator}headers = new Headers()`,
@@ -265,7 +280,10 @@ const parametrizedMethod = (
   };
 
   return render(
-    "export const {{name}} = ({{{formattedParam}}}): \n\tPromise<FetchResponse<{{contractResult}}>> => {\n\t{{{queryParams}}}return api{{method}}({{{parameters}}});\n}\n",
+    [
+      "export type {{contractResultName}} = \n| {{{contractResult}}};\n",
+      "export const {{name}} = ({{{formattedParam}}}): \n\tPromise<{{contractResultName}}> => {\n\t{{{queryParams}}}return api{{method}}({{{parameters}}}) as Promise<{{contractResultName}}>;\n}\n",
+    ].join("\n"),
     view,
   );
 };
@@ -294,17 +312,26 @@ const bodyBasedMethod = (
   const comma = formattedRequestContractType.length > 0 ? ", " : "";
   const method = getMethodType();
 
+  const name = endpointDescription.name;
+
+  const contractResultName = getContractResultName(name);
+
   const view = {
-    name: endpointDescription.name,
+    name: name,
     contractParameterName,
     contractResult,
+    contractResultName,
     url: `\`\$\{API_URL\}${parametrizedUrl.url}\``,
     formattedParam: `${formattedRequestContractType}${comma}${formattedFunctionParameters}${paramSeparator}headers = new Headers()`,
     method,
   };
 
   return render(
-    "export const {{name}} = ({{{formattedParam}}}): \n\tPromise<FetchResponse<{{contractResult}}>> => \n\tapi{{method}}({{{url}}}, {{contractParameterName}}, headers);\n",
+    [
+      "export type {{contractResultName}} = \n| {{{contractResult}}};\n",
+      "export const {{name}} = ({{{formattedParam}}}): \n\tPromise<{{contractResultName}}> => \n\tapi{{method}}({{{url}}}, {{contractParameterName}}, headers) as Promise<{{contractResultName}}>;\n",
+    ].join("\n"),
+
     view,
   );
 };
@@ -358,3 +385,6 @@ export const generateServices = (swagger: SwaggerSchema) => {
 
   return `${view}\n${API}`;
 };
+function getContractResultName(name: string) {
+  return `${name.charAt(0).toUpperCase()}${name.slice(1)}FetchResponse`;
+}
