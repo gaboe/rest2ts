@@ -6,7 +6,7 @@ import {
   getEndpointsDescriptions,
   MethodType,
 } from "./ApiDescriptionGenerator";
-import { getTypeNameFromRef } from "./Common";
+import { getTypeNameFromRef, getTypeNameFromSchema } from "./Common";
 import { getRequestContractType, parametrizeUrl } from "./ServiceGenerator";
 
 const bodyBasedMethod = (
@@ -111,13 +111,12 @@ const getContractResult = (
   const getTypeName = (schema: Schema, isArray: boolean) => {
     if (schema.oneOf) {
       const typeNames = schema.oneOf
-        .map(s => getTypeNameFromRef(s.$ref ?? s.type ?? "") || "any")
+        .map(s => getTypeNameFromSchema(s))
         .join(" | ");
       return isArray ? `(${typeNames})[]` : typeNames;
     }
 
-    const typeName =
-      getTypeNameFromRef(schema.$ref ?? schema.type ?? "") || "any";
+    const typeName = getTypeNameFromSchema(schema);
     return isArray ? `${typeName}[]` : typeName;
   };
 
