@@ -25,6 +25,13 @@
         ],
         "parameters": [
           {
+            "name": "dO_Id",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
             "name": "do_num",
             "in": "query",
             "required": true,

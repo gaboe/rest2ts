@@ -210,6 +210,7 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
   });
 
   const formattedFunctionParameters = parameters
+    .sort((a, b) => (a.required ? -1 : 1))
     .map(
       e => `${e.name.split(".").join("")}${e.required ? "" : "?"}: ${e.type}`,
     )
