@@ -6,15 +6,31 @@
   },
   "host": "localhost",
   "basePath": "/WebAPI",
-  "schemes": ["http"],
+  "schemes": [
+    "http"
+  ],
   "paths": {
     "/api/Agenda/Search": {
       "get": {
-        "tags": ["Agenda"],
+        "tags": [
+          "Agenda"
+        ],
         "operationId": "Agenda_Search",
         "consumes": [],
-        "produces": ["application/json", "text/json", "application/xml", "text/xml"],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
         "parameters": [
+          {
+            "name": "dO_Id",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
           {
             "name": "do_num",
             "in": "query",
@@ -44,10 +60,23 @@
     },
     "/api/ApiUsers/IsUserValid": {
       "post": {
-        "tags": ["ApiUsers"],
+        "tags": [
+          "ApiUsers"
+        ],
         "operationId": "ApiUsers_IsUserValid",
-        "consumes": ["application/json", "text/json", "application/xml", "text/xml", "application/x-www-form-urlencoded"],
-        "produces": ["application/json", "text/json", "application/xml", "text/xml"],
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml",
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
         "parameters": [
           {
             "name": "details",
@@ -70,6 +99,13 @@
             "description": "OK",
             "schema": {
               "type": "object"
+            }
+          },
+          "201": {
+            "description": "OK",
+            "schema": {
+              "format": "int32",
+              "type": "integer"
             }
           }
         }
@@ -126,10 +162,17 @@
     },
     "/api/Case/UpdateCaseType/{caseNo}/{caseType}": {
       "patch": {
-        "tags": ["Case"],
+        "tags": [
+          "Case"
+        ],
         "operationId": "Case_UpdateCaseType",
         "consumes": [],
-        "produces": ["application/json", "text/json", "application/xml", "text/xml"],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
         "parameters": [
           {
             "name": "caseNo",
@@ -192,7 +235,10 @@
       }
     },
     "SearchDto": {
-      "required": ["EV_LIB", "EV_AGENDA"],
+      "required": [
+        "EV_LIB",
+        "EV_AGENDA"
+      ],
       "type": "object",
       "properties": {
         "DO_NUM": {
@@ -291,7 +337,12 @@
       }
     },
     "Status": {
-      "enum": ["ValidationError", "OK", "Exception", "InvalidOperation"],
+      "enum": [
+        "ValidationError",
+        "OK",
+        "Exception",
+        "InvalidOperation"
+      ],
       "type": "string"
     }
   }

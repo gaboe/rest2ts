@@ -11,7 +11,7 @@ import {
 } from "./ApiDescriptionGenerator";
 import { render } from "mustache";
 import { Maybe, Nothing, Just } from "purify-ts";
-import { getTypeNameFromRef } from "./Common";
+import { getTypeNameFromRef, getTypeNameFromSchema } from "./Common";
 
 export const getRequestContractType = (
   endpointDescription: EndpointDescription,
@@ -79,13 +79,12 @@ const getContractResult = (
   const getTypeName = (schema: Schema, isArray: boolean) => {
     if (schema.oneOf) {
       const typeNames = schema.oneOf
-        .map(s => getTypeNameFromRef(s.$ref ?? s.type ?? "") || "any")
+        .map(s => getTypeNameFromSchema(s))
         .join(" | ");
       return isArray ? `(${typeNames})[]` : typeNames;
     }
 
-    const typeName =
-      getTypeNameFromRef(schema.$ref ?? schema.type ?? "") || "any";
+    const typeName = getTypeNameFromSchema(schema);
     return isArray ? `${typeName}[]` : typeName;
   };
 
@@ -211,6 +210,7 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
   });
 
   const formattedFunctionParameters = parameters
+    .sort((a, b) => (a.required ? -1 : 1))
     .map(
       e => `${e.name.split(".").join("")}${e.required ? "" : "?"}: ${e.type}`,
     )
