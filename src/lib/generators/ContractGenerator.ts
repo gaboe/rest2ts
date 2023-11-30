@@ -50,7 +50,7 @@ const renderProperties =
             name: isNullable ? `${op}?` : op,
             type: isNullable ? `${type} | null` : type,
           };
-          return render("{{ name }}: {{ type }};", view);
+          return render("{{ name }}: {{{ type }}};", view);
         })
         .join("\n\t");
       return properties.concat(
@@ -110,13 +110,20 @@ const renderProperties =
         case "array":
           const arrayTypeSchema = Maybe.fromNullable(schema.items)
             .chain(e => (e instanceof Array ? Just(e[0]) : Just(e)))
-            .chain(e =>
-              Just(
+            .chain(e => {
+              if (e.enum) {
+                return Just(
+                  `(${e.enum
+                    .map(e => (isNaN(parseInt(e)) ? `"${e}"` : e))
+                    .join(" | ")})`,
+                );
+              }
+              return Just(
                 e.$ref
                   ? getTypeNameFromRef(e.$ref)
                   : renderProperties(swagger, areNullableStringsEnabled)(e),
-              ),
-            )
+              );
+            })
             .orDefault("");
           return `${arrayTypeSchema}[]`;
         default:

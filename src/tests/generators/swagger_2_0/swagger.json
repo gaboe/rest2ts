@@ -333,6 +333,17 @@
         "SignatureType": {
           "format": "int32",
           "type": "integer"
+        },
+        "VisibilityTypes": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "None",
+              "Partners",
+              "Client"
+            ],
+            "type": "string"
+          }
         }
       }
     },

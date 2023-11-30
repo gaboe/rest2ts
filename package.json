@@ -7,7 +7,8 @@
     "dev": "run-p start test",
     "start": "tsc -w",
     "test": "ava -w --verbose",
-    "build": "tsc"
+    "build": "tsc",
+    "debug": "ava --serial"
   },
   "repository": {
     "url": "git://github.com/gaboe/rest2ts.git",
