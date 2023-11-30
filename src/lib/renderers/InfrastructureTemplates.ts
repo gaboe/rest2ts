@@ -111,8 +111,20 @@ function apiGet<TResponse extends FetchResponse<unknown, number>>(
 ) {
   updateHeaders(headers);
   const queryString = Object.entries(paramsObject)
-    .filter(([_, val]) => val !== undefined && val !== null)
-    .map(([key, val]) => \`\${key}=\${val}\`)
+    .map(([key, value]) => {
+      if (Array.isArray(value)) {
+        return value
+          .map(val => \`\${encodeURIComponent(key)}=\${encodeURIComponent(
+            val,
+          )}\`\)
+          .join('&');
+      }
+      // Handling non-array parameters
+      return value !== undefined && value !== null 
+        ? \`\${encodeURIComponent(key)}=\${encodeURIComponent(value)}\`\ 
+        : '';
+    })
+    .filter(part => part !== '')
     .join("&");
   const maybeQueryString = queryString.length > 0 ? \`?\${queryString}\` : "";
   const requestOptions = {
