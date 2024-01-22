@@ -23,6 +23,7 @@ export const getInfrastructureTemplate = () => {
     error: null;
     status: TStatus;
     args: any;
+    responseHeaders: Headers;
   }
 
   export type FetchResponse<TData, TStatus extends number = 0> = 
@@ -60,7 +61,7 @@ export const getInfrastructureTemplate = () => {
       const status = res.status;
       try {
         const json = await res.json();
-        const response = { data: json, status: res.status, args, error: null };
+        const response = { data: json, status: res.status, args, error: null, responseHeaders: res.headers };
         CONFIG.onResponse && CONFIG.onResponse(response);
         return response as unknown as T;
       }
