@@ -51,7 +51,7 @@ export const getInfrastructureTemplate = () => {
     }
 
     const errorStatus = (args: any) => {
-      const errorResponse = { status: 0, args, data: null, error: new Error("Network error", {cause: status}) } as FetchResponse<T, Error500s>;
+      const errorResponse = { status: 0, args, data: null, error: new Error("Network error") } as FetchResponse<T, Error500s>;
       CONFIG.onResponse && CONFIG.onResponse(errorResponse);
       return errorResponse as unknown as T;
     }
