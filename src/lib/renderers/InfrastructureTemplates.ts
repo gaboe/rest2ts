@@ -97,6 +97,7 @@ function apiPost<TResponse extends FetchResponse<unknown, number>, TRequest>(
     headers,
     body: raw,
     redirect: "follow",
+    credentials: "include",
   };
 
   return fetchJson<TResponse>(url, requestOptions as any);
@@ -133,6 +134,7 @@ function apiGet<TResponse extends FetchResponse<unknown, number>>(
     method: "GET",
     headers,
     redirect: "follow",
+    credentials: "include",
   };
   return fetchJson<TResponse>(\`\${url}\${maybeQueryString}\`, requestOptions);
 }
@@ -151,6 +153,7 @@ function apiPut<TResponse extends FetchResponse<unknown, number>, TRequest>(
     headers,
     body: raw,
     redirect: "follow",
+    credentials: "include",
   };
 
   return fetchJson<TResponse>(url, requestOptions as any);
@@ -172,6 +175,7 @@ function apiDelete<TResponse extends FetchResponse<unknown, number>>(
     method: "DELETE",
     headers,
     redirect: "follow",
+    credentials: "include",
   };
   return fetchJson<TResponse>(\`\${url}\${maybeQueryString}\`, requestOptions);
 }
@@ -190,6 +194,7 @@ function apiPatch<TResponse extends FetchResponse<unknown, number>, TRequest>(
     headers,
     body: raw,
     redirect: "follow",
+    credentials: "include",
   };
 
   return fetchJson<TResponse>(url, requestOptions as any);
