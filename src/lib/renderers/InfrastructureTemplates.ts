@@ -5,7 +5,7 @@ const disclaimer = `
 
 export const getInfrastructureTemplate = (isCookiesAuthEnabled: boolean) => {
   const credentialsTemplate = isCookiesAuthEnabled
-    ? `\ncredentials: "include",`
+    ? `\n\t\tcredentials: "include",`
     : "";
 
   return `${disclaimer}// ARCHITECTURE START

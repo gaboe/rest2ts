@@ -44,7 +44,6 @@ const generateAngularContent = (
   schema: any,
   baseUrl: string,
   generatedCodeBaseUrl: string | undefined,
-
   areNullableStringsEnabled: boolean = false,
 ) => {
   const swaggerSchema = schema as SwaggerSchema;
@@ -109,5 +108,6 @@ export const generate = async (
         baseUrl,
         generatedCodeBaseUrl,
         areNullableStringsEnabled,
+        isCookiesAuthEnabled,
       );
 };
