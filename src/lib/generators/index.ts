@@ -16,7 +16,7 @@ const generateContent = (
   baseUrl: string,
   generatedCodeBaseUrl: string | undefined,
   areNullableStringsEnabled: boolean = false,
-  isCookiesAuthEnabled: boolean,
+  isCookiesAuthEnabled: boolean = false,
 ) => {
   const swaggerSchema = schema as SwaggerSchema;
   const routes = renderRoutes(generateRoutes(swaggerSchema));
