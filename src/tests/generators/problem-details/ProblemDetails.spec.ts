@@ -6,7 +6,7 @@ test("problem details", async t => {
   var api = await SwaggerParser.parse(
     "./src/tests/generators/problem-details/swagger.json",
   );
-  const content = await generate(api, "", undefined, true);
+  const content = await generate(api, "", undefined, true, false, true);
 
   t.snapshot(content);
 });

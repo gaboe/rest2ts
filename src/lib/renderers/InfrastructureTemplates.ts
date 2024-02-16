@@ -3,7 +3,11 @@ const disclaimer = `
 // THIS FILE WAS GENERATED
 // ALL CHANGES WILL BE OVERWRITTEN\n\n`;
 
-export const getInfrastructureTemplate = () => {
+export const getInfrastructureTemplate = (isCookiesAuthEnabled: boolean) => {
+  const credentialsTemplate = isCookiesAuthEnabled
+    ? `\ncredentials: "include",`
+    : "";
+
   return `${disclaimer}// ARCHITECTURE START
   type StandardError = globalThis.Error;
   type Error500s = 501 | 502 | 503 | 504 | 505 | 506 | 507 | 508 | 510 | 511;
@@ -96,8 +100,7 @@ function apiPost<TResponse extends FetchResponse<unknown, number>, TRequest>(
     method: "POST",
     headers,
     body: raw,
-    redirect: "follow",
-    credentials: "include",
+    redirect: "follow",${credentialsTemplate}
   };
 
   return fetchJson<TResponse>(url, requestOptions as any);
@@ -133,8 +136,7 @@ function apiGet<TResponse extends FetchResponse<unknown, number>>(
   const requestOptions = {
     method: "GET",
     headers,
-    redirect: "follow",
-    credentials: "include",
+    redirect: "follow",${credentialsTemplate}
   };
   return fetchJson<TResponse>(\`\${url}\${maybeQueryString}\`, requestOptions);
 }
@@ -152,8 +154,7 @@ function apiPut<TResponse extends FetchResponse<unknown, number>, TRequest>(
     method: "PUT",
     headers,
     body: raw,
-    redirect: "follow",
-    credentials: "include",
+    redirect: "follow",${credentialsTemplate}
   };
 
   return fetchJson<TResponse>(url, requestOptions as any);
@@ -174,8 +175,7 @@ function apiDelete<TResponse extends FetchResponse<unknown, number>>(
   var requestOptions = {
     method: "DELETE",
     headers,
-    redirect: "follow",
-    credentials: "include",
+    redirect: "follow",${credentialsTemplate}
   };
   return fetchJson<TResponse>(\`\${url}\${maybeQueryString}\`, requestOptions);
 }
@@ -193,8 +193,7 @@ function apiPatch<TResponse extends FetchResponse<unknown, number>, TRequest>(
     method: "PATCH",
     headers,
     body: raw,
-    redirect: "follow",
-    credentials: "include",
+    redirect: "follow",${credentialsTemplate}
   };
 
   return fetchJson<TResponse>(url, requestOptions as any);

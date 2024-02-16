@@ -14,6 +14,7 @@ type ProgramProps = {
   areNullableStringsEnabled: boolean;
   generateForAngular: boolean;
   fileName: string | undefined;
+  cookies: boolean;
 };
 
 const optimist = opt
@@ -25,6 +26,7 @@ const optimist = opt
   .alias("f", "fileName")
   .alias("nullstr", "areNullableStringsEnabled")
   .alias("ng", "generateForAngular")
+  .describe("cookies", "If set, api will be generated with cookies auth")
   .describe(
     "t",
     "If set, jwt token will be set to local storage with key as value of this param",
@@ -49,6 +51,7 @@ const {
   areNullableStringsEnabled,
   generateForAngular,
   fileName,
+  cookies,
 } = optimist.argv as ProgramProps;
 
 if (help) {
@@ -83,6 +86,7 @@ SwaggerParser.parse(source, async (err, api) => {
       urlValue,
       areNullableStringsEnabled == true,
       generateForAngular == true,
+      cookies == true,
     );
 
     fs.outputFile(`${target}/${fileName ?? "Api.ts"}`, content).catch(err => {
