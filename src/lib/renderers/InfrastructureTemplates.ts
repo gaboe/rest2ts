@@ -3,7 +3,11 @@ const disclaimer = `
 // THIS FILE WAS GENERATED
 // ALL CHANGES WILL BE OVERWRITTEN\n\n`;
 
-export const getInfrastructureTemplate = () => {
+export const getInfrastructureTemplate = (isCookiesAuthEnabled: boolean) => {
+  const credentialsTemplate = isCookiesAuthEnabled
+    ? `\n\t\tcredentials: "include",`
+    : "";
+
   return `${disclaimer}// ARCHITECTURE START
   type StandardError = globalThis.Error;
   type Error500s = 501 | 502 | 503 | 504 | 505 | 506 | 507 | 508 | 510 | 511;
@@ -51,7 +55,7 @@ export const getInfrastructureTemplate = () => {
     }
 
     const errorStatus = (args: any) => {
-      const errorResponse = { status: 0, args, data: null, error: new Error("Network error", {cause: status}) } as FetchResponse<T, Error500s>;
+      const errorResponse = { status: 0, args, data: null, error: new Error("Network error") } as FetchResponse<T, Error500s>;
       CONFIG.onResponse && CONFIG.onResponse(errorResponse);
       return errorResponse as unknown as T;
     }
@@ -96,7 +100,7 @@ function apiPost<TResponse extends FetchResponse<unknown, number>, TRequest>(
     method: "POST",
     headers,
     body: raw,
-    redirect: "follow",
+    redirect: "follow",${credentialsTemplate}
   };
 
   return fetchJson<TResponse>(url, requestOptions as any);
@@ -132,7 +136,7 @@ function apiGet<TResponse extends FetchResponse<unknown, number>>(
   const requestOptions = {
     method: "GET",
     headers,
-    redirect: "follow",
+    redirect: "follow",${credentialsTemplate}
   };
   return fetchJson<TResponse>(\`\${url}\${maybeQueryString}\`, requestOptions);
 }
@@ -150,7 +154,7 @@ function apiPut<TResponse extends FetchResponse<unknown, number>, TRequest>(
     method: "PUT",
     headers,
     body: raw,
-    redirect: "follow",
+    redirect: "follow",${credentialsTemplate}
   };
 
   return fetchJson<TResponse>(url, requestOptions as any);
@@ -171,7 +175,7 @@ function apiDelete<TResponse extends FetchResponse<unknown, number>>(
   var requestOptions = {
     method: "DELETE",
     headers,
-    redirect: "follow",
+    redirect: "follow",${credentialsTemplate}
   };
   return fetchJson<TResponse>(\`\${url}\${maybeQueryString}\`, requestOptions);
 }
@@ -189,7 +193,7 @@ function apiPatch<TResponse extends FetchResponse<unknown, number>, TRequest>(
     method: "PATCH",
     headers,
     body: raw,
-    redirect: "follow",
+    redirect: "follow",${credentialsTemplate}
   };
 
   return fetchJson<TResponse>(url, requestOptions as any);

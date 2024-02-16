@@ -16,6 +16,7 @@ const generateContent = (
   baseUrl: string,
   generatedCodeBaseUrl: string | undefined,
   areNullableStringsEnabled: boolean = false,
+  isCookiesAuthEnabled: boolean = false,
 ) => {
   const swaggerSchema = schema as SwaggerSchema;
   const routes = renderRoutes(generateRoutes(swaggerSchema));
@@ -27,7 +28,7 @@ const generateContent = (
   const view = {
     routes,
     contracts,
-    infrastructure: getInfrastructureTemplate(),
+    infrastructure: getInfrastructureTemplate(isCookiesAuthEnabled),
     services: generateServices(swaggerSchema),
     baseApiUrl,
     // raw: JSON.stringify(api, null, 2),
@@ -43,7 +44,6 @@ const generateAngularContent = (
   schema: any,
   baseUrl: string,
   generatedCodeBaseUrl: string | undefined,
-
   areNullableStringsEnabled: boolean = false,
 ) => {
   const swaggerSchema = schema as SwaggerSchema;
@@ -69,6 +69,7 @@ export const generate = async (
   generatedCodeBaseUrl: string | undefined,
   areNullableStringsEnabled: boolean = false,
   generateForAngular: boolean = false,
+  isCookiesAuthEnabled: boolean = false,
 ) => {
   if (!!api.swagger && !api.openapi) {
     const response = await axios.post(
@@ -91,6 +92,7 @@ export const generate = async (
           baseUrl,
           generatedCodeBaseUrl,
           areNullableStringsEnabled,
+          isCookiesAuthEnabled,
         );
   }
 
@@ -106,5 +108,6 @@ export const generate = async (
         baseUrl,
         generatedCodeBaseUrl,
         areNullableStringsEnabled,
+        isCookiesAuthEnabled,
       );
 };
