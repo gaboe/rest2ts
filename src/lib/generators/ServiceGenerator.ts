@@ -209,11 +209,23 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
     return param;
   });
 
+  const formatParamName = (name: string) =>
+    name
+      .split(".")
+      .join("")
+      .replace(/\[(.*?)\]/g, (_match, innerMatch) =>
+        innerMatch
+          .split("")
+          .map((char: string, i: number) =>
+            i === 0 ? char.toUpperCase() : char.toLowerCase(),
+          )
+          .join(""),
+      )
+      .trim();
+
   const formattedFunctionParameters = parameters
     .sort((a, b) => (a.required ? -1 : 1))
-    .map(
-      e => `${e.name.split(".").join("")}${e.required ? "" : "?"}: ${e.type}`,
-    )
+    .map(e => `${formatParamName(e.name)}${e.required ? "" : "?"}: ${e.type}`)
     .join(", ");
 
   const parametrizedUrl = parameters.reduce(
@@ -232,9 +244,10 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
       usedParameters: new Array<string>(),
     },
   );
+
   const unusedParameters = parameters
     .filter(e => !parametrizedUrl.usedParameters.some(x => x === e.name))
-    .map(e => `"${e.name}": ${e.name.split(".").join("")}`);
+    .map(e => `"${e.name}": ${formatParamName(e.name)}`);
 
   return { parametrizedUrl, formattedFunctionParameters, unusedParameters };
 };
