@@ -193,6 +193,15 @@
           "title": {
             "type": "string",
             "example": "Agra pojišťovna"
+          },
+          "commisionTransfer": {
+            "type": "ElectronicTradeApi\\Enum\\CommisionTransferEnum",
+            "enum": [
+              "None",
+              "TransferWithBreakdown",
+              "TransferWithoutBreakdown"
+            ],
+            "example": "None"
           }
         },
         "type": "object"

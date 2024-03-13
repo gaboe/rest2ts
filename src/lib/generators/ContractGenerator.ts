@@ -81,7 +81,12 @@ const renderProperties =
         { type },
       );
     } else if (schema.enum) {
-      return schema.enum.map(e => `${e} = "${e}"`).join(",\n\t");
+      const isAnonymousEnum =
+        schema.type !== "string" && schema.type !== "integer";
+
+      return isAnonymousEnum
+        ? schema.enum.map(e => `"${e}"`).join(" | ")
+        : schema.enum.map(e => `${e} = "${e}"`).join(",\n\t");
     } else if (schema.allOf && schema.allOf[0]) {
       const allOf = schema.allOf[0];
       if (allOf.$ref) {
