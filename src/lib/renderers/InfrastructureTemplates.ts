@@ -89,7 +89,7 @@ export const getInfrastructureTemplate = (isCookiesAuthEnabled: boolean) => {
     return undefined;
   }
   
-  function updateHeaders(headers: Headers) => {
+  function updateHeaders(headers: Headers) {
     if (!headers.has("Content-Type")) {
       headers.append("Content-Type", "application/json");
     }
