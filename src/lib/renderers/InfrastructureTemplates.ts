@@ -34,7 +34,7 @@ export const getInfrastructureTemplate = (isCookiesAuthEnabled: boolean) => {
     TStatus extends ErrorStatuses ? FetchResponseOfError: FetchResponseOfSuccess<TData, TStatus>;
 
   type Configuration = {
-    jwtKey: string | undefined;
+    jwtKey: string | undefined | (() => string | null | undefined);
     onResponse?: (response: FetchResponse<unknown, any>) => void;
   };
   
@@ -76,14 +76,24 @@ export const getInfrastructureTemplate = (isCookiesAuthEnabled: boolean) => {
       return errorStatus(args);
     }
   }
+
+  function getToken(): string | null | undefined {
+    if (typeof CONFIG.jwtKey === 'function') {
+      return CONFIG.jwtKey();
+    }
+
+    if (typeof CONFIG.jwtKey === 'string') {
+      return localStorage.getItem(CONFIG.jwtKey);
+    }
+
+    return undefined;
+  }
   
-  const updateHeaders = (headers: Headers) => {
+  function updateHeaders(headers: Headers) => {
     if (!headers.has("Content-Type")) {
       headers.append("Content-Type", "application/json");
     }
-    const token = CONFIG.jwtKey
-      ? localStorage.getItem(CONFIG.jwtKey as any)
-      : undefined;
+    const token = getToken();
     if (!headers.has("Authorization") && token) {
       headers.append("Authorization", token);
     }
