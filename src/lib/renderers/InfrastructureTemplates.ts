@@ -1,7 +1,7 @@
 const disclaimer = `
 /* eslint-disable */
 // THIS FILE WAS GENERATED
-// ALL CHANGES WILL BE OVERWRITTEN\n\n`;
+// ALL CHANGES WILL BE OVERWRITTEN\n\n`.trimStart();
 
 export const getInfrastructureTemplate = (isCookiesAuthEnabled: boolean) => {
   const credentialsTemplate = isCookiesAuthEnabled
