@@ -89,34 +89,8 @@ export const getInfrastructureTemplate = (isCookiesAuthEnabled: boolean) => {
     }
   };
 
-function apiPost<TResponse extends FetchResponse<unknown, number>, TRequest>(
-  url: string,
-  request: TRequest,
-  headers: Headers
-) {
-  var raw = JSON.stringify(request);
-  updateHeaders(headers);
-  var requestOptions = {
-    method: "POST",
-    headers,
-    body: raw,
-    redirect: "follow",${credentialsTemplate}
-  };
-
-  return fetchJson<TResponse>(url, requestOptions as any);
-}
-
-type ParamsObject = {
-  [key: string]: any;
-};
-
-function apiGet<TResponse extends FetchResponse<unknown, number>>(
-  url: string,
-  headers: Headers,
-  paramsObject: ParamsObject = {}
-) {
-  updateHeaders(headers);
-  const queryString = Object.entries(paramsObject)
+function getQueryParamsString(paramsObject: ParamsObject = {}) {
+	const queryString = Object.entries(paramsObject)
     .map(([key, value]) => {
       if (Array.isArray(value)) {
         return value
@@ -132,7 +106,41 @@ function apiGet<TResponse extends FetchResponse<unknown, number>>(
     })
     .filter(part => part !== '')
     .join("&");
-  const maybeQueryString = queryString.length > 0 ? \`?\${queryString}\` : "";
+
+	return queryString.length > 0 ? \`?\${queryString}\` : '';
+}
+
+function apiPost<TResponse extends FetchResponse<unknown, number>, TRequest>(
+  url: string,
+  request: TRequest,
+  headers: Headers,
+  paramsObject: ParamsObject = {}
+) {
+  var raw = JSON.stringify(request);
+  updateHeaders(headers);
+  var requestOptions = {
+    method: "POST",
+    headers,
+    body: raw,
+    redirect: "follow",${credentialsTemplate}
+  };
+  const maybeQueryString = getQueryParamsString(paramsObject);
+
+  return fetchJson<TResponse>(\`\${url}\${maybeQueryString}\`, requestOptions as any);
+}
+
+type ParamsObject = {
+  [key: string]: any;
+};
+
+function apiGet<TResponse extends FetchResponse<unknown, number>>(
+  url: string,
+  headers: Headers,
+  paramsObject: ParamsObject = {}
+) {
+  updateHeaders(headers);
+  
+  const maybeQueryString = getQueryParamsString(paramsObject);
   const requestOptions = {
     method: "GET",
     headers,
@@ -144,7 +152,8 @@ function apiGet<TResponse extends FetchResponse<unknown, number>>(
 function apiPut<TResponse extends FetchResponse<unknown, number>, TRequest>(
   url: string,
   request: TRequest,
-  headers: Headers
+  headers: Headers,
+  paramsObject: ParamsObject = {}
 ) {
   updateHeaders(headers);
 
@@ -156,8 +165,9 @@ function apiPut<TResponse extends FetchResponse<unknown, number>, TRequest>(
     body: raw,
     redirect: "follow",${credentialsTemplate}
   };
+  const maybeQueryString = getQueryParamsString(paramsObject);
 
-  return fetchJson<TResponse>(url, requestOptions as any);
+  return fetchJson<TResponse>(\`\${url}\${maybeQueryString}\`, requestOptions as any);
 }
 
 function apiDelete<TResponse extends FetchResponse<unknown, number>>(
@@ -183,7 +193,8 @@ function apiDelete<TResponse extends FetchResponse<unknown, number>>(
 function apiPatch<TResponse extends FetchResponse<unknown, number>, TRequest>(
   url: string,
   request: TRequest,
-  headers: Headers
+  headers: Headers,
+  paramsObject: ParamsObject = {}
 ) {
   updateHeaders(headers);
 
@@ -195,8 +206,9 @@ function apiPatch<TResponse extends FetchResponse<unknown, number>, TRequest>(
     body: raw,
     redirect: "follow",${credentialsTemplate}
   };
+  const maybeQueryString = getQueryParamsString(paramsObject);
 
-  return fetchJson<TResponse>(url, requestOptions as any);
+  return fetchJson<TResponse>(\`\${url}\${maybeQueryString}\`, requestOptions as any);
 }
 // ARCHITECTURE END
 `;
@@ -346,9 +358,11 @@ function apiPost<T extends ResponseResult<unknown, number>, U = unknown>(
 	httpClient: HttpClient,
 	url: string,
 	body: U,
+  params?: QueryParams,
 ): Observable<T | never> {
+  const queryUrl = !!params ? createQueryUrl(url, params) : url;
 	return httpClient
-		.post<HttpResponse<T['response']>>(url, body, {
+		.post<HttpResponse<T['response']>>(queryUrl, body, {
 			observe: 'response',
 		})
 		.pipe(
@@ -372,9 +386,11 @@ function apiPut<T extends ResponseResult<unknown, number>, U = unknown>(
 	httpClient: HttpClient,
 	url: string,
 	body: U,
+  params?: QueryParams,
 ): Observable<T | never> {
+  const queryUrl = !!params ? createQueryUrl(url, params) : url;
 	return httpClient
-		.put<HttpResponse<T['response']>>(url, body, {
+		.put<HttpResponse<T['response']>>(queryUrl, body, {
 			observe: 'response',
 		})
 		.pipe(
@@ -423,9 +439,11 @@ function apiPatch<T extends ResponseResult<unknown, number>, U = unknown>(
 	httpClient: HttpClient,
 	url: string,
 	body: U,
+  params?: QueryParams,
 ): Observable<T | never> {
+  const queryUrl = !!params ? createQueryUrl(url, params) : url;
 	return httpClient
-		.patch<HttpResponse<T['response']>>(url, body, {
+		.patch<HttpResponse<T['response']>>(queryUrl, body, {
 			observe: 'response',
 		})
 		.pipe(
