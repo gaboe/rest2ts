@@ -1,58 +1,7 @@
 {
-  "name": "rest2ts",
-  "version": "4.6.2",
+  "private": true,
+  "version": "0.0.0",
   "description": "",
-  "main": "index.ts",
-  "scripts": {
-    "dev": "run-p start test",
-    "start": "tsc -w",
-    "test": "ava -w --verbose",
-    "build": "tsc",
-    "debug": "ava --serial"
-  },
-  "repository": {
-    "url": "git://github.com/gaboe/rest2ts.git",
-    "type": "git"
-  },
-  "author": "Gabriel Ecegi",
-  "license": "ISC",
-  "bin": {
-    "rest2ts": "./build/index.js"
-  },
-  "rejectUnauthorized": false,
-  "dependencies": {
-    "axios": "^0.27.2",
-    "fs-extra": "^9.0.0",
-    "mustache": "^4.0.1",
-    "optimist": "^0.6.1",
-    "purify-ts": "^0.14.1",
-    "swagger-parser": "^9.0.1",
-    "typescript": "^5.1.6"
-  },
-  "devDependencies": {
-    "@ava/typescript": "^1.1.1",
-    "@types/express": "^4.17.6",
-    "@types/fs-extra": "^8.1.0",
-    "@types/mustache": "^4.0.1",
-    "@types/node": "^13.11.1",
-    "@types/node-fetch": "^2.5.6",
-    "@types/optimist": "0.0.29",
-    "@types/test-listen": "^1.1.0",
-    "ava": "^5.1.1",
-    "express": "^4.17.1",
-    "node-fetch": "^2.6.0",
-    "npm-run-all": "^4.1.5",
-    "swagger-schema-official": "^2.0.0-bab6bed",
-    "test-listen": "^1.1.0"
-  },
-  "ava": {
-    "typescript": {
-      "rewritePaths": {
-        "src/": "build/"
-      }
-    },
-    "ignoredByWatcher": [
-      "tests/infrastructure/ApiFetch.spec.ts"
-    ]
-  }
+  "scripts": {},
+  "rejectUnauthorized": false
 }
