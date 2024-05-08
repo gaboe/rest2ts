@@ -23,6 +23,13 @@ export const getRequestContractType = (
       ? (schema.items as Schema).$ref
       : schema.$ref;
 
+    if (schema.type === "string" || schema.type === "number") {
+      return Just({
+        contractParameterName: "body",
+        formattedParam: `body: ${schema.type}`,
+      });
+    }
+
     return Maybe.fromNullable(refName)
       .chain(e => Just(getTypeNameFromRef(e)))
       .chain(v =>
@@ -153,6 +160,8 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
     switch (schema.type) {
       case "integer":
         return `number${nullability}`;
+      case "string":
+        return `string${nullability}`;
       case "object":
         return `{}${nullability}`;
       case "array":
@@ -231,7 +240,8 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
   const parametrizedUrl = parameters.reduce(
     ({ url, usedParameters }, e) => {
       const match = `\{${e.name}\}`;
-      var index = url.indexOf(match);
+      const index = url.indexOf(match);
+
       return index > -1
         ? {
             url: url.replace(match, `\$${match}`),
@@ -319,11 +329,20 @@ const bodyBasedMethod = (
     }
   };
 
-  const { parametrizedUrl, formattedFunctionParameters } =
+  const { parametrizedUrl, formattedFunctionParameters, unusedParameters } =
     parametrizeUrl(endpointDescription);
   const paramSeparator = formattedFunctionParameters.length > 0 ? ", " : "";
   const comma = formattedRequestContractType.length > 0 ? ", " : "";
   const method = getMethodType();
+
+  const queryParams =
+    unusedParameters.length > 0
+      ? render("const queryParams = {\n\t\t{{{rows}}}\n\t}\n\t", {
+          rows: unusedParameters.join("\t\t,\n"),
+        })
+      : "";
+
+  const queryParameters = unusedParameters.length > 0 ? `, queryParams` : "";
 
   const name = endpointDescription.name;
 
@@ -337,12 +356,14 @@ const bodyBasedMethod = (
     url: `\`\$\{API_URL\}${parametrizedUrl.url}\``,
     formattedParam: `${formattedRequestContractType}${comma}${formattedFunctionParameters}${paramSeparator}headers = new Headers()`,
     method,
+    queryParams,
+    queryParameters,
   };
 
   return render(
     [
       "export type {{contractResultName}} = \n| {{{contractResult}}};\n",
-      "export const {{name}} = ({{{formattedParam}}}): \n\tPromise<{{contractResultName}}> => \n\tapi{{method}}({{{url}}}, {{contractParameterName}}, headers) as Promise<{{contractResultName}}>;\n",
+      `export const {{name}} = ({{{formattedParam}}}): \n\tPromise<{{contractResultName}}> => {\n\t{{{queryParams}}}return api{{method}}({{{url}}}, {{contractParameterName}}, headers{{queryParameters}}) as Promise<{{contractResultName}}>;\n}\n`,
     ].join("\n"),
 
     view,

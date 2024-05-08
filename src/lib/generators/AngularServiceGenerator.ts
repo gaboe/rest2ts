@@ -27,10 +27,18 @@ const bodyBasedMethod = (
     }
   };
 
-  const { parametrizedUrl, formattedFunctionParameters } =
+  const { parametrizedUrl, formattedFunctionParameters, unusedParameters } =
     parametrizeUrl(endpointDescription);
   const comma = formattedRequestContractType.length > 0 ? ", " : "";
   const method = getMethodType();
+
+  const queryParams =
+    unusedParameters.length > 0
+      ? render("const queryParams = {\n\t\t{{{rows}}}\n\t}\n\t", {
+          rows: unusedParameters.join("\t\t,\n"),
+        })
+      : "";
+  const queryParameters = unusedParameters.length > 0 ? `, queryParams` : "";
 
   const view = {
     name: endpointDescription.name,
@@ -41,12 +49,14 @@ const bodyBasedMethod = (
       formattedFunctionParameters ? comma : ""
     }${formattedFunctionParameters}`,
     method,
+    queryParams,
+    queryParameters,
   };
 
   return render(
     `
-    {{name}}({{{formattedParam}}}): Observable<{{{contractResult}}}> { 
-      return api{{method}}<{{{contractResult}}}>(this.httpClient, {{{url}}}, {{contractParameterName}});
+    {{name}}({{{formattedParam}}}): Observable<{{{contractResult}}}> {\n\t{{{queryParams}}}
+      return api{{method}}<{{{contractResult}}}>(this.httpClient, {{{url}}}, {{contractParameterName}}{{queryParameters}});
     }
   `,
     view,
