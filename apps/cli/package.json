@@ -1,0 +1,30 @@
+{
+  "name": "rest2ts",
+  "private": false,
+  "version": "4.6.2",
+  "type": "commonjs",
+  "bin": {
+    "rest2ts": "./dist/index.js"
+  },
+  "repository": {
+    "url": "git://github.com/gaboe/rest2ts.git",
+    "type": "git"
+  },
+  "author": "Gabriel Ecegi",
+  "scripts": {
+    "lint": "eslint . --max-warnings 0",
+    "build": "ncc build ./src/main.ts -m"
+  },
+  "dependencies": {
+    "commander": "^12.0.0"
+  },
+  "devDependencies": {
+    "@next/eslint-plugin-next": "^14.1.1",
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@types/eslint": "^8.56.5",
+    "@types/node": "^20.11.24",
+    "eslint": "^8.57.0",
+    "typescript": "^5.3.3"
+  }
+}
