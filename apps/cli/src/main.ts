@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { Command } from "commander";
-// import { outputFile } from "fs-extra";
-// import { generateApiContent } from "@rest2ts/core";
+import { outputFile } from "fs-extra";
+import { generateApiContent } from "@rest2ts/core";
 
 type ProgramProps = {
   source: string | undefined;
@@ -33,12 +33,10 @@ program
 program.parse(process.argv);
 
 const options = program.opts<ProgramProps>();
-console.log("🚀 ~ options:", options);
 
 const { source, target, urlValue, generateForAngular, fileName, cookies } =
   options;
 
-// Kontrola potrebných argumentov
 if (!source) {
   console.error("Error: Source -s is required.");
   program.outputHelp();
@@ -53,7 +51,25 @@ if (!target) {
 
 console.log(`Getting openAPI from ${source}`);
 
+// eslint-disable-next-line turbo/no-undeclared-env-vars
 process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = "0";
 
 const baseUrl = source.substring(0, source.indexOf("/swagger/"));
 console.log("🚀 ~ baseUrl:", baseUrl);
+
+generateApiContent(source, baseUrl, urlValue, generateForAngular, cookies)
+  .then((content) => {
+    if (content === null) {
+      console.error("Failed to generate api content");
+      process.exit(1);
+    }
+
+    outputFile(`${target}/${fileName ?? "Api.ts"}`, content).catch((err) => {
+      console.error(err);
+      process.exit(1);
+    });
+  })
+  .catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });

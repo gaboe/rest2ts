@@ -13,18 +13,22 @@
   "author": "Gabriel Ecegi",
   "scripts": {
     "lint": "eslint . --max-warnings 0",
-    "build": "ncc build ./src/main.ts -m"
+    "build": "ncc build ./src/main.ts"
   },
   "dependencies": {
-    "commander": "^12.0.0"
+    "@rest2ts/core": "workspace:*",
+    "commander": "^12.0.0",
+    "fs-extra": "^11.2.0"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^14.1.1",
-    "@repo/eslint-config": "workspace:*",
-    "@repo/typescript-config": "workspace:*",
+    "@rest2ts/eslint-config": "workspace:*",
+    "@rest2ts/typescript-config": "workspace:*",
     "@types/eslint": "^8.56.5",
+    "@types/fs-extra": "^11.0.4",
     "@types/node": "^20.11.24",
     "eslint": "^8.57.0",
+    "i": "^0.3.7",
     "typescript": "^5.3.3"
   }
 }

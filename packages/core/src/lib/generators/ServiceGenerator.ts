@@ -14,10 +14,10 @@ import { getTypeNameFromRef, getTypeNameFromSchema } from "./Common";
 import { render } from "../renderers/Renderer";
 
 export const getRequestContractType = (
-  endpointDescription: EndpointDescription,
+  endpointDescription: EndpointDescription
 ): Maybe<{ contractParameterName: string; formattedParam: string }> => {
   const getContractType = (op: Operation) => {
-    const schema = op.requestBody.content["application/json"].schema;
+    const schema = op.requestBody.content["application/json"]!.schema;
     const isRequestParamArray = schema.type === "array" && !!schema.items;
     const refName = isRequestParamArray
       ? (schema.items as Schema).$ref
@@ -31,14 +31,14 @@ export const getRequestContractType = (
     }
 
     return Maybe.fromNullable(refName)
-      .chain(e => Just(getTypeNameFromRef(e)))
-      .chain(v =>
+      .chain((e) => Just(getTypeNameFromRef(e)))
+      .chain((v) =>
         Just({
           contractParameterName: "requestContract",
           formattedParam: `requestContract: ${v}${
             isRequestParamArray ? "[]" : ""
           }`,
-        }),
+        })
       );
   };
 
@@ -75,10 +75,10 @@ export const getRequestContractType = (
 };
 
 const getContractResult = (
-  endpointDescription: EndpointDescription,
+  endpointDescription: EndpointDescription
 ): Maybe<string> => {
   const getSchemas = (operation: Operation) =>
-    Object.entries(operation.responses).map(e => ({
+    Object.entries(operation.responses).map((e) => ({
       status: e[0],
       schema: e[1]?.content?.["application/json"]?.schema ?? null,
     }));
@@ -86,7 +86,7 @@ const getContractResult = (
   const getTypeName = (schema: Schema, isArray: boolean) => {
     if (schema.oneOf) {
       const typeNames = schema.oneOf
-        .map(s => getTypeNameFromSchema(s))
+        .map((s) => getTypeNameFromSchema(s))
         .join(" | ");
       return isArray ? `(${typeNames})[]` : typeNames;
     }
@@ -106,9 +106,9 @@ const getContractResult = (
 
         if (schema.type === "array") {
           const typeName = Maybe.fromNullable(schema.items)
-            .chain(e => (e instanceof Array ? Just(e[0]) : Just(e)))
-            .chain(e =>
-              Just(isFileSchema ? "FileResponse" : getTypeName(e, true)),
+            .chain((e) => (e instanceof Array ? Just(e[0]) : Just(e)))
+            .chain((e) =>
+              Just(isFileSchema ? "FileResponse" : getTypeName(e!, true))
             )
             .orDefault("");
           return `FetchResponse<${typeName}, ${status}>`;
@@ -164,21 +164,22 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
         return `string${nullability}`;
       case "object":
         return `{}${nullability}`;
-      case "array":
+      case "array": {
         const arrayTypeSchema = Maybe.fromNullable(schema.items)
-          .chain(e => (e instanceof Array ? Just(e[0]) : Just(e)))
-          .chain(e =>
-            Just(e.$ref ? getTypeNameFromRef(e.$ref) : getType(parameter, e)),
+          .chain((e) => (e instanceof Array ? Just(e[0]) : Just(e)))
+          .chain((e) =>
+            Just(e!.$ref ? getTypeNameFromRef(e!.$ref) : getType(parameter, e!))
           )
           .orDefault("");
         return `${arrayTypeSchema}[]${nullability}`;
-      default:
+      }
+      default: {
         const oneOf = (schema as any).oneOf as Schema[];
 
         if (!!oneOf) {
           const types = oneOf
-            .filter(e => !!e.$ref)
-            .map(e => getTypeNameFromRef(e.$ref!))
+            .filter((e) => !!e.$ref)
+            .map((e) => getTypeNameFromRef(e.$ref!))
             .join(" | ");
 
           return `${types}${nullability}`;
@@ -189,6 +190,7 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
           schema.allOf ||
           (schema.$ref && getTypeNameFromRef(schema.$ref))
         }${nullability}`;
+      }
     }
   };
 
@@ -209,7 +211,7 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
     }
   };
 
-  const parameters = (getParameters() ?? []).map(e => {
+  const parameters = (getParameters() ?? []).map((e) => {
     const param = {
       name: e.name,
       type: getType(e, (e as any).schema),
@@ -226,15 +228,15 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
         innerMatch
           .split("")
           .map((char: string, i: number) =>
-            i === 0 ? char.toUpperCase() : char.toLowerCase(),
+            i === 0 ? char.toUpperCase() : char.toLowerCase()
           )
-          .join(""),
+          .join("")
       )
       .trim();
 
   const formattedFunctionParameters = parameters
-    .sort(a => (a.required ? -1 : 1))
-    .map(e => `${formatParamName(e.name)}${e.required ? "" : "?"}: ${e.type}`)
+    .sort((a) => (a.required ? -1 : 1))
+    .map((e) => `${formatParamName(e.name)}${e.required ? "" : "?"}: ${e.type}`)
     .join(", ");
 
   const parametrizedUrl = parameters.reduce(
@@ -252,12 +254,12 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
     {
       url: endpointDescription.originalPath,
       usedParameters: new Array<string>(),
-    },
+    }
   );
 
   const unusedParameters = parameters
-    .filter(e => !parametrizedUrl.usedParameters.some(x => x === e.name))
-    .map(e => `"${e.name}": ${formatParamName(e.name)}`);
+    .filter((e) => !parametrizedUrl.usedParameters.some((x) => x === e.name))
+    .map((e) => `"${e.name}": ${formatParamName(e.name)}`);
 
   return { parametrizedUrl, formattedFunctionParameters, unusedParameters };
 };
@@ -265,7 +267,7 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
 const parametrizedMethod = (
   endpointDescription: EndpointDescription,
   contractParameterName: string,
-  contractResult: string,
+  contractResult: string
 ) => {
   const { unusedParameters, parametrizedUrl, formattedFunctionParameters } =
     parametrizeUrl(endpointDescription);
@@ -307,7 +309,7 @@ const parametrizedMethod = (
       "export type {{contractResultName}} = \n| {{{contractResult}}};\n",
       "export const {{name}} = ({{{formattedParam}}}): \n\tPromise<{{contractResultName}}> => {\n\t{{{queryParams}}}return api{{method}}({{{parameters}}}) as Promise<{{contractResultName}}>;\n}\n",
     ].join("\n"),
-    view,
+    view
   );
 };
 
@@ -316,7 +318,7 @@ const bodyBasedMethod = (
   formattedRequestContractType: string,
   contractParameterName: string,
   contractResult: string,
-  methodType: MethodType,
+  methodType: MethodType
 ) => {
   const getMethodType = () => {
     switch (methodType) {
@@ -366,14 +368,14 @@ const bodyBasedMethod = (
       `export const {{name}} = ({{{formattedParam}}}): \n\tPromise<{{contractResultName}}> => {\n\t{{{queryParams}}}return api{{method}}({{{url}}}, {{contractParameterName}}, headers{{queryParameters}}) as Promise<{{contractResultName}}>;\n}\n`,
     ].join("\n"),
 
-    view,
+    view
   );
 };
 
 export const generateServices = (swagger: SwaggerSchema) => {
   const endpoints = getEndpointsDescriptions(swagger);
   const view = endpoints
-    .map(endpointDescription => {
+    .map((endpointDescription) => {
       const {
         formattedParam: formattedRequestContractType,
         contractParameterName,
@@ -395,7 +397,7 @@ export const generateServices = (swagger: SwaggerSchema) => {
           formattedRequestContractType,
           contractParameterName,
           contractResult,
-          endpointDescription.methodType,
+          endpointDescription.methodType
         );
       }
       if (
@@ -405,7 +407,7 @@ export const generateServices = (swagger: SwaggerSchema) => {
         return parametrizedMethod(
           endpointDescription,
           contractParameterName,
-          contractResult,
+          contractResult
         );
       }
 
@@ -414,7 +416,7 @@ export const generateServices = (swagger: SwaggerSchema) => {
     .join("\n");
 
   const API = render(`export const API = { \n\t{{{ rows }}}\n}\n`, {
-    rows: endpoints.map(e => e.name).join(",\n\t"),
+    rows: endpoints.map((e) => e.name).join(",\n\t"),
   });
 
   return `${view}\n${API}`;

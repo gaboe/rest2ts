@@ -31,4 +31,8 @@ module.exports = {
       files: ["*.js?(x)", "*.ts?(x)"],
     },
   ],
+  rules: {
+    "no-extra-boolean-cast": "off",
+    "no-useless-escape": "off",
+  },
 };

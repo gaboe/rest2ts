@@ -5,18 +5,18 @@ import { Maybe, Just } from "purify-ts";
 
 const addSchemaAllOf = (
   allOf: Schema[] | null,
-  swagger: SwaggerSchema,
+  swagger: SwaggerSchema
 ): string => {
   if (!allOf?.length) {
     return "";
   }
 
   const properties = allOf
-    .filter(x => !!x.$ref)
+    .filter((x) => !!x.$ref)
     .map(({ $ref }) => {
-      const typeName = getTypeNameFromRef($ref!);
+      const typeName = getTypeNameFromRef($ref!)!;
       const t = swagger.components.schemas[typeName];
-      return renderProperties(swagger)(t);
+      return renderProperties(swagger)(t!);
     })
     .join("\n\t");
 
@@ -31,7 +31,7 @@ const renderProperties =
       !!Object.keys(schema?.properties ?? {}).length
     ) {
       const properties = Object.keys(schema.properties ?? {})
-        .map(op => {
+        .map((op) => {
           const childProp = (schema.properties as any)[op] as Schema;
 
           const type = renderProperties(swagger)(childProp);
@@ -51,7 +51,7 @@ const renderProperties =
       !!Object.keys(schema?.additionalProperties ?? {}).length
     ) {
       const type = renderProperties(swagger)(
-        schema.additionalProperties as Schema,
+        schema.additionalProperties as Schema
       );
 
       const isNullable: boolean = (schema.additionalProperties as any).nullable;
@@ -60,29 +60,29 @@ const renderProperties =
         isNullable
           ? "{[key: string | number]: {{{type}}}} | null"
           : "{[key: string | number]: {{{type}}}}",
-        { type },
+        { type }
       );
     } else if (schema.enum) {
       const isAnonymousEnum =
         schema.type !== "string" && schema.type !== "integer";
 
       return isAnonymousEnum
-        ? schema.enum.map(e => `"${e}"`).join(" | ")
-        : schema.enum.map(e => `${e} = "${e}"`).join(",\n\t");
+        ? schema.enum.map((e) => `"${e}"`).join(" | ")
+        : schema.enum.map((e) => `${e} = "${e}"`).join(",\n\t");
     } else if (schema.allOf && schema.allOf[0]) {
       const allOf = schema.allOf[0];
       if (allOf.$ref) {
-        const typeName = getTypeNameFromRef(allOf.$ref);
-        const tt = swagger.components.schemas[typeName];
+        const typeName = getTypeNameFromRef(allOf.$ref)!;
+        const tt = swagger.components.schemas[typeName]!;
         if (schema.type === "object") {
           return renderProperties(swagger)(tt);
         } else if (tt.type === "object") {
-          return typeName;
+          return typeName!;
         }
         return `typeof ${typeName}`;
       }
       if (allOf.enum) {
-        return allOf.enum.map(e => e).join(" | ");
+        return allOf.enum.map((e) => e).join(" | ");
       }
       if (allOf.type === "object") {
         return "any";
@@ -94,34 +94,35 @@ const renderProperties =
           return "number";
         case "object":
           return "unknown";
-        case "array":
+        case "array": {
           const arrayTypeSchema = Maybe.fromNullable(schema.items)
-            .chain(e => (e instanceof Array ? Just(e[0]) : Just(e)))
-            .chain(e => {
-              if (e.enum) {
+            .chain((e) => (e instanceof Array ? Just(e[0]) : Just(e)))
+            .chain((e) => {
+              if (e!.enum) {
                 return Just(
-                  `(${e.enum
-                    .map(e => (isNaN(parseInt(e)) ? `"${e}"` : e))
-                    .join(" | ")})`,
+                  `(${e!.enum
+                    .map((e) => (isNaN(parseInt(e)) ? `"${e}"` : e))
+                    .join(" | ")})`
                 );
               }
               return Just(
-                e.$ref
-                  ? getTypeNameFromRef(e.$ref)
-                  : renderProperties(swagger)(e),
+                e!.$ref
+                  ? getTypeNameFromRef(e!.$ref)
+                  : renderProperties(swagger)(e!)
               );
             })
             .orDefault("");
           return `${arrayTypeSchema}[]`;
+        }
         default:
           return (schema.type || schema.allOf) as string;
       }
     } else if (schema.$ref) {
-      return schema.$ref.split("/").reverse()[0];
+      return schema.$ref.split("/").reverse()[0]!;
     } else if ((schema as any).oneOf) {
       const oneOf = (schema as any).oneOf as Schema[];
 
-      return oneOf.map(e => renderProperties(swagger)(e)).join(" | ");
+      return oneOf.map((e) => renderProperties(swagger)(e)).join(" | ");
     } else {
       return "any";
     }
@@ -131,8 +132,8 @@ export const generateContracts = (swaggerSchema: SwaggerSchema) => {
   const rp = renderProperties(swaggerSchema);
 
   const rows = Object.keys(swaggerSchema.components?.schemas || [])
-    .map(k => {
-      const o = swaggerSchema.components.schemas[k];
+    .map((k) => {
+      const o = swaggerSchema.components.schemas[k]!;
 
       const view = {
         name: k,
@@ -142,7 +143,7 @@ export const generateContracts = (swaggerSchema: SwaggerSchema) => {
       if (o.enum) {
         return render(
           `export enum {{ name }} {\n\t{{{ properties }}}\n};\n`,
-          view,
+          view
         );
       }
 
@@ -150,7 +151,7 @@ export const generateContracts = (swaggerSchema: SwaggerSchema) => {
         return view.properties.length > 0 && view.properties !== "unknown"
           ? render(
               `export type {{ name }} = {\n\t{{{ properties }}}\n};\n`,
-              view,
+              view
             )
           : render(`export type {{ name }} = {};\n`, view);
       }

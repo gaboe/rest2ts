@@ -14,7 +14,7 @@ const bodyBasedMethod = (
   formattedRequestContractType: string,
   contractParameterName: string,
   contractResult: string,
-  methodType: MethodType,
+  methodType: MethodType
 ) => {
   const getMethodType = () => {
     switch (methodType) {
@@ -59,18 +59,18 @@ const bodyBasedMethod = (
       return api{{method}}<{{{contractResult}}}>(this.httpClient, {{{url}}}, {{contractParameterName}}{{queryParameters}});
     }
   `,
-    view,
+    view
   );
 };
 
 const parametrizedMethod = (
   endpointDescription: EndpointDescription,
-  contractResult: string,
+  contractResult: string
 ) => {
   const { unusedParameters, parametrizedUrl, formattedFunctionParameters } =
     parametrizeUrl(endpointDescription);
   const method = `${endpointDescription.methodType.charAt(
-    0,
+    0
   )}${endpointDescription.methodType.substring(1).toLowerCase()}${
     endpointDescription.isFileResponse ? "File" : ""
   }`;
@@ -86,7 +86,7 @@ const parametrizedMethod = (
     `\`\$\{this.baseUrl\}${parametrizedUrl.url}\``,
     ...[unusedParameters.length > 0 ? "queryParams" : ""],
   ]
-    .filter(x => !!x)
+    .filter((x) => !!x)
     .join(", ");
 
   const view = {
@@ -105,15 +105,15 @@ const parametrizedMethod = (
       return api{{method}}<{{{contractResult}}}>(this.httpClient, {{{parameters}}});
     }
     `,
-    view,
+    view
   );
 };
 
 const getContractResult = (
-  endpointDescription: EndpointDescription,
+  endpointDescription: EndpointDescription
 ): Maybe<string> => {
   const getSchemas = (operation: Operation) =>
-    Object.entries(operation.responses).map(e => ({
+    Object.entries(operation.responses).map((e) => ({
       status: e[0],
       schema: e[1]?.content?.["application/json"]?.schema ?? null,
     }));
@@ -121,7 +121,7 @@ const getContractResult = (
   const getTypeName = (schema: Schema, isArray: boolean) => {
     if (schema.oneOf) {
       const typeNames = schema.oneOf
-        .map(s => getTypeNameFromSchema(s))
+        .map((s) => getTypeNameFromSchema(s))
         .join(" | ");
       return isArray ? `(${typeNames})[]` : typeNames;
     }
@@ -141,9 +141,9 @@ const getContractResult = (
 
         if (schema.type === "array") {
           const typeName = Maybe.fromNullable(schema.items)
-            .chain(e => (e instanceof Array ? Just(e[0]) : Just(e)))
-            .chain(e =>
-              Just(isFileSchema ? "FileResponse" : getTypeName(e, true)),
+            .chain((e) => (e instanceof Array ? Just(e[0]) : Just(e)))
+            .chain((e) =>
+              Just(isFileSchema ? "FileResponse" : getTypeName(e!, true))
             )
             .orDefault("");
           return `ResponseResult<${typeName}, ${status}>`;
@@ -187,7 +187,7 @@ const getContractResult = (
 
 export const generateAngularServices = (swagger: SwaggerSchema) => {
   const endpoints = getEndpointsDescriptions(swagger).map(
-    endpointDescription => {
+    (endpointDescription) => {
       const {
         formattedParam: formattedRequestContractType,
         contractParameterName,
@@ -209,7 +209,7 @@ export const generateAngularServices = (swagger: SwaggerSchema) => {
           formattedRequestContractType,
           contractParameterName,
           contractResult,
-          endpointDescription.methodType,
+          endpointDescription.methodType
         );
       }
       if (
@@ -220,7 +220,7 @@ export const generateAngularServices = (swagger: SwaggerSchema) => {
       }
 
       return `// ${endpointDescription.name}\n`;
-    },
+    }
   );
 
   const view = render(
@@ -246,7 +246,7 @@ export class ApiService {
   `,
     {
       rows: endpoints.join("\n"),
-    },
+    }
   );
 
   return `${view}\n`;
