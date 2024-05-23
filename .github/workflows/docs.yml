@@ -47,6 +47,8 @@ jobs:
           #standalone: # optional, default is false            
       - name: Install dependencies
         run: pnpm install
+      - name: Go to docs directory
+        run: cd apps/docs  
       - name: Build
         run: pnpm build
       # 👆 Build steps
