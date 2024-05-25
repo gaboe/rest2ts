@@ -7,6 +7,7 @@ type ProgramProps = {
   source: string | undefined;
   target: string | undefined;
   urlValue: string | undefined;
+  url: string | undefined;
   help: never;
   areNullableStringsEnabled: boolean;
   generateForAngular: boolean;
@@ -21,6 +22,7 @@ program
   .usage("-s <source> -t <target> [options]")
   .option("-s, --source <path>", "Path to the swagger file")
   .option("-t, --target <path>", "Target path")
+  .option("-u", "--url <value>")
   .option("-v, --url-value <value>", "Base URL value used in generated code")
   .option(
     "-ng, --generate-for-angular",
@@ -34,7 +36,7 @@ program.parse(process.argv);
 
 const options = program.opts<ProgramProps>();
 
-const { source, target, urlValue, generateForAngular, fileName, cookies } =
+const { source, target, urlValue, url, generateForAngular, fileName, cookies } =
   options;
 
 if (!source) {
@@ -49,6 +51,12 @@ if (!target) {
   process.exit(1);
 }
 
+if (!!urlValue) {
+  console.warn(
+    "Deprecation: argument --urlValue or -v is deprecated. Please use --url or -u instead."
+  );
+}
+
 console.log(`Getting openAPI from ${source}`);
 
 // eslint-disable-next-line turbo/no-undeclared-env-vars
@@ -57,7 +65,13 @@ process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = "0";
 const baseUrl = source.substring(0, source.indexOf("/swagger/"));
 console.log("🚀 ~ baseUrl:", baseUrl);
 
-generateApiContent(source, baseUrl, urlValue, generateForAngular, cookies)
+generateApiContent(
+  source,
+  baseUrl,
+  urlValue ?? url,
+  generateForAngular,
+  cookies
+)
   .then((content) => {
     if (content === null) {
       console.error("Failed to generate api content");

@@ -2,46 +2,50 @@
 sidebar_position: 1
 ---
 
-# Tutorial Intro
+# Intro
 
-Let's discover **Docusaurus in less than 5 minutes**.
+## Motivation
 
-## Getting Started
+Do you know that feeling, when you try to generate Typescript types from API, but the type generator
 
-Get started by **creating a new site**.
+❌ requires you to install some Java files on your machine
 
-Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new)**.
+❌ is hard to integrate in your project
 
-### What you'll need
+❌ doesn't handle your complex types
 
-- [Node.js](https://nodejs.org/en/download/) version 18.0 or above:
-  - When installing Node.js, you are recommended to check all checkboxes related to dependencies.
+❌ is slowly generating whole folder structure
 
-## Generate a new site
+❌ can't handle nullable types or enums
 
-Generate a new Docusaurus site using the **classic template**.
+...
 
-The classic template will automatically be added to your project after you run the command:
+✅ And that's why REST2TS was created.
 
-```bash
-npm init docusaurus@latest my-website classic
-```
+## Setup
 
-You can type this command into Command Prompt, Powershell, Terminal, or any other integrated terminal of your code editor.
+✅ You need to have node.js installed (which you already probably have).
 
-The command also installs all necessary dependencies you need to run Docusaurus.
-
-## Start your site
-
-Run the development server:
+So just run:
 
 ```bash
-cd my-website
-npm run start
+npx rest2ts --source https://petstore.swagger.io/v2/swagger.json --target ./api -v "'https://petstore.swagger.io/v2'"
 ```
 
-The `cd` command changes the directory you're working with. In order to work with your newly created Docusaurus site, you'll need to navigate the terminal there.
+✅ Integrate this script into your package.json > scripts like this
 
-The `npm run start` command builds your website locally and serves it through a development server, ready for you to view at http://localhost:3000/.
+```json
+"generate-types": "npx rest2ts --source https://petstore.swagger.io/v2/swagger.json --target ./api -v \"https://petstore.swagger.io/v2\""
+```
 
-Open `docs/intro.md` (this page) and edit some lines: the site **reloads automatically** and displays your changes.
+Run from project root
+
+```bash
+npm generate-types
+```
+
+and types from https://petstore.swagger.io/v2/swagger.json will be generated into ./api folder.
+
+✅ REST2TS generates whole api into one file. Let's keep it simple.
+
+✅ Generates complex return type, handles nullability and enums.
