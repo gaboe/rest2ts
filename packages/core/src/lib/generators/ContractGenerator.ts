@@ -64,7 +64,8 @@ const renderProperties =
       );
     } else if (schema.enum) {
       const isAnonymousEnum =
-        schema.type !== "string" && schema.type !== "integer";
+        (schema.type !== "string" && schema.type !== "integer") ||
+        schema.enum.length > 1;
 
       return isAnonymousEnum
         ? schema.enum.map((e) => `"${e}"`).join(" | ")

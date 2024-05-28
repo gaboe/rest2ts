@@ -8,7 +8,7 @@ export const getInfrastructureTemplate = (isCookiesAuthEnabled: boolean) => {
     ? `\n\t\tcredentials: "include",`
     : "";
 
-  return `${disclaimer}// ARCHITECTURE START
+  return `${disclaimer}// INFRASTRUCTURE START
   type StandardError = globalThis.Error;
   type Error500s = 501 | 502 | 503 | 504 | 505 | 506 | 507 | 508 | 510 | 511;
   type ErrorStatuses = 0 | Error500s;
@@ -220,7 +220,7 @@ function apiPatch<TResponse extends FetchResponse<unknown, number>, TRequest>(
 
   return fetchJson<TResponse>(\`\${url}\${maybeQueryString}\`, requestOptions as any);
 }
-// ARCHITECTURE END
+// INFRASTRUCTURE END
 `;
 };
 

@@ -10,7 +10,11 @@ import {
   MethodType,
 } from "./ApiDescriptionGenerator";
 import { Maybe, Nothing, Just } from "purify-ts";
-import { getTypeNameFromRef, getTypeNameFromSchema } from "./Common";
+import {
+  getStatusCode,
+  getTypeNameFromRef,
+  getTypeNameFromSchema,
+} from "./Common";
 import { render } from "../renderers/Renderer";
 
 export const getRequestContractType = (
@@ -98,8 +102,13 @@ const getContractResult = (
   const getTypeFromOperation = (schemas: ReturnType<typeof getSchemas>) => {
     const type = schemas
       .map(({ schema, status }) => {
+        const statusCode = getStatusCode(
+          status,
+          endpointDescription.methodType
+        );
+
         if (!schema) {
-          return `FetchResponse<void, ${status}>`;
+          return `FetchResponse<void, ${statusCode}>`;
         }
 
         const isFileSchema = schema.format === "binary";
@@ -111,11 +120,11 @@ const getContractResult = (
               Just(isFileSchema ? "FileResponse" : getTypeName(e!, true))
             )
             .orDefault("");
-          return `FetchResponse<${typeName}, ${status}>`;
+          return `FetchResponse<${typeName}, ${statusCode}>`;
         }
         return `FetchResponse<${
           isFileSchema ? "FileResponse" : getTypeName(schema, false)
-        }, ${status}>`;
+        }, ${statusCode}>`;
       })
       .join(" \n| ");
 
@@ -350,12 +359,16 @@ const bodyBasedMethod = (
 
   const contractResultName = getContractResultName(name);
 
+  const pathName = `${name}Path`;
+
   const view = {
     name: name,
     contractParameterName,
     contractResult,
     contractResultName,
-    url: `\`\$\{API_URL\}${parametrizedUrl.url}\``,
+    pathName,
+    pathValue: `"${parametrizedUrl.url}"`,
+    url: `\`\$\{API_URL\}$\{${pathName}\}\``,
     formattedParam: `${formattedRequestContractType}${comma}${formattedFunctionParameters}${paramSeparator}headers = new Headers()`,
     method,
     queryParams,
@@ -365,6 +378,7 @@ const bodyBasedMethod = (
   return render(
     [
       "export type {{contractResultName}} = \n| {{{contractResult}}};\n",
+      "export const {{pathName}} = {{{pathValue}}};\n",
       `export const {{name}} = ({{{formattedParam}}}): \n\tPromise<{{contractResultName}}> => {\n\t{{{queryParams}}}return api{{method}}({{{url}}}, {{contractParameterName}}, headers{{queryParameters}}) as Promise<{{contractResultName}}>;\n}\n`,
     ].join("\n"),
 
@@ -415,11 +429,7 @@ export const generateServices = (swagger: SwaggerSchema) => {
     })
     .join("\n");
 
-  const API = render(`export const API = { \n\t{{{ rows }}}\n}\n`, {
-    rows: endpoints.map((e) => e.name).join(",\n\t"),
-  });
-
-  return `${view}\n${API}`;
+  return view;
 };
 function getContractResultName(name: string) {
   return `${name.charAt(0).toUpperCase()}${name.slice(1)}FetchResponse`;

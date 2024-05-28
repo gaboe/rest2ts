@@ -5,7 +5,7 @@ import {
   getEndpointsDescriptions,
   MethodType,
 } from "./ApiDescriptionGenerator";
-import { getTypeNameFromSchema } from "./Common";
+import { getStatusCode, getTypeNameFromSchema } from "./Common";
 import { getRequestContractType, parametrizeUrl } from "./ServiceGenerator";
 import { render } from "../renderers/Renderer";
 
@@ -133,8 +133,13 @@ const getContractResult = (
   const getTypeFromOperation = (schemas: ReturnType<typeof getSchemas>) => {
     const type = schemas
       .map(({ schema, status }) => {
+        const statusCode = getStatusCode(
+          status,
+          endpointDescription.methodType
+        );
+
         if (!schema) {
-          return `ResponseResult<void, ${status}>`;
+          return `ResponseResult<void, ${statusCode}>`;
         }
 
         const isFileSchema = schema.format === "binary";
@@ -146,11 +151,11 @@ const getContractResult = (
               Just(isFileSchema ? "FileResponse" : getTypeName(e!, true))
             )
             .orDefault("");
-          return `ResponseResult<${typeName}, ${status}>`;
+          return `ResponseResult<${typeName}, ${statusCode}>`;
         }
         return `ResponseResult<${
           isFileSchema ? "FileResponse" : getTypeName(schema, false)
-        }, ${status}>`;
+        }, ${statusCode}>`;
       })
       .join(" | ");
 

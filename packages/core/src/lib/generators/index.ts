@@ -1,5 +1,4 @@
 import { SwaggerSchema } from "../models/SwaggerSchema";
-import { renderRoutes } from "../renderers/ApiRoutesRender";
 import { generateRoutes } from "./ApiDescriptionGenerator";
 import { generateContracts } from "./ContractGenerator";
 import {
@@ -15,17 +14,15 @@ const generateContent = (
   schema: any,
   baseUrl: string,
   generatedCodeBaseUrl: string | undefined,
-  isCookiesAuthEnabled: boolean = false,
+  isCookiesAuthEnabled: boolean = false
 ) => {
   const swaggerSchema = schema as SwaggerSchema;
-  const routes = renderRoutes(generateRoutes(swaggerSchema));
   const contracts = generateContracts(swaggerSchema);
   const baseApiUrl = generatedCodeBaseUrl
     ? `const API_URL = ${generatedCodeBaseUrl};`
     : `const API_URL = "${baseUrl}";`;
 
   const view = {
-    routes,
     contracts,
     infrastructure: getInfrastructureTemplate(isCookiesAuthEnabled),
     services: generateServices(swaggerSchema),
@@ -33,26 +30,24 @@ const generateContent = (
     // raw: JSON.stringify(api, null, 2),
   };
   const content = render(
-    "{{{ infrastructure }}}\n{{{ routes }}}\n{{{ contracts }}}\n{{{ baseApiUrl }}}\n\n{{{ services }}}\n{{{ raw }}}",
-    view,
+    "{{{ infrastructure }}}\n{{{ contracts }}}\n{{{ baseApiUrl }}}\n\n{{{ services }}}\n{{{ raw }}}",
+    view
   );
   return content;
 };
 
 const generateAngularContent = (schema: any) => {
   const swaggerSchema = schema as SwaggerSchema;
-  const routes = renderRoutes(generateRoutes(swaggerSchema));
   const contracts = generateContracts(swaggerSchema);
 
   const view = {
-    routes,
     contracts,
     infrastructure: getAngularInfrastructureTemplate(),
     services: generateAngularServices(swaggerSchema),
   };
   const content = render(
-    "{{{ infrastructure }}}\n{{{ routes }}}\n{{{ contracts }}}\n\n{{{ services }}}\n",
-    view,
+    "{{{ infrastructure }}}\n{{{ contracts }}}\n\n{{{ services }}}\n",
+    view
   );
   return content;
 };
@@ -62,12 +57,12 @@ export const generate = async (
   baseUrl: string,
   generatedCodeBaseUrl: string | undefined,
   generateForAngular: boolean = false,
-  isCookiesAuthEnabled: boolean = false,
+  isCookiesAuthEnabled: boolean = false
 ) => {
   if (!!api.swagger && !api.openapi) {
     const response = await axios.post(
       "https://converter.swagger.io/api/convert",
-      api,
+      api
     );
     if (response.status !== 200) {
       console.error("Failed to convert Swagger 2.0 to OpenAPI 3.0", response);
@@ -79,7 +74,7 @@ export const generate = async (
           response.data,
           baseUrl,
           generatedCodeBaseUrl,
-          isCookiesAuthEnabled,
+          isCookiesAuthEnabled
         );
   }
 

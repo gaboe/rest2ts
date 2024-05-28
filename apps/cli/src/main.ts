@@ -22,7 +22,7 @@ program
   .usage("-s <source> -t <target> [options]")
   .option("-s, --source <path>", "Path to the swagger file")
   .option("-t, --target <path>", "Target path")
-  .option("-u", "--url <value>")
+  .option("-u", "--url <value>", "Base URL value used in generated code")
   .option("-v, --url-value <value>", "Base URL value used in generated code")
   .option(
     "-ng, --generate-for-angular",
