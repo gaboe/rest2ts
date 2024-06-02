@@ -12,8 +12,6 @@ async function parseSwagger(source: string) {
 
 export async function generateApiContent(
   source: string,
-  baseUrl: string,
-  urlValue: string | undefined,
   generateForAngular: boolean,
   cookies: boolean
 ): Promise<string | null> {
@@ -24,11 +22,5 @@ export async function generateApiContent(
     return null;
   }
 
-  return await generate(
-    openAPI,
-    baseUrl,
-    urlValue,
-    generateForAngular == true,
-    cookies == true
-  );
+  return await generate(openAPI, generateForAngular == true, cookies == true);
 }

@@ -12,7 +12,8 @@
     "test:coverage": "vitest run --coverage",
     "test:snapshot:update": "vitest -u",
     "lint": "eslint . --max-warnings 0",
-    "generate:component": "turbo gen react-component"
+    "generate:component": "turbo gen react-component",
+    "tsc": "tsc --noEmit"
   },
   "devDependencies": {
     "@rest2ts/eslint-config": "workspace:*",

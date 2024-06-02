@@ -6,13 +6,10 @@ import { generateApiContent } from "@rest2ts/core";
 type ProgramProps = {
   source: string | undefined;
   target: string | undefined;
-  urlValue: string | undefined;
-  url: string | undefined;
-  help: never;
-  areNullableStringsEnabled: boolean;
-  generateForAngular: boolean;
   fileName: string | undefined;
   cookies: boolean;
+  generateForAngular: boolean;
+  help: never;
 };
 
 const program = new Command();
@@ -22,13 +19,11 @@ program
   .usage("-s <source> -t <target> [options]")
   .option("-s, --source <path>", "Path to the swagger file")
   .option("-t, --target <path>", "Target path")
-  .option("-u", "--url <value>", "Base URL value used in generated code")
-  .option("-v, --url-value <value>", "Base URL value used in generated code")
   .option(
     "-ng, --generate-for-angular",
     "Generate output for Angular with HttpClient and RxJS"
   )
-  .option("-f, --file-name <name>", "Output file name (default: Api.ts)")
+  .option("-f, --file-name <name>", "Output file name (defaults to Api.ts)")
   .option("--cookies", "Generate API with cookies auth")
   .helpOption("-h, --help", "Show help");
 
@@ -36,8 +31,7 @@ program.parse(process.argv);
 
 const options = program.opts<ProgramProps>();
 
-const { source, target, urlValue, url, generateForAngular, fileName, cookies } =
-  options;
+const { source, target, generateForAngular, fileName, cookies } = options;
 
 if (!source) {
   console.error("Error: Source -s is required.");
@@ -51,27 +45,12 @@ if (!target) {
   process.exit(1);
 }
 
-if (!!urlValue) {
-  console.warn(
-    "Deprecation: argument --urlValue or -v is deprecated. Please use --url or -u instead."
-  );
-}
-
 console.log(`Getting openAPI from ${source}`);
 
 // eslint-disable-next-line turbo/no-undeclared-env-vars
 process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = "0";
 
-const baseUrl = source.substring(0, source.indexOf("/swagger/"));
-console.log("🚀 ~ baseUrl:", baseUrl);
-
-generateApiContent(
-  source,
-  baseUrl,
-  urlValue ?? url,
-  generateForAngular,
-  cookies
-)
+generateApiContent(source, generateForAngular, cookies)
   .then((content) => {
     if (content === null) {
       console.error("Failed to generate api content");

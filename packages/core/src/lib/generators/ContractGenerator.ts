@@ -25,7 +25,7 @@ const addSchemaAllOf = (
 
 const renderProperties =
   (swagger: SwaggerSchema) =>
-  (schema: Schema): string => {
+  (schema: Schema, isEnumDeclaration: boolean = false): string => {
     if (
       schema.type === "object" &&
       !!Object.keys(schema?.properties ?? {}).length
@@ -63,13 +63,9 @@ const renderProperties =
         { type }
       );
     } else if (schema.enum) {
-      const isAnonymousEnum =
-        (schema.type !== "string" && schema.type !== "integer") ||
-        schema.enum.length > 1;
-
-      return isAnonymousEnum
-        ? schema.enum.map((e) => `"${e}"`).join(" | ")
-        : schema.enum.map((e) => `${e} = "${e}"`).join(",\n\t");
+      return isEnumDeclaration
+        ? schema.enum.map((e) => `${e} = "${e}"`).join(",\n\t")
+        : schema.enum.map((e) => `"${e}"`).join(" | ");
     } else if (schema.allOf && schema.allOf[0]) {
       const allOf = schema.allOf[0];
       if (allOf.$ref) {
@@ -136,17 +132,21 @@ export const generateContracts = (swaggerSchema: SwaggerSchema) => {
     .map((k) => {
       const o = swaggerSchema.components.schemas[k]!;
 
-      const view = {
-        name: k,
-        properties: rp(o),
-      };
-
       if (o.enum) {
+        const view = {
+          name: k,
+          properties: rp(o, true),
+        };
         return render(
           `export enum {{ name }} {\n\t{{{ properties }}}\n};\n`,
           view
         );
       }
+
+      const view = {
+        name: k,
+        properties: rp(o, false),
+      };
 
       if (o.type === "object") {
         return view.properties.length > 0 && view.properties !== "unknown"

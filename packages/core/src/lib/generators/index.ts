@@ -1,5 +1,4 @@
 import { SwaggerSchema } from "../models/SwaggerSchema";
-import { generateRoutes } from "./ApiDescriptionGenerator";
 import { generateContracts } from "./ContractGenerator";
 import {
   getAngularInfrastructureTemplate,
@@ -12,22 +11,15 @@ import { render } from "../renderers/Renderer";
 
 const generateContent = (
   schema: any,
-  baseUrl: string,
-  generatedCodeBaseUrl: string | undefined,
   isCookiesAuthEnabled: boolean = false
 ) => {
   const swaggerSchema = schema as SwaggerSchema;
   const contracts = generateContracts(swaggerSchema);
-  const baseApiUrl = generatedCodeBaseUrl
-    ? `const API_URL = ${generatedCodeBaseUrl};`
-    : `const API_URL = "${baseUrl}";`;
 
   const view = {
     contracts,
     infrastructure: getInfrastructureTemplate(isCookiesAuthEnabled),
     services: generateServices(swaggerSchema),
-    baseApiUrl,
-    // raw: JSON.stringify(api, null, 2),
   };
   const content = render(
     "{{{ infrastructure }}}\n{{{ contracts }}}\n{{{ baseApiUrl }}}\n\n{{{ services }}}\n{{{ raw }}}",
@@ -54,8 +46,6 @@ const generateAngularContent = (schema: any) => {
 
 export const generate = async (
   api: any,
-  baseUrl: string,
-  generatedCodeBaseUrl: string | undefined,
   generateForAngular: boolean = false,
   isCookiesAuthEnabled: boolean = false
 ) => {
@@ -70,15 +60,10 @@ export const generate = async (
     }
     return generateForAngular
       ? generateAngularContent(response.data)
-      : generateContent(
-          response.data,
-          baseUrl,
-          generatedCodeBaseUrl,
-          isCookiesAuthEnabled
-        );
+      : generateContent(response.data, isCookiesAuthEnabled);
   }
 
   return generateForAngular
     ? generateAngularContent(api)
-    : generateContent(api, baseUrl, generatedCodeBaseUrl, isCookiesAuthEnabled);
+    : generateContent(api, isCookiesAuthEnabled);
 };

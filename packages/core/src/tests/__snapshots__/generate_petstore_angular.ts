@@ -2,7 +2,7 @@
 // THIS FILE WAS GENERATED
 // ALL CHANGES WILL BE OVERWRITTEN
 
-// ARCHITECTURE START
+// INFRASTRUCTURE START
 
 import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Inject, Injectable, InjectionToken, Optional } from '@angular/core';
@@ -250,7 +250,7 @@ function apiPatch<T extends ResponseResult<unknown, number>, U = unknown>(
 		);
 }
 
-  // ARCHITECTURE END
+  // INFRASTRUCTURE END
 
 export interface FileResponse {
   data: Blob;
@@ -423,10 +423,10 @@ export class ApiService {
     }
   
 
-    getUserLogin(password: string, username: string): Observable<ResponseResult<string, 200> | ResponseResult<void, 400>> {
+    getUserLogin(username: string, password: string): Observable<ResponseResult<string, 200> | ResponseResult<void, 400>> {
       const queryParams = {
-		"password": password		,
-"username": username
+		"username": username		,
+"password": password
 	}
 	
       return apiGet<ResponseResult<string, 200> | ResponseResult<void, 400>>(this.httpClient, `${this.baseUrl}/user/login`, queryParams);

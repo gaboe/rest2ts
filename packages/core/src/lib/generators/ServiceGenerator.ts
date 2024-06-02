@@ -220,14 +220,27 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
     }
   };
 
-  const parameters = (getParameters() ?? []).map((e) => {
-    const param = {
-      name: e.name,
-      type: getType(e, (e as any).schema),
-      required: !!e.required,
-    };
-    return param;
-  });
+  const parameters = (getParameters() ?? [])
+    .map((e, index) => {
+      const param = {
+        name: e.name,
+        type: getType(e, (e as any).schema),
+        required: !!e.required,
+        xPosition: e["x-position"] ?? index, // Ensures undefined x-positions are treated as very large numbers
+      };
+      return param;
+    })
+    .sort((a, b) => {
+      // First sort by required status (required first)
+      if (a.required && !b.required) {
+        return -1;
+      }
+      if (!a.required && b.required) {
+        return 1;
+      }
+      // Then sort by x-position
+      return a.xPosition - b.xPosition;
+    });
 
   const formatParamName = (name: string) =>
     name
@@ -243,13 +256,19 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
       )
       .trim();
 
+  const formatAsArgument = (parameter: {
+    name: string;
+    type: string;
+    required: boolean;
+  }) =>
+    `${formatParamName(parameter.name)}${parameter.required ? "" : "?"}: ${parameter.type}`;
+
   const formattedFunctionParameters = parameters
-    .sort((a) => (a.required ? -1 : 1))
-    .map((e) => `${formatParamName(e.name)}${e.required ? "" : "?"}: ${e.type}`)
+    .map((e) => formatAsArgument(e))
     .join(", ");
 
   const parametrizedUrl = parameters.reduce(
-    ({ url, usedParameters }, e) => {
+    ({ url, usedParameters, usedFormattedParameters }, e) => {
       const match = `\{${e.name}\}`;
       const index = url.indexOf(match);
 
@@ -257,12 +276,17 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
         ? {
             url: url.replace(match, `\$${match}`),
             usedParameters: [...usedParameters, ...[e.name]],
+            usedFormattedParameters: [
+              ...usedFormattedParameters,
+              ...[formatAsArgument(e)],
+            ],
           }
-        : { url, usedParameters };
+        : { url, usedParameters, usedFormattedParameters };
     },
     {
       url: endpointDescription.originalPath,
       usedParameters: new Array<string>(),
+      usedFormattedParameters: new Array<string>(),
     }
   );
 
@@ -286,20 +310,28 @@ const parametrizedMethod = (
 
   const queryParams =
     unusedParameters.length > 0
-      ? render("const queryParams = {\n\t\t{{{rows}}}\n\t}\n\t", {
-          rows: unusedParameters.join("\t\t,\n"),
+      ? render("const queryParams = {\n{{{rows}}}\n\t}\n\t", {
+          rows: unusedParameters.map((e) => `\t\t${e}`).join(",\n"),
         })
       : "";
 
+  const name = endpointDescription.name;
+  const pathName = `${name}Path`;
+  const formattedUsedParameters = parametrizedUrl.usedParameters.join(", ");
+
+  const formattedPathFunctionParameters =
+    parametrizedUrl.usedFormattedParameters.join(", ");
+
+  const url = `\`\$\{getApiUrl()\}$\{${pathName}(${formattedUsedParameters})\}\``;
+
   const parameters = [
-    `\`\$\{API_URL\}${parametrizedUrl.url}\``,
+    url,
     "headers",
     ...[unusedParameters.length > 0 ? "queryParams" : "{}"],
   ].join(", ");
 
   const paramSeparator = formattedFunctionParameters.length > 0 ? ", " : "";
 
-  const name = endpointDescription.name;
   const contractResultName = getContractResultName(name);
 
   const view = {
@@ -311,11 +343,17 @@ const parametrizedMethod = (
     queryParams,
     formattedParam: `${formattedFunctionParameters}${paramSeparator}headers = new Headers()`,
     method,
+    pathName,
+    pathValue: `\`${parametrizedUrl.url}\``,
+    formattedFunctionParameters,
+    formattedUsedParameters,
+    formattedPathFunctionParameters,
   };
 
   return render(
     [
       "export type {{contractResultName}} = \n| {{{contractResult}}};\n",
+      "export const {{pathName}} = ({{{formattedPathFunctionParameters}}}) => {{{pathValue}}};\n",
       "export const {{name}} = ({{{formattedParam}}}): \n\tPromise<{{contractResultName}}> => {\n\t{{{queryParams}}}return api{{method}}({{{parameters}}}) as Promise<{{contractResultName}}>;\n}\n",
     ].join("\n"),
     view
@@ -343,13 +381,14 @@ const bodyBasedMethod = (
   const { parametrizedUrl, formattedFunctionParameters, unusedParameters } =
     parametrizeUrl(endpointDescription);
   const paramSeparator = formattedFunctionParameters.length > 0 ? ", " : "";
+
   const comma = formattedRequestContractType.length > 0 ? ", " : "";
   const method = getMethodType();
 
   const queryParams =
     unusedParameters.length > 0
-      ? render("const queryParams = {\n\t\t{{{rows}}}\n\t}\n\t", {
-          rows: unusedParameters.join("\t\t,\n"),
+      ? render("const queryParams = {\n{{{rows}}}\n\t}\n\t", {
+          rows: unusedParameters.map((e) => `\t\t${e}`).join(",\n"),
         })
       : "";
 
@@ -367,18 +406,19 @@ const bodyBasedMethod = (
     contractResult,
     contractResultName,
     pathName,
-    pathValue: `"${parametrizedUrl.url}"`,
-    url: `\`\$\{API_URL\}$\{${pathName}\}\``,
+    pathValue: `\`${parametrizedUrl.url}\``,
+    url: `\`\$\{getApiUrl()\}$\{${pathName}(${parametrizedUrl.usedParameters.join(", ")})\}\``,
     formattedParam: `${formattedRequestContractType}${comma}${formattedFunctionParameters}${paramSeparator}headers = new Headers()`,
     method,
     queryParams,
     queryParameters,
+    formattedFunctionParameters,
   };
 
   return render(
     [
       "export type {{contractResultName}} = \n| {{{contractResult}}};\n",
-      "export const {{pathName}} = {{{pathValue}}};\n",
+      "export const {{pathName}} = ({{{formattedFunctionParameters}}}) => {{{pathValue}}};\n",
       `export const {{name}} = ({{{formattedParam}}}): \n\tPromise<{{contractResultName}}> => {\n\t{{{queryParams}}}return api{{method}}({{{url}}}, {{contractParameterName}}, headers{{queryParameters}}) as Promise<{{contractResultName}}>;\n}\n`,
     ].join("\n"),
 

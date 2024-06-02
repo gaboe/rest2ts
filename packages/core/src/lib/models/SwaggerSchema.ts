@@ -26,6 +26,7 @@ export type BaseParameter = {
   in: "body" | "query" | "path" | "header" | "formData" | "body";
   required?: boolean;
   description?: string;
+  ["x-position"]?: number;
 };
 
 export type BodyParameter = BaseParameter & {
