@@ -83,25 +83,22 @@ export const renderProperties =
         return isEnumDeclaration
           ? schema.enum.map((e) => `${e} = "${e}"`).join(",\n\t")
           : schema.enum.map((e) => `"${e}"`).join(" | ");
-      } else if (schema.allOf && schema.allOf[0]) {
-        const allOf = schema.allOf[0];
-        if (allOf.$ref) {
-          const typeName = getTypeNameFromRef(allOf.$ref)!;
-          const tt = swagger.components.schemas[typeName]!;
-          if (schema.type === "object") {
-            return renderProperties(swagger)(tt);
-          } else if (tt.type === "object") {
-            return typeName!;
-          }
-          return `typeof ${typeName}`;
-        }
-        if (allOf.enum) {
-          return allOf.enum.map((e) => e).join(" | ");
-        }
-        if (allOf.type === "object") {
-          return "any";
-        }
-        return "any";
+      } else if (schema.allOf) {
+        return schema.allOf
+          .map((x) => {
+            if (x.$ref) {
+              const typeName = getTypeNameFromRef(x.$ref)!;
+              const tt = swagger.components.schemas[typeName]!;
+              if (schema.type === "object") {
+                return renderProperties(swagger)(tt);
+              } else if (tt.type === "object") {
+                return typeName!;
+              }
+              return `typeof ${typeName}`;
+            }
+            return renderProperties(swagger)(x);
+          })
+          .join("\n\t");
       } else if (schema.type) {
         switch (schema.type) {
           case "integer":
