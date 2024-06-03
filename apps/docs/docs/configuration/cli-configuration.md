@@ -1,10 +1,19 @@
 ---
-sidebar_position: 2
+sidebar_position: 1
 ---
 
-# Configuration
+# CLI Configuration
 
 REST2TS handles multiple arguments:
+
+```bash
+npx rest2ts
+  --source https://petstore.swagger.io/v2/swagger.json
+  --target ./api
+  --generate-for-angular
+  --url https://petstore.swagger.io/v2
+  --file-name MyApi.ts
+```
 
 ### --source / -s
 
@@ -26,16 +35,6 @@ Takes path to the directory where the generated files will be saved.
 
 ```bash
  npx rest2ts --source https://petstore.swagger.io/v2/swagger.json --target ./generated
-```
-
-### --url / -u
-
-Takes base url of the API.
-
-#### Example
-
-```bash
- npx rest2ts --source https://petstore.swagger.io/v2/swagger.json --target ./generated --url https://petstore.swagger.io/v2
 ```
 
 ### --generate-for-angular / -ng

@@ -2,10 +2,12 @@
 
 ## Generate beautiful TypeScript types from REST APIs
 
-## Usage
+## Usage 🚀
 
 ```bash
-npx rest2ts -s https://petstore.swagger.io/v2/swagger.json -t ./api -v "'https://petstore.swagger.io/v2'"
+npx rest2ts -s https://petstore.swagger.io/v2/swagger.json -t ./api
 ```
 
-📖 Whole documentation with all options is here 👉 [https://gaboe.github.io/rest2ts/](https://gaboe.github.io/rest2ts/) 👈
+## Docs 📖
+
+👉 [https://gaboe.github.io/rest2ts/](https://gaboe.github.io/rest2ts/) 👈
