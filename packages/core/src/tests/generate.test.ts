@@ -2,7 +2,7 @@ import SwaggerParser from "@apidevtools/swagger-parser";
 import { describe, expect, test } from "vitest";
 import { generate } from "../lib/generators";
 
-const cases = ["petstore", "nswag"];
+const cases = ["petstore", "nswag", "anonymous_object"];
 
 function fixturePath(name: string) {
   return `./src/tests/fixtures/${name}.json`;
