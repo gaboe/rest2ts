@@ -110,7 +110,8 @@ const parametrizedMethod = (
 };
 
 const getContractResult = (
-  endpointDescription: EndpointDescription
+  endpointDescription: EndpointDescription,
+  swagger: SwaggerSchema,
 ): Maybe<string> => {
   const getSchemas = (operation: Operation) =>
     Object.entries(operation.responses).map((e) => ({
@@ -121,12 +122,12 @@ const getContractResult = (
   const getTypeName = (schema: Schema, isArray: boolean) => {
     if (schema.oneOf) {
       const typeNames = schema.oneOf
-        .map((s) => getTypeNameFromSchema(s))
+        .map((s) => getTypeNameFromSchema(s, swagger))
         .join(" | ");
       return isArray ? `(${typeNames})[]` : typeNames;
     }
 
-    const typeName = getTypeNameFromSchema(schema);
+    const typeName = getTypeNameFromSchema(schema, swagger);
     return isArray ? `${typeName}[]` : typeName;
   };
 
@@ -202,7 +203,7 @@ export const generateAngularServices = (swagger: SwaggerSchema) => {
       });
 
       const contractResult =
-        getContractResult(endpointDescription).orDefault("any");
+        getContractResult(endpointDescription, swagger).orDefault("any");
 
       if (
         endpointDescription.methodType === "POST" ||
