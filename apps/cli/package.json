@@ -1,8 +1,7 @@
 {
   "name": "rest2ts",
   "private": false,
-  "version": "5.0.9",
-  "main": "dist/index.js",
+  "version": "5.0.10",
   "type": "commonjs",
   "bin": {
     "rest2ts": "./dist/index.js"
