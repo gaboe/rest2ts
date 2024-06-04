@@ -13,7 +13,7 @@
   "author": "Gabriel Ecegi",
   "scripts": {
     "lint": "eslint . --max-warnings 0",
-    "build": "ncc build ./src/main.ts"
+    "build": "ncc build ./src/main.ts -m"
   },
   "dependencies": {
     "@rest2ts/core": "workspace:*",
