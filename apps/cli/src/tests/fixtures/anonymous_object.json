@@ -1,0 +1,60 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Swagger anonymous route object",
+    "description": "Example swagger json for github issue",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "\/api\/test": {
+      "get": {
+        "summary": "Test route",
+        "operationId": "4154a669519b96e4c7ac0c3e208e1dc0",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application\/json": {
+                "schema": {
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "ok"
+                    },
+                    "data": {
+                      "$ref": "#\/components\/schemas\/ElectronicTradeBigRiskItemResponseDTO"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ElectronicTradeBigRiskItemResponseDTO": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "title": {
+            "type": "string",
+            "example": "Velke riziko",
+            "nullable": true
+          },
+          "validationNumber": {
+            "type": "integer",
+            "example": 1,
+            "nullable": true
+          }
+        },
+        "type": "object"
+      }
+    }
+  }
+}

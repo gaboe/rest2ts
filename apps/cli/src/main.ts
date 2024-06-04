@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { Command } from "commander";
 import { outputFile } from "fs-extra";
-import { generateApiContent } from "@rest2ts/core";
+import { generateApiContent } from "./lib";
 
 type ProgramProps = {
   source: string | undefined;
