@@ -1,6 +1,5 @@
-#!/bin/env node
+#!/usr/bin/env node
 
-// import { Command } from "commander";
 import * as opt from "optimist";
 
 import { outputFile } from "fs-extra";
