@@ -366,7 +366,7 @@ function apiPatch<TResponse extends FetchResponse<unknown, number>, TRequest>(
 // INFRASTRUCTURE END
 
 export type ApiProblemDetails = {
-	errors: {[key: string | number]: ErrorDetail[]};
+	errors: { [key: string | number]: ErrorDetail[] };
 	type?: string | null;
 	title?: string | null;
 	status?: number | null;
@@ -1138,7 +1138,7 @@ export type ClientApprovalStepInitCommandResult = {};
 export type CompleteClientApprovalStepCommandResult = {};
 
 export type ApiProblemDetailsOfCompleteClientApprovalStepError = {
-	errors: {[key: string | number]: ErrorDetail[]};
+	errors: { [key: string | number]: ErrorDetail[] };
 	type?: string | null;
 	title?: string | null;
 	status?: number | null;
@@ -1179,7 +1179,7 @@ export type EnterpriseInvoiceIssuanceAndPaymentStepQueryResult = {
 export type ClientInvoiceRecurringPaymentCancelCommandResult = {};
 
 export type ApiProblemDetailsOfClientInvoiceRecurringPaymentCancelErrorStatus = {
-	errors: {[key: string | number]: ErrorDetail[]};
+	errors: { [key: string | number]: ErrorDetail[] };
 	type?: string | null;
 	title?: string | null;
 	status?: number | null;
@@ -1194,7 +1194,7 @@ export enum ClientInvoiceRecurringPaymentCancelErrorStatus {
 export type ClientInvoiceRecurringPaymentReminderCommandResult = {};
 
 export type ApiProblemDetailsOfClientInvoiceRecurringPaymentReminderErrorStatus = {
-	errors: {[key: string | number]: ErrorDetail[]};
+	errors: { [key: string | number]: ErrorDetail[] };
 	type?: string | null;
 	title?: string | null;
 	status?: number | null;
@@ -1210,7 +1210,7 @@ export enum ClientInvoiceRecurringPaymentReminderErrorStatus {
 export type ClientPrepaidInvoiceRecurringPaymentReminderCommandResult = {};
 
 export type ApiProblemDetailsOfClientPrepaidInvoiceRecurringPaymentReminderErrorStatus = {
-	errors: {[key: string | number]: ErrorDetail[]};
+	errors: { [key: string | number]: ErrorDetail[] };
 	type?: string | null;
 	title?: string | null;
 	status?: number | null;
@@ -1225,7 +1225,7 @@ export enum ClientPrepaidInvoiceRecurringPaymentReminderErrorStatus {
 export type ClientInvoiceRecurringPaymentCreateInvoiceCommandResult = {};
 
 export type ApiProblemDetailsOfClientInvoiceRecurringPaymentCreateAndSendInvoiceToClientErrorStatus = {
-	errors: {[key: string | number]: ErrorDetail[]};
+	errors: { [key: string | number]: ErrorDetail[] };
 	type?: string | null;
 	title?: string | null;
 	status?: number | null;
@@ -1241,7 +1241,7 @@ export enum ClientInvoiceRecurringPaymentCreateAndSendInvoiceToClientErrorStatus
 export type ClientInvoiceRecurringPaymentClientPaidCommandResult = {};
 
 export type ApiProblemDetailsOfClientInvoiceRecurringPaymentClientPaidErrorStatus = {
-	errors: {[key: string | number]: ErrorDetail[]};
+	errors: { [key: string | number]: ErrorDetail[] };
 	type?: string | null;
 	title?: string | null;
 	status?: number | null;
@@ -1263,7 +1263,7 @@ export type ClientInvoiceRecurringPaymentClientPaidRequest = {
 export type ClientPrepaidInvoiceRecurringPaymentSendInvoiceAndSetPaidCommandResult = {};
 
 export type ApiProblemDetailsOfClientPrepaidInvoiceRecurringPaymentSendInvoiceAndSetPaidErrorStatus = {
-	errors: {[key: string | number]: ErrorDetail[]};
+	errors: { [key: string | number]: ErrorDetail[] };
 	type?: string | null;
 	title?: string | null;
 	status?: number | null;
@@ -1290,7 +1290,7 @@ export type ClientPrepaidPaymentApprovalStepCompleteCommandRequest = {
 };
 
 export type ApiProblemDetailsOfInProgressClientApprovalStepError = {
-	errors: {[key: string | number]: ErrorDetail[]};
+	errors: { [key: string | number]: ErrorDetail[] };
 	type?: string | null;
 	title?: string | null;
 	status?: number | null;
@@ -1480,7 +1480,7 @@ export type EnterpriseBasicSettingsDto = {
 export type CreateEnterpriseCommissionSettingsCommandResult = {};
 
 export type ApiProblemDetailsOfCreateEnterpriseCommissionSettingsErrorStatus = {
-	errors: {[key: string | number]: ErrorDetail[]};
+	errors: { [key: string | number]: ErrorDetail[] };
 	type?: string | null;
 	title?: string | null;
 	status?: number | null;
@@ -1652,7 +1652,7 @@ export type CreateCutoffCommandResult = {
 };
 
 export type ApiProblemDetailsOfCreateCutoffErrorStatus = {
-	errors: {[key: string | number]: ErrorDetail[]};
+	errors: { [key: string | number]: ErrorDetail[] };
 	type?: string | null;
 	title?: string | null;
 	status?: number | null;
@@ -1825,7 +1825,7 @@ export type ClientDto = {
 export type SignUpCommandResult = {};
 
 export type ApiProblemDetailsOfSignUpErrorStatus = {
-	errors: {[key: string | number]: ErrorDetail[]};
+	errors: { [key: string | number]: ErrorDetail[] };
 	type?: string | null;
 	title?: string | null;
 	status?: number | null;
@@ -1838,7 +1838,7 @@ export enum SignUpErrorStatus {
 };
 
 export type ApiProblemDetailsOfPasswordChangeResultStatus = {
-	errors: {[key: string | number]: ErrorDetail[]};
+	errors: { [key: string | number]: ErrorDetail[] };
 	type?: string | null;
 	title?: string | null;
 	status?: number | null;
@@ -1879,7 +1879,7 @@ export enum IdentityProvider {
 };
 
 export type ApiProblemDetailsOfAuthError = {
-	errors: {[key: string | number]: ErrorDetail[]};
+	errors: { [key: string | number]: ErrorDetail[] };
 	type?: string | null;
 	title?: string | null;
 	status?: number | null;
@@ -1915,7 +1915,7 @@ export type EmailVerificationCommandResult = {
 };
 
 export type ApiProblemDetailsOfEmailVerificationCommandResultStatus = {
-	errors: {[key: string | number]: ErrorDetail[]};
+	errors: { [key: string | number]: ErrorDetail[] };
 	type?: string | null;
 	title?: string | null;
 	status?: number | null;
@@ -1961,7 +1961,7 @@ export type RedirectHttpResult = {
 export type ResetPasswordCommandResult = {};
 
 export type ApiProblemDetailsOfResetPasswordCommandResultStatus = {
-	errors: {[key: string | number]: ErrorDetail[]};
+	errors: { [key: string | number]: ErrorDetail[] };
 	type?: string | null;
 	title?: string | null;
 	status?: number | null;
@@ -1982,7 +1982,7 @@ export type SetPasswordCommandResult = {
 };
 
 export type ApiProblemDetailsOfSetPasswordCommandStatus = {
-	errors: {[key: string | number]: ErrorDetail[]};
+	errors: { [key: string | number]: ErrorDetail[] };
 	type?: string | null;
 	title?: string | null;
 	status?: number | null;

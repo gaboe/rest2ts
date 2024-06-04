@@ -82,8 +82,8 @@ export const renderProperties =
 
       return render(
         isNullable
-          ? "{[key: string | number]: {{{type}}}} | null"
-          : "{[key: string | number]: {{{type}}}}",
+          ? "{ [key: string | number]: {{type}} } | null"
+          : "{ [key: string | number]: {{type}} }",
         { type }
       );
     } else if (schema.enum) {

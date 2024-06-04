@@ -1,6 +1,5 @@
-// import { render as mustacheRender } from "mustache";
-import Mustache from "mustache";
+import { compile } from "handlebars";
 
 export function render(template: string, view: Record<string, unknown>) {
-  return Mustache.render(template, view);
+  return compile(template)(view);
 }

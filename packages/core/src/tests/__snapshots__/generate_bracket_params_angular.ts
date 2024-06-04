@@ -263,7 +263,7 @@ export type ErrorDetailDTO = {
 };
 
 export type ExceptionDTO = {
-	errors?: {[key: string | number]: ErrorDetailDTO[]} | null;
+	errors?: { [key: string | number]: ErrorDetailDTO[] } | null;
 	type?: string | null;
 	title?: string | null;
 	status?: number | null;
