@@ -9,6 +9,8 @@ const cases = [
   "allof_anonymous_schema",
   "auth_login",
   "bracket_params",
+  "one_of",
+  "post_put_bodies",
 ];
 
 function fixturePath(name: string) {

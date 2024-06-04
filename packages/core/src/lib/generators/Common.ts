@@ -126,6 +126,11 @@ export const renderProperties =
                     .join(" | ")})`
                 );
               }
+
+              if (e?.type === "object") {
+                return Just(`{\n\t${renderProperties(swagger)(e!)}\n}`);
+              }
+
               return Just(
                 e!.$ref
                   ? getTypeNameFromRef(e!.$ref)
