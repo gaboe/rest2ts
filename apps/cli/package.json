@@ -1,7 +1,7 @@
 {
   "name": "rest2ts",
   "private": false,
-  "version": "5.0.4",
+  "version": "5.0.5",
   "main": "dist/index.js",
   "type": "commonjs",
   "bin": {
@@ -27,6 +27,7 @@
     "commander": "^12.1.0",
     "fs-extra": "^11.2.0",
     "handlebars": "^4.7.8",
+    "optimist": "^0.6.1",
     "purify-ts": "^2.0.3"
   },
   "devDependencies": {
@@ -36,6 +37,7 @@
     "@types/eslint": "^8.56.10",
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^20.14.1",
+    "@types/optimist": "^0.0.33",
     "@vitest/coverage-istanbul": "^1.6.0",
     "eslint": "^9.4.0",
     "typescript": "^5.4.5",
