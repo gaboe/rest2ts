@@ -365,21 +365,99 @@ function apiPatch<TResponse extends FetchResponse<unknown, number>, TRequest>(
 }
 // INFRASTRUCTURE END
 
-export type ElectronicTradeBigRiskItemResponseDTO = {
-	id: number;
-	title?: string | null;
-	validationNumber?: number | null;
+export type SearchResponse = {
+	Data: SearchDto;
+	Errors: string[];
+	Status: Status;
 };
 
-export type GetTestFetchResponse = 
-| FetchResponse<{status: string;
-	data: ElectronicTradeBigRiskItemResponseDTO;}, 200> 
+export type LoginDataDataContract = {
+	Login: string;
+	Password: string;
+};
+
+export type SearchDto = {
+	DO_NUM: string;
+	EV_RANG: number;
+	EV_LIB: string;
+	EV_DATREAL: string;
+	EV_HREREAL: string;
+	EV_URGENCE: string;
+	EV_AGENDA: string;
+	EV_COD: string;
+	EV_PSEUDO: string;
+	EV_Deadline: string;
+	EV_DeadlineTime: string;
+	EV_DeadlineSendCounter: number;
+	EV_Alarm: boolean;
+	EV_AgendaWorkerKey: string;
+	EV_Status: string;
+	EV_InsertUser: string;
+};
+
+export type IPA_PlexDbContext_ContractSignature = {
+	ID: number;
+	ContractNo: string;
+	RoleProviderId: number;
+	Signature: string;
+	UP_Id: number;
+	SignatureType: number;
+	VisibilityTypes: ("None" | "Partners" | "Client")[];
+};
+
+export enum Status {
+	ValidationError = "ValidationError",
+	OK = "OK",
+	Exception = "Exception",
+	InvalidOperation = "InvalidOperation"
+};
+
+export type GetAgendaSearchFetchResponse = 
+| FetchResponse<SearchResponse[], 200> 
 | ErrorResponse;
 
-export const getTestPath = () => `/api/test`;
+export const getAgendaSearchPath = () => `/api/Agenda/Search`;
 
-export const getTest = (headers = new Headers()): 
-	Promise<GetTestFetchResponse> => {
-	return apiGet(`${getApiUrl()}${getTestPath()}`, headers, {}) as Promise<GetTestFetchResponse>;
+export const getAgendaSearch = (do_num: string, dO_Id?: number, headers = new Headers()): 
+	Promise<GetAgendaSearchFetchResponse> => {
+	const queryParams = {
+		"do_num": do_num,
+		"dO_Id": dO_Id
+	}
+	return apiGet(`${getApiUrl()}${getAgendaSearchPath()}`, headers, queryParams) as Promise<GetAgendaSearchFetchResponse>;
+}
+
+export type PostApiUsersIsUserValidFetchResponse = 
+| FetchResponse<object, 200> 
+| FetchResponse<number, 201> 
+| ErrorResponse;
+
+export const postApiUsersIsUserValidPath = () => `/api/ApiUsers/IsUserValid`;
+
+export const postApiUsersIsUserValid = (requestContract: LoginDataDataContract, headers = new Headers()): 
+	Promise<PostApiUsersIsUserValidFetchResponse> => {
+	return apiPost(`${getApiUrl()}${postApiUsersIsUserValidPath()}`, requestContract, headers) as Promise<PostApiUsersIsUserValidFetchResponse>;
+}
+
+export type PostContractEditContractSignaturesFetchResponse = 
+| FetchResponse<object, 200> 
+| ErrorResponse;
+
+export const postContractEditContractSignaturesPath = () => `/api/Contract/EditContractSignatures`;
+
+export const postContractEditContractSignatures = (requestContract: IPA_PlexDbContext_ContractSignature[], headers = new Headers()): 
+	Promise<PostContractEditContractSignaturesFetchResponse> => {
+	return apiPost(`${getApiUrl()}${postContractEditContractSignaturesPath()}`, requestContract, headers) as Promise<PostContractEditContractSignaturesFetchResponse>;
+}
+
+export type PatchCaseUpdateCaseTypeCaseNoCaseTypeFetchResponse = 
+| FetchResponse<object, 200> 
+| ErrorResponse;
+
+export const patchCaseUpdateCaseTypeCaseNoCaseTypePath = (caseNo: string, caseType: string) => `/api/Case/UpdateCaseType/${caseNo}/${caseType}`;
+
+export const patchCaseUpdateCaseTypeCaseNoCaseType = (caseNo: string, caseType: string, headers = new Headers()): 
+	Promise<PatchCaseUpdateCaseTypeCaseNoCaseTypeFetchResponse> => {
+	return apiPatch(`${getApiUrl()}${patchCaseUpdateCaseTypeCaseNoCaseTypePath(caseNo, caseType)}`, {}, headers) as Promise<PatchCaseUpdateCaseTypeCaseNoCaseTypeFetchResponse>;
 }
 

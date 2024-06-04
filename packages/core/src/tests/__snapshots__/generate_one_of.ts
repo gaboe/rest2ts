@@ -491,8 +491,6 @@ export type Idcard = {
 	issue_date: string;
 };
 
-
-
 export type GetBankIDVerifyBankIdFetchResponse = 
 | FetchResponse<ProcessBankIDVerificationCommandResult, 200> 
 | ErrorResponse;

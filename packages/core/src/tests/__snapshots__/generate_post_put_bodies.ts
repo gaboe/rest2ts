@@ -409,8 +409,6 @@ export type ApiCallError = {
 }[];
 };
 
-
-
 export type PostSignatureSmsFetchResponse = 
 | FetchResponse<boolean, 200> 
 | ErrorResponse;

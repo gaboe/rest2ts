@@ -390,8 +390,6 @@ export type ProductItemDTO = {
 	hidden?: boolean | null;
 };
 
-
-
 export type GetProducersFetchResponse = 
 | FetchResponse<ProducerItemDTO[], 200> 
 | FetchResponse<ExceptionDTO, 401> 

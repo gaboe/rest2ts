@@ -385,8 +385,6 @@ export type Cow = {
 	discriminator: string;
 };
 
-
-
 export type GetTestFetchResponse = 
 | FetchResponse<{status: string;
 	data?: Dog | Cat | Cow | null;}, 200> 
@@ -398,3 +396,4 @@ export const getTest = (headers = new Headers()):
 	Promise<GetTestFetchResponse> => {
 	return apiGet(`${getApiUrl()}${getTestPath()}`, headers, {}) as Promise<GetTestFetchResponse>;
 }
+

@@ -410,8 +410,6 @@ export type User = {
 	userStatus: number;
 };
 
-
-
 export type PostPetPetIdUploadImageFetchResponse = 
 | FetchResponse<ApiResponse, 200> 
 | ErrorResponse;

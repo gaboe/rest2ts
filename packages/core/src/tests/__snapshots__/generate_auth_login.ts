@@ -399,8 +399,6 @@ export type ProblemDetails = {
 	instance?: string | null;
 };
 
-
-
 export type PostAuthLoginFetchResponse = 
 | FetchResponse<AuthResult, 200> 
 | FetchResponse<ProblemDetails, 400> 

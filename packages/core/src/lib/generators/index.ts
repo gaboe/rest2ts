@@ -17,12 +17,12 @@ const generateContent = (
   const contracts = generateContracts(swaggerSchema);
 
   const view = {
-    contracts,
     infrastructure: getInfrastructureTemplate(isCookiesAuthEnabled),
+    contracts,
     services: generateServices(swaggerSchema),
   };
   const content = render(
-    "{{{ infrastructure }}}\n{{{ contracts }}}\n{{{ baseApiUrl }}}\n\n{{{ services }}}\n{{{ raw }}}",
+    "{{{ infrastructure }}}\n{{{ contracts }}}\n{{{ services }}}",
     view
   );
   return content;

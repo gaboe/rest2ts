@@ -1999,8 +1999,6 @@ export type SetPasswordCommand = {
 	password: string;
 };
 
-
-
 export type GetWorkflowsStepsFetchResponse = 
 | FetchResponse<EntityListOfStepDto, 200> 
 | FetchResponse<ApiProblemDetails, 401> 
