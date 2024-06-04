@@ -26,7 +26,7 @@ type Configuration = {
 This is the base URL of your API. It can be a string or a function that returns a string. This is useful when you need to change the base URL based on the environment.
 
 ```tsx
-configureApiCalls({
+setupClient({
   apiUrl: () => import.meta.env.VITE_API_URL,
 });
 ```
@@ -36,7 +36,7 @@ configureApiCalls({
 This is the key in the local storage where the JWT token is stored. It can be a string, or a function that returns a string.
 
 ```tsx
-configureApiCalls({
+setupClient({
   jwtKey: () => localStorage.getItem("jwt"),
 });
 ```
@@ -46,7 +46,7 @@ configureApiCalls({
 This is an array of functions that modify the request before it is sent. Each function receives the request object and returns the modified request object. If the function returns `TerminateRequest`, the request is not sent.
 
 ```tsx
-configureApiCalls({
+setupClient({
   requestMiddlewares: [
     {
       name: "Add JWT token",
@@ -67,7 +67,7 @@ configureApiCalls({
 This is an array of functions that modify the response before it is returned. Each function receives the response object and returns the modified response object. If the function returns `TerminateResponse`, the response is not returned.
 
 ```tsx
-configureApiCalls({
+setupClient({
   responseMiddlewares: [
     {
       name: "Handle 401",
@@ -86,10 +86,10 @@ configureApiCalls({
 ## Example
 
 ```tsx
-import { configureApiCalls, FetchResponse } from "Api/Api";
+import { setupClient } from "Api/Api";
 
 function App() {
-  configureApiCalls({
+  setupClient({
     apiUrl: "https://api.example.com",
     jwtKey: "jwt",
     requestMiddlewares: [

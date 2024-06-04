@@ -52,7 +52,7 @@
     responseMiddlewares: [],
   };
 
-  export function configureApiCalls(configuration: Configuration) {
+  export function setupClient(configuration: Configuration) {
     CONFIG = {
       ...CONFIG,
       ...configuration,
@@ -430,4 +430,3 @@ export const putSignatureSms = (requestContract: SmsSignDto, headers = new Heade
 	Promise<PutSignatureSmsFetchResponse> => {
 	return apiPut(`${getApiUrl()}${putSignatureSmsPath()}`, requestContract, headers) as Promise<PutSignatureSmsFetchResponse>;
 }
-

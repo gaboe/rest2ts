@@ -33,13 +33,13 @@ and types from https://petstore.swagger.io/v2/swagger.json will be generated int
 
 </details>
 
-## Configure fetching
+## Setup client
 
 ```tsx
-import { configureApiCalls, FetchResponse } from "Api/Api";
+import { setupClient } from "Api/Api";
 
 function App() {
-  configureApiCalls({
+  setupClient({
     apiUrl: "https://api.example.com",
   });
 

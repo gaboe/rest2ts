@@ -52,7 +52,7 @@
     responseMiddlewares: [],
   };
 
-  export function configureApiCalls(configuration: Configuration) {
+  export function setupClient(configuration: Configuration) {
     CONFIG = {
       ...CONFIG,
       ...configuration,
@@ -460,4 +460,3 @@ export const patchCaseUpdateCaseTypeCaseNoCaseType = (caseNo: string, caseType: 
 	Promise<PatchCaseUpdateCaseTypeCaseNoCaseTypeFetchResponse> => {
 	return apiPatch(`${getApiUrl()}${patchCaseUpdateCaseTypeCaseNoCaseTypePath(caseNo, caseType)}`, {}, headers) as Promise<PatchCaseUpdateCaseTypeCaseNoCaseTypeFetchResponse>;
 }
-

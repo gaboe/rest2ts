@@ -52,7 +52,7 @@
     responseMiddlewares: [],
   };
 
-  export function configureApiCalls(configuration: Configuration) {
+  export function setupClient(configuration: Configuration) {
     CONFIG = {
       ...CONFIG,
       ...configuration,
@@ -382,4 +382,3 @@ export const getTest = (headers = new Headers()):
 	Promise<GetTestFetchResponse> => {
 	return apiGet(`${getApiUrl()}${getTestPath()}`, headers, {}) as Promise<GetTestFetchResponse>;
 }
-

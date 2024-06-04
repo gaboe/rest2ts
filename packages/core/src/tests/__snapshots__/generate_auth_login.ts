@@ -52,7 +52,7 @@
     responseMiddlewares: [],
   };
 
-  export function configureApiCalls(configuration: Configuration) {
+  export function setupClient(configuration: Configuration) {
     CONFIG = {
       ...CONFIG,
       ...configuration,
@@ -410,4 +410,3 @@ export const postAuthLogin = (requestContract: AuthRequest, headers = new Header
 	Promise<PostAuthLoginFetchResponse> => {
 	return apiPost(`${getApiUrl()}${postAuthLoginPath()}`, requestContract, headers) as Promise<PostAuthLoginFetchResponse>;
 }
-

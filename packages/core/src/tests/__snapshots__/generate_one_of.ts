@@ -52,7 +52,7 @@
     responseMiddlewares: [],
   };
 
-  export function configureApiCalls(configuration: Configuration) {
+  export function setupClient(configuration: Configuration) {
     CONFIG = {
       ...CONFIG,
       ...configuration,
@@ -518,4 +518,3 @@ export const getProductList = (contractTypeCode?: ContractTypeCode | undefined |
 	}
 	return apiGet(`${getApiUrl()}${getProductListPath()}`, headers, queryParams) as Promise<GetProductListFetchResponse>;
 }
-

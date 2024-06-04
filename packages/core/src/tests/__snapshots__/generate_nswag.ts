@@ -52,7 +52,7 @@
     responseMiddlewares: [],
   };
 
-  export function configureApiCalls(configuration: Configuration) {
+  export function setupClient(configuration: Configuration) {
     CONFIG = {
       ...CONFIG,
       ...configuration,
@@ -3560,4 +3560,3 @@ export const putAuthPassword = (requestContract: SetPasswordCommand, headers = n
 	Promise<PutAuthPasswordFetchResponse> => {
 	return apiPut(`${getApiUrl()}${putAuthPasswordPath()}`, requestContract, headers) as Promise<PutAuthPasswordFetchResponse>;
 }
-

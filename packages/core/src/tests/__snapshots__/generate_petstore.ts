@@ -52,7 +52,7 @@
     responseMiddlewares: [],
   };
 
-  export function configureApiCalls(configuration: Configuration) {
+  export function setupClient(configuration: Configuration) {
     CONFIG = {
       ...CONFIG,
       ...configuration,
@@ -655,4 +655,3 @@ export const postUser = (requestContract: User, headers = new Headers()):
 	Promise<PostUserFetchResponse> => {
 	return apiPost(`${getApiUrl()}${postUserPath()}`, requestContract, headers) as Promise<PostUserFetchResponse>;
 }
-

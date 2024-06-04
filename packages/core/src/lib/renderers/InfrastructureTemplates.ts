@@ -58,7 +58,7 @@ export const getInfrastructureTemplate = (isCookiesAuthEnabled: boolean) => {
     responseMiddlewares: [],
   };
 
-  export function configureApiCalls(configuration: Configuration) {
+  export function setupClient(configuration: Configuration) {
     CONFIG = {
       ...CONFIG,
       ...configuration,
