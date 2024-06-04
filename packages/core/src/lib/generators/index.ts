@@ -5,7 +5,7 @@ import {
   getInfrastructureTemplate,
 } from "../renderers/InfrastructureTemplates";
 import { generateServices } from "./ServiceGenerator";
-import axios from "axios";
+import { post } from "axios";
 import { generateAngularServices } from "./AngularServiceGenerator";
 import { render } from "../renderers/Renderer";
 
@@ -50,7 +50,7 @@ export const generate = async (
   isCookiesAuthEnabled: boolean = false
 ) => {
   if (!!api.swagger && !api.openapi) {
-    const response = await axios.post(
+    const response = await post(
       "https://converter.swagger.io/api/convert",
       api
     );
