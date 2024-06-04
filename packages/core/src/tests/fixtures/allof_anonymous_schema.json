@@ -1,0 +1,131 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Swagger sample schema for anonymous schmea inside allOf attribute",
+    "description": "Example swagger json for github issue",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "\/api\/test": {
+      "get": {
+        "summary": "Test route",
+        "operationId": "4154a669519b96e4c7ac0c3e208e1dc0",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application\/json": {
+                "schema": {
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "ok"
+                    },
+                    "data": {
+                      "oneOf": [
+                        {
+                          "$ref": "#/components/schemas/Dog"
+                        },
+                        {
+                          "$ref": "#/components/schemas/Cat"
+                        },
+                        {
+                          "$ref": "#/components/schemas/Cow"
+                        }
+                      ],
+                      "nullable": true
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Pet": {
+        "properties": {
+          "discriminator": {
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "discriminator": {
+          "propertyName": "discriminator"
+        }
+      },
+      "Dog": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Pet"
+          },
+          {
+            "properties": {
+              "woof": {
+                "type": "boolean"
+              }
+            },
+            "type": "object"
+          }
+        ]
+      },
+      "Cat": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Pet"
+          },
+          {
+            "allOf": [
+              {
+                "allOf": [
+                  {
+                    "allOf": [
+                      {
+                        "properties": {
+                          "eat": {
+                            "type": "boolean"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    ],
+                    "type": "object"
+                  }
+                ],
+                "type": "object"
+              },
+              {
+                "properties": {
+                  "meow": {
+                    "type": "boolean"
+                  }
+                },
+                "type": "object"
+              }
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "Cow": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Pet"
+          }
+        ],
+        "properties": {
+          "moo": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  }
+}
