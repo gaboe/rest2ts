@@ -1,10 +1,10 @@
 {
   "name": "rest2ts",
   "private": false,
-  "version": "5.1.6",
+  "version": "5.1.7",
   "type": "commonjs",
   "bin": {
-    "rest2ts": "./dist/main.js"
+    "rest2ts": "./dist/index.js"
   },
   "repository": {
     "url": "git://github.com/gaboe/rest2ts.git",

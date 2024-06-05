@@ -7,6 +7,6 @@ export default defineConfig({
   clean: true,
   sourcemap: true,
   minify: true,
-  entry: ["src/main.ts"],
+  entry: ["src/index.ts"],
   outDir: "dist",
 });
