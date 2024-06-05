@@ -11,6 +11,18 @@
     "type": "git"
   },
   "author": "Gabriel Ecegi",
+  "keywords": [
+    "rest",
+    "api",
+    "typescript",
+    "swagger",
+    "openapi",
+    "client",
+    "code-generation",
+    "codegen",
+    "http",
+    "types"
+  ],
   "scripts": {
     "lint": "eslint . --max-warnings 0",
     "build": "ncc build ./src/main.ts",
