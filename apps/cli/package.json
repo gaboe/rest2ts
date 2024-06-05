@@ -4,7 +4,7 @@
   "version": "5.1.2",
   "type": "commonjs",
   "bin": {
-    "rest2ts": "./dist/index.js"
+    "rest2ts": "./dist/main.js"
   },
   "repository": {
     "url": "git://github.com/gaboe/rest2ts.git",
@@ -25,7 +25,7 @@
   ],
   "scripts": {
     "lint": "eslint . --max-warnings 0",
-    "build": "ncc build ./src/main.ts",
+    "build": "tsup",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
@@ -49,6 +49,7 @@
     "@types/node": "^20.14.1",
     "@vitest/coverage-istanbul": "^1.6.0",
     "eslint": "^9.4.0",
+    "tsup": "^8.1.0",
     "typescript": "^5.4.5",
     "vitest": "^1.6.0"
   }
