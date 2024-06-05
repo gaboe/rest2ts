@@ -1,9 +1,8 @@
 #!/usr/bin/env node
 
-import * as opt from "optimist";
-
 import { outputFile } from "fs-extra";
 import { generateApiContent } from "./lib";
+import { Command } from "commander";
 
 type ProgramProps = {
   source: string | undefined;
@@ -14,55 +13,36 @@ type ProgramProps = {
   help: never;
 };
 
-// const program = new Command();
+const program = new Command();
 
-// program
-//   .description("Generate TypeScript API clients from Swagger")
-//   .usage("-s <source> -t <target> [options]")
-//   .option("-s, --source <path>", "Path to the swagger file")
-//   .option("-t, --target <path>", "Target path")
-//   .option(
-//     "-ng, --generate-for-angular",
-//     "Generate output for Angular with HttpClient and RxJS"
-//   )
-//   .option("-f, --file-name <name>", "Output file name (defaults to Api.ts)")
-//   .option("--cookies", "Generate API with cookies auth")
-//   .helpOption("-h, --help", "Show help");
-
-// program.parse(process.argv);
-
-// const options = program.opts<ProgramProps>();
-
-// const { source, target, generateForAngular, fileName, cookies } = options;
-
-const optimist = opt
-  .usage("Usage: rest2ts -s path/to/swagger.json")
-  .alias("h", "help")
-  .alias("s", "source")
-  .alias("t", "target")
-  .alias("f", "fileName")
-  .alias("ng", "generateForAngular")
-  .describe("cookies", "If set, api will be generated with cookies auth")
-  .describe("s", "Path to the swagger file")
-  .describe("t", "Target path")
-  .describe(
-    "ng",
-    "Generates output for angular with HttpClient and Rxjs. Values 0/1"
+program
+  .description("Generate TypeScript API clients from Swagger")
+  .usage("-s <source> -t <target> [options]")
+  .option("-s, --source <path>", "Path to the swagger file")
+  .option("-t, --target <path>", "Target path")
+  .option(
+    "-ng, --generate-for-angular",
+    "Generate output for Angular with HttpClient and RxJS"
   )
-  .describe("f", "Output file name. Default file name is Api.ts");
+  .option("-f, --file-name <name>", "Output file name (defaults to Api.ts)")
+  .option("--cookies", "Generate API with cookies auth")
+  .helpOption("-h, --help", "Show help");
 
-const { source, target, generateForAngular, fileName, cookies } =
-  optimist.argv as ProgramProps;
+program.parse(process.argv);
+
+const options = program.opts<ProgramProps>();
+
+const { source, target, generateForAngular, fileName, cookies } = options;
 
 if (!source) {
   console.error("Error: Source -s is required.");
-  optimist.showHelp();
+  program.outputHelp();
   process.exit(1);
 }
 
 if (!target) {
   console.error("Error: Target -t is required.");
-  optimist.showHelp();
+  program.outputHelp();
   process.exit(1);
 }
 
