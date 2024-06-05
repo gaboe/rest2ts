@@ -3,9 +3,9 @@
 // ALL CHANGES WILL BE OVERWRITTEN
 
 // INFRASTRUCTURE START
-  type StandardError = globalThis.Error;
-  type Error500s = 501 | 502 | 503 | 504 | 505 | 506 | 507 | 508 | 510 | 511;
-  type ErrorStatuses = 0 | Error500s;
+  export type StandardError = globalThis.Error;
+  export type Error500s = 501 | 502 | 503 | 504 | 505 | 506 | 507 | 508 | 510 | 511;
+  export type ErrorStatuses = 0 | Error500s;
   export type ErrorResponse = FetchResponse<unknown, ErrorStatuses>;
 
   export type FetchResponseOfError = {
@@ -27,10 +27,10 @@
   export type FetchResponse<TData, TStatus extends number = 0> = 
     TStatus extends ErrorStatuses ? FetchResponseOfError: FetchResponseOfSuccess<TData, TStatus>;
 
-  type TerminateRequest = null;
-  type TerminateResponse = null;
+  export type TerminateRequest = null;
+  export type TerminateResponse = null;
 
-  type Configuration = {
+  export type Configuration = {
     apiUrl: string | (() => string);
     jwtKey: string | undefined | (() => string | null | undefined);
     requestMiddlewares?: Array<{
@@ -67,20 +67,20 @@
     };
   }
 
-  function getApiUrl() {
+  export function getApiUrl() {
     if (typeof CONFIG.apiUrl === "function") {
       return CONFIG.apiUrl();
     }
     return CONFIG.apiUrl;
   }
 
-  type Termination = {
+  export type Termination = {
     termination: {
       name: string;
     };
   };
 
-  function processRequestWithMiddlewares(
+  export function processRequestWithMiddlewares(
     request: FetchArgs
   ): FetchArgs | Termination {
     for (const middleware of CONFIG.requestMiddlewares || []) {
@@ -97,7 +97,7 @@
     return request;
   }
 
-  function processResponseWithMiddlewares<T extends FetchResponse<unknown, any>>(
+  export function processResponseWithMiddlewares<T extends FetchResponse<unknown, any>>(
     response: T
   ): T | Termination {
     for (const middleware of CONFIG.responseMiddlewares || []) {
@@ -121,19 +121,19 @@
     return response;
   }
 
-  type FetchOptions = {
+  export type FetchOptions = {
     method: string;
     headers: Headers;
     body?: any;
     redirect: RequestRedirect;
   };
 
-  type FetchArgs = {
+  export type FetchArgs = {
     url: string;
     options: FetchOptions;
   }
 
-  async function fetchJson<T extends FetchResponse<unknown, number>>(
+  export async function fetchJson<T extends FetchResponse<unknown, number>>(
     args: FetchArgs
   ): Promise<T> {
     const errorResponse = (error: StandardError, status: number, args: any) => {
@@ -196,7 +196,7 @@
     }
   }
 
-  function getToken(): string | null | undefined {
+  export function getJwtKey(): string | null | undefined {
     if (typeof CONFIG.jwtKey === "function") {
       return CONFIG.jwtKey();
     }
@@ -212,13 +212,13 @@
     if (!headers.has("Content-Type")) {
       headers.append("Content-Type", "application/json");
     }
-    const token = getToken();
-    if (!headers.has("Authorization") && token) {
+    const token = getJwtKey();
+    if (!headers.has("Authorization") && !!token) {
       headers.append("Authorization", token);
     }
   };
 
-function getQueryParamsString(paramsObject: ParamsObject = {}) {
+export function getQueryParamsString(paramsObject: ParamsObject = {}) {
 	const queryString = Object.entries(paramsObject)
     .map(([key, value]) => {
       if (Array.isArray(value)) {
@@ -239,7 +239,7 @@ function getQueryParamsString(paramsObject: ParamsObject = {}) {
 	return queryString.length > 0 ? `?${queryString}` : '';
 }
 
-function apiPost<TResponse extends FetchResponse<unknown, number>, TRequest>(
+export function apiPost<TResponse extends FetchResponse<unknown, number>, TRequest>(
   url: string,
   request: TRequest,
   headers: Headers,
@@ -264,11 +264,11 @@ function apiPost<TResponse extends FetchResponse<unknown, number>, TRequest>(
   });
 }
 
-type ParamsObject = {
+export type ParamsObject = {
   [key: string]: any;
 };
 
-function apiGet<TResponse extends FetchResponse<unknown, number>>(
+export function apiGet<TResponse extends FetchResponse<unknown, number>>(
   url: string,
   headers: Headers,
   paramsObject: ParamsObject = {}
@@ -289,7 +289,7 @@ function apiGet<TResponse extends FetchResponse<unknown, number>>(
   });
 }
 
-function apiPut<TResponse extends FetchResponse<unknown, number>, TRequest>(
+export function apiPut<TResponse extends FetchResponse<unknown, number>, TRequest>(
   url: string,
   request: TRequest,
   headers: Headers,
@@ -314,7 +314,7 @@ function apiPut<TResponse extends FetchResponse<unknown, number>, TRequest>(
   });
 }
 
-function apiDelete<TResponse extends FetchResponse<unknown, number>>(
+export function apiDelete<TResponse extends FetchResponse<unknown, number>>(
   url: string,
   headers: Headers,
   paramsObject: ParamsObject = {}
@@ -340,7 +340,7 @@ function apiDelete<TResponse extends FetchResponse<unknown, number>>(
   });
 }
 
-function apiPatch<TResponse extends FetchResponse<unknown, number>, TRequest>(
+export function apiPatch<TResponse extends FetchResponse<unknown, number>, TRequest>(
   url: string,
   request: TRequest,
   headers: Headers,
