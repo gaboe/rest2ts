@@ -12,6 +12,12 @@ npx rest2ts -s https://petstore.swagger.io/v2/swagger.json -t ./api
 
 👉 [https://gaboe.github.io/rest2ts/](https://gaboe.github.io/rest2ts/) 👈
 
+## 🤝 Support
+
+<a href="https://www.buymeacoffee.com/gaboe" target="_blank">
+    <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" >
+</a>
+
 ## 📦 Contribution
 
 1. Clone the repository
@@ -35,9 +41,3 @@ if you want to change snapshot run
 ```bash
 pnpm test:snapshot:update
 ```
-
-## 🤝 Support
-
-<a href="https://www.buymeacoffee.com/gaboe" target="_blank">
-    <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" >
-</a>
