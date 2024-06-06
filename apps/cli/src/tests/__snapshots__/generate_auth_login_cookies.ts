@@ -1,14 +1,8 @@
-const disclaimer = `
 /* eslint-disable */
 // THIS FILE WAS GENERATED
-// ALL CHANGES WILL BE OVERWRITTEN\n\n`.trimStart();
+// ALL CHANGES WILL BE OVERWRITTEN
 
-export const getInfrastructureTemplate = (isCookiesAuthEnabled: boolean) => {
-  const credentialsTemplate = isCookiesAuthEnabled
-    ? `\n\t\tcredentials: "include",`
-    : "";
-
-  return `${disclaimer}// INFRASTRUCTURE START
+// INFRASTRUCTURE START
   export type StandardError = globalThis.Error;
   export type Error500s = 501 | 502 | 503 | 504 | 505 | 506 | 507 | 508 | 510 | 511;
   export type ErrorStatuses = 0 | Error500s;
@@ -115,7 +109,7 @@ export const getInfrastructureTemplate = (isCookiesAuthEnabled: boolean) => {
             args: response.args,
             data: null,
             error: new Error(
-              \`Response terminated by middleware: \${middleware.name}\`
+              `Response terminated by middleware: ${middleware.name}`
             ),
           } as FetchResponseOfError as unknown as T;
         }
@@ -131,7 +125,8 @@ export const getInfrastructureTemplate = (isCookiesAuthEnabled: boolean) => {
     method: string;
     headers: Headers;
     body?: any;
-    redirect: RequestRedirect;${isCookiesAuthEnabled ? "\n\t\tcredentials?: RequestCredentials;" : ""}
+    redirect: RequestRedirect;
+		credentials?: RequestCredentials;
   };
 
   export type FetchArgs = {
@@ -173,7 +168,7 @@ export const getInfrastructureTemplate = (isCookiesAuthEnabled: boolean) => {
           args,
           data: null,
           error: new Error(
-            \`Request terminated by middleware: \${fetchRequest.termination.name}\`
+            `Request terminated by middleware: ${fetchRequest.termination.name}`
           ),
         } as FetchResponse<T, Error500s>;
 
@@ -229,20 +224,20 @@ export function getQueryParamsString(paramsObject: ParamsObject = {}) {
     .map(([key, value]) => {
       if (Array.isArray(value)) {
         return value
-          .map(val => \`\${encodeURIComponent(key)}=\${encodeURIComponent(
+          .map(val => `${encodeURIComponent(key)}=${encodeURIComponent(
             val,
-          )}\`\)
+          )}`)
           .join('&');
       }
       // Handling non-array parameters
       return value !== undefined && value !== null 
-        ? \`\${encodeURIComponent(key)}=\${encodeURIComponent(value)}\`\ 
+        ? `${encodeURIComponent(key)}=${encodeURIComponent(value)}` 
         : '';
     })
     .filter(part => part !== '')
     .join("&");
 
-	return queryString.length > 0 ? \`?\${queryString}\` : '';
+	return queryString.length > 0 ? `?${queryString}` : '';
 }
 
 export function apiPost<TResponse extends FetchResponse<unknown, number>, TRequest>(
@@ -259,13 +254,14 @@ export function apiPost<TResponse extends FetchResponse<unknown, number>, TReque
     method: "POST",
     headers,
     body: raw,
-    redirect: "follow",${credentialsTemplate}
+    redirect: "follow",
+		credentials: "include",
   };
 
   const maybeQueryString = getQueryParamsString(paramsObject);
 
   return fetchJson<TResponse>({
-    url: \`\${url}\${maybeQueryString}\`,
+    url: `${url}${maybeQueryString}`,
     options: requestOptions,
   });
 }
@@ -286,11 +282,12 @@ export function apiGet<TResponse extends FetchResponse<unknown, number>>(
   const requestOptions: FetchOptions = {
     method: "GET",
     headers,
-    redirect: "follow",${credentialsTemplate}
+    redirect: "follow",
+		credentials: "include",
   };
 
   return fetchJson<TResponse>({
-    url: \`\${url}\${maybeQueryString}\`,
+    url: `${url}${maybeQueryString}`,
     options: requestOptions,
   });
 }
@@ -309,13 +306,14 @@ export function apiPut<TResponse extends FetchResponse<unknown, number>, TReques
     method: "PUT",
     headers,
     body: raw,
-    redirect: "follow",${credentialsTemplate}
+    redirect: "follow",
+		credentials: "include",
   };
 
   const maybeQueryString = getQueryParamsString(paramsObject);
 
   return fetchJson<TResponse>({
-    url: \`\${url}\${maybeQueryString}\`,
+    url: `${url}${maybeQueryString}`,
     options: requestOptions,
   });
 }
@@ -329,19 +327,20 @@ export function apiDelete<TResponse extends FetchResponse<unknown, number>>(
 
   const queryString = Object.entries(paramsObject)
     .filter(([_, val]) => val !== undefined && val !== null)
-    .map(([key, val]) => \`\${key}=\${val}\`)
+    .map(([key, val]) => `${key}=${val}`)
     .join("&");
   
-  const maybeQueryString = queryString.length > 0 ? \`?\${queryString}\` : "";
+  const maybeQueryString = queryString.length > 0 ? `?${queryString}` : "";
 
   const requestOptions: FetchOptions = {
     method: "DELETE",
     headers,
-    redirect: "follow",${credentialsTemplate}
+    redirect: "follow",
+		credentials: "include",
   };
 
   return fetchJson<TResponse>({
-    url: \`\${url}\${maybeQueryString}\`,
+    url: `${url}${maybeQueryString}`,
     options: requestOptions,
   });
 }
@@ -360,273 +359,60 @@ export function apiPatch<TResponse extends FetchResponse<unknown, number>, TRequ
     method: "PATCH",
     headers,
     body: raw,
-    redirect: "follow",${credentialsTemplate}
+    redirect: "follow",
+		credentials: "include",
   };
   const maybeQueryString = getQueryParamsString(paramsObject);
 
   return fetchJson<TResponse>({
-    url: \`\${url}\${maybeQueryString}\`,
+    url: `${url}${maybeQueryString}`,
     options: requestOptions,
   });
 }
 // INFRASTRUCTURE END
-`;
+
+export type AuthRequest = {
+	login: string;
+	password: string;
 };
 
-export const getAngularInfrastructureTemplate = () => {
-  return `${disclaimer}// INFRASTRUCTURE START
-
-import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { Inject, Injectable, InjectionToken, Optional } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
-
-type FlattenableValue =
-  | string
-  | number
-  | boolean
-  | null
-  | undefined
-  | Date
-  | FlattenableValue[]
-  | {
-      [prop: string]: FlattenableValue;
-    };
-
-type QueryParams = { [key: string]: FlattenableValue } | null | undefined;
-
-function flattenQueryParams(data: QueryParams) {
-  const params: Record<string, any> = {};
-  flatten(params, data, '');
-  return params;
-}
-
-function flatten(params: any, data: FlattenableValue, path: string) {
-  for (const key of Object.keys(data)) {
-    if (data[key] instanceof Array) {
-      data[key].forEach((item: FlattenableValue, index: number) => {
-        if (item instanceof Object) {
-          flatten(params, item, \`\${path}\${key}[\${index}].\`);
-        } else {
-          params[\`\${path}\${key}[\${index}]\`] = item;
-        }
-      });
-    } else if (data[key]?.constructor === Object) {
-      flatten(params, data[key], \`\${path}\${key}.\`);
-    } else {
-      params[\`\${path}\${key}\`] = data[key];
-    }
-  }
-}
-
-type ResponseResult<T, U extends number = 0> = {
-  status: U;
-  response: U extends 0 ? unknown : T;
+export enum AuthError {
+	_100 = "100",
+	_101 = "101",
+	_102 = "102",
+	_200 = "200",
+	_300 = "300",
+	_301 = "301"
 };
 
-function createQueryUrl(url: string, paramsObject: QueryParams) {
-  const queryString = Object.entries(flattenQueryParams(paramsObject))
-    .map(([key, val]) => {
-			
-			if (key && val !== null && val !== undefined) {
-				return Array.isArray(val) 
-					? val.map((item) => \`\${encodeURIComponent(key)}=\${encodeURIComponent(item)}\`).join('&') 
-					: \`\${encodeURIComponent(key)}=\${encodeURIComponent(val)}\`;
-			}
-			return null;
-		})
-		.filter(p => !!p)
-    .join("&");
-
-  const maybeQueryString = queryString.length > 0 ? \`?\${queryString}\` : "";
-  return \`\${url}\${maybeQueryString}\`;
-}
-
-function parseErrorResponse<T>(error: unknown): T | unknown {
-	try {
-		return JSON.parse(error as string) as T;
-	} catch (e) {
-		return error;
-	}
-}
-
-function apiGet<T extends ResponseResult<unknown, number>>(
-	httpClient: HttpClient,
-	url: string,
-	params?: QueryParams,
-): Observable<T | never> {
-	const queryUrl = !!params ? createQueryUrl(url, params) : url;
-	return httpClient
-		.get<HttpResponse<T['response']>>(queryUrl, { observe: 'response' })
-		.pipe(
-			map(
-				(r) =>
-					({
-						status: r.status,
-						response: r.body as T['response'],
-					} as T),
-			),
-			catchError((err) => {
-				if (err instanceof HttpErrorResponse) {
-					return of({ status: err.status, response: parseErrorResponse<T>(err.error) }) as Observable<T>;
-				}
-				return throwError(() => err);
-			}),
-		);
-}
-
-function apiGetFile<T extends ResponseResult<unknown, number>>(
-	httpClient: HttpClient,
-	url: string,
-	params?: QueryParams,
-): Observable<T | never> {
-	const mapResult = (response: HttpResponse<Blob>) => {
-		const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-		let fileNameMatch = contentDisposition ? /filename\\\*=(?:(\\\?['"])(.*?)\\1|(?:[^\\s]+'.*?')?([^;\\n]*))/g.exec(contentDisposition) : undefined;
-		let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
-		if (fileName) {
-			fileName = decodeURIComponent(fileName);
-		} else {
-			fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-			fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-		}
-		return { data: response.body, fileName: fileName };
-	}
-
-	const queryUrl = !!params ? createQueryUrl(url, params) : url;
-	return httpClient
-		.get(queryUrl, { observe: 'response', responseType: "blob" })
-		.pipe(
-			map(
-				(r) =>
-				({
-					status: r.status,
-					response: mapResult(r),
-				} as T),
-			),
-			catchError((err) => {
-				if (err instanceof HttpErrorResponse) {
-					return of({ status: err.status, response: parseErrorResponse<T>(err.error) }) as Observable<T>;
-				}
-				return throwError(() => err);
-			}),
-		);
-}
-
-function apiPost<T extends ResponseResult<unknown, number>, U = unknown>(
-	httpClient: HttpClient,
-	url: string,
-	body: U,
-  params?: QueryParams,
-): Observable<T | never> {
-  const queryUrl = !!params ? createQueryUrl(url, params) : url;
-	return httpClient
-		.post<HttpResponse<T['response']>>(queryUrl, body, {
-			observe: 'response',
-		})
-		.pipe(
-			map(
-				(r) =>
-					({
-						status: r.status,
-						response: r.body as T['response'],
-					} as T),
-			),
-			catchError((err) => {
-				if (err instanceof HttpErrorResponse) {
-					return of({ status: err.status, response: parseErrorResponse<T>(err.error) }) as Observable<T>;
-				}
-				return throwError(() => err);
-			}),
-		);
-}
-
-function apiPut<T extends ResponseResult<unknown, number>, U = unknown>(
-	httpClient: HttpClient,
-	url: string,
-	body: U,
-  params?: QueryParams,
-): Observable<T | never> {
-  const queryUrl = !!params ? createQueryUrl(url, params) : url;
-	return httpClient
-		.put<HttpResponse<T['response']>>(queryUrl, body, {
-			observe: 'response',
-		})
-		.pipe(
-			map(
-				(r) =>
-					({
-						status: r.status,
-						response: r.body as T['response'],
-					} as T),
-			),
-			catchError((err) => {
-				if (err instanceof HttpErrorResponse) {
-					return of({ status: err.status, response: parseErrorResponse<T>(err.error) }) as Observable<T>;
-				}
-				return throwError(() => err);
-			}),
-		);
-}
-
-function apiDelete<T extends ResponseResult<unknown, number>>(
-	httpClient: HttpClient,
-	url: string,
-	params?: QueryParams,
-) {
-	const queryUrl = !!params ? createQueryUrl(url, params) : url;
-	return httpClient
-		.delete<HttpResponse<T['response']>>(queryUrl, { observe: 'response' })
-		.pipe(
-			map(
-				(r) =>
-					({
-						status: r.status,
-						response: r.body as T['response'],
-					} as T),
-			),
-			catchError((err) => {
-				if (err instanceof HttpErrorResponse) {
-					return of({ status: err.status, response: parseErrorResponse<T>(err.error) }) as Observable<T>;
-				}
-				return throwError(() => err);
-			}),
-		);
-}
-
-function apiPatch<T extends ResponseResult<unknown, number>, U = unknown>(
-	httpClient: HttpClient,
-	url: string,
-	body: U,
-  params?: QueryParams,
-): Observable<T | never> {
-  const queryUrl = !!params ? createQueryUrl(url, params) : url;
-	return httpClient
-		.patch<HttpResponse<T['response']>>(queryUrl, body, {
-			observe: 'response',
-		})
-		.pipe(
-			map(
-				(r) =>
-					({
-						status: r.status,
-						response: r.body as T['response'],
-					} as T),
-			),
-			catchError((err) => {
-				if (err instanceof HttpErrorResponse) {
-					return of({ status: err.status, response: parseErrorResponse<T>(err.error) }) as Observable<T>;
-				}
-				return throwError(() => err);
-			}),
-		);
-}
-
-  // INFRASTRUCTURE END
-
-export interface FileResponse {
-  data: Blob;
-  fileName?: string;
-}
-  `;
+export type AuthResult = {
+	isSuccessful: boolean;
+	token?: string | null;
+	expiration: string;
+	email?: string | null;
+	firstName?: string | null;
+	lastName?: string | null;
+	enterpriseID: number;
+	error: typeof AuthError;
+	errorMessage?: string | null;
 };
+
+export type ProblemDetails = {
+	type?: string | null;
+	title?: string | null;
+	status?: number | null;
+	detail?: string | null;
+	instance?: string | null;
+};
+
+export type PostAuthLoginFetchResponse = 
+| FetchResponse<AuthResult, 200> 
+| FetchResponse<ProblemDetails, 400> 
+| ErrorResponse;
+
+export const postAuthLoginPath = () => `/api/Auth/login`;
+
+export const postAuthLogin = (requestContract: AuthRequest, headers = new Headers()): 
+	Promise<PostAuthLoginFetchResponse> => {
+	return apiPost(`${getApiUrl()}${postAuthLoginPath()}`, requestContract, headers) as Promise<PostAuthLoginFetchResponse>;
+}

@@ -30,6 +30,12 @@ for (const name of cases) {
       expect(content).toMatchFileSnapshot(snapshotPath(name));
     });
 
+    test("Generate with cookies", async () => {
+      const api = await SwaggerParser.parse(fixturePath(name));
+      const content = await generate(api, false, true);
+      expect(content).toMatchFileSnapshot(snapshotPath(`${name}_cookies`));
+    });
+
     test("Generate angular", async () => {
       const api = await SwaggerParser.parse(fixturePath(name));
       const content = await generate(api, true, true);
