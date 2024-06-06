@@ -11,7 +11,6 @@ npx rest2ts
   --source https://petstore.swagger.io/v2/swagger.json
   --target ./api
   --generate-for-angular
-  --url https://petstore.swagger.io/v2
   --file-name MyApi.ts
 ```
 
@@ -44,7 +43,7 @@ Generates output for Angular with HttpClient and RxJS.
 #### Example
 
 ```bash
- npx rest2ts --source https://petstore.swagger.io/v2/swagger.json --target ./generated --url https://petstore.swagger.io/v2 --generate-for-angular
+ npx rest2ts --source https://petstore.swagger.io/v2/swagger.json --target ./generated --generate-for-angular
 ```
 
 ### --file-name / -f
@@ -56,7 +55,7 @@ Default value is `Api.ts`.
 #### Example
 
 ```bash
- npx rest2ts --source https://petstore.swagger.io/v2/swagger.json --target ./generated --url https://petstore.swagger.io/v2 --generate-for-angular --file-name MyApi.ts
+ npx rest2ts --source https://petstore.swagger.io/v2/swagger.json --target ./generated --generate-for-angular --file-name MyApi.ts
 ```
 
 ### --cookies
@@ -66,7 +65,7 @@ Generates API with cookies auth.
 #### Example
 
 ```bash
- npx rest2ts --source https://petstore.swagger.io/v2/swagger.json --target ./generated --url https://petstore.swagger.io/v2 --generate-for-angular --cookies
+ npx rest2ts --source https://petstore.swagger.io/v2/swagger.json --target ./generated --generate-for-angular --cookies
 ```
 
 ### --help / -h
