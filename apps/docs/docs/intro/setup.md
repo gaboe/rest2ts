@@ -40,7 +40,7 @@ import { setupClient } from "Api/Api";
 
 function App() {
   setupClient({
-    apiUrl: "https://api.example.com",
+    apiUrl: "https://petstore.swagger.io/v2",
   });
 
   <>Your app</>;
