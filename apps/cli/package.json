@@ -31,7 +31,9 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:snapshot:update": "vitest -u",
-    "tsc": "tsc --noEmit"
+    "tsc": "tsc --noEmit",
+    "publish:npm": "pnpm publish",
+    "publish:jsr": "npx jsr publish"
   },
   "dependencies": {
     "@apidevtools/swagger-parser": "^10.1.0",
