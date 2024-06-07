@@ -25,6 +25,7 @@
   ],
   "scripts": {
     "lint": "eslint . --max-warnings 0",
+    "dev": "pnpm run test:watch",
     "build": "tsup",
     "test": "vitest run",
     "test:watch": "vitest",
