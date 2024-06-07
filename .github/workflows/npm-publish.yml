@@ -1,4 +1,4 @@
-name: Publish npm package
+name: Publish NPM package
 on:
   workflow_dispatch:
   push:
@@ -24,14 +24,18 @@ jobs:
         with:
           node-version: '21'
 
-      - name: Install dependencies
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4.0.0
+
+      - name: Install dependencies and buid
         run: |
           cd ./apps/cli
-          npm install
+          pnpm i
+          pnpm build
 
       - name: Publish package
         run: |
           cd ./apps/cli
-          npm publish
+          pnpm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

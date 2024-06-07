@@ -24,7 +24,7 @@ jobs:
       - name: Install dependencies
         run: |
           cd ./apps/cli
-          pnpm install
+          pnpm i
 
       - name: Publish package
         run: |
