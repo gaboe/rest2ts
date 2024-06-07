@@ -19,7 +19,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4.0.0
 
-      - name: Install dependencies and buid
+      - name: Install dependencies and build
         run: |
           cd ./apps/cli
           pnpm i
@@ -27,6 +27,6 @@ jobs:
 
       - uses: JS-DevTools/npm-publish@v3
         with:
-          path: ./apps/cli
+          package: ./apps/cli
           token: ${{ secrets.NPM_TOKEN }}
 
