@@ -1,5 +1,5 @@
 {
   "name": "@gaboe/rest2ts",
-  "version": "5.1.10",
+  "version": "5.1.11",
   "exports": "./src/index.ts"
 }
