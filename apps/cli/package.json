@@ -1,7 +1,8 @@
 {
   "name": "rest2ts",
+  "description": "Generate beautiful TypeScript types from REST APIs",
   "private": false,
-  "version": "5.1.10",
+  "version": "5.1.11",
   "type": "commonjs",
   "bin": {
     "rest2ts": "./dist/index.js"
@@ -33,7 +34,7 @@
     "test:snapshot:update": "vitest -u",
     "tsc": "tsc --noEmit",
     "publish:npm": "pnpm publish",
-    "publish:jsr": "npx jsr publish"
+    "publish:jsr": "pnpm jsr publish"
   },
   "dependencies": {
     "@apidevtools/swagger-parser": "^10.1.0",
