@@ -16,8 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Change directory
-        run: cd ./apps/cli
-
       - name: Publish package
-        run: npx jsr publish
+        run: |
+          cd ./apps/cli
+          npx jsr publish
