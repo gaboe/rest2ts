@@ -11,20 +11,11 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
-
-    permissions:
-      contents: read
-      id-token: write
-
     steps:
       - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: '21'
-          registry-url: 'https://npm.pkg.github.com'
-
+          node-version: "20"
       - name: Setup pnpm
         uses: pnpm/action-setup@v4.0.0
 
@@ -34,9 +25,8 @@ jobs:
           pnpm i
           pnpm build
 
-      - name: Publish package
-        run: |
-          cd ./apps/cli
-          npm publish --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - uses: JS-DevTools/npm-publish@v3
+        with:
+          path: ./apps/cli
+          token: ${{ secrets.NPM_TOKEN }}
+
