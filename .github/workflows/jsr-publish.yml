@@ -16,7 +16,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4.0.0
+
+      - name: Install dependencies
+        run: |
+          cd ./apps/cli
+          pnpm install
+
       - name: Publish package
         run: |
           cd ./apps/cli
-          npx jsr publish
+          pnpm dlx jsr publish
