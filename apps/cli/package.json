@@ -2,7 +2,7 @@
   "name": "rest2ts",
   "description": "Generate beautiful TypeScript types from REST APIs",
   "private": false,
-  "version": "5.1.11",
+  "version": "5.1.12",
   "type": "commonjs",
   "bin": {
     "rest2ts": "./dist/index.js"
