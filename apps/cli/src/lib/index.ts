@@ -1,9 +1,9 @@
 import { generate } from "./generators";
-import { parse } from "@apidevtools/swagger-parser";
+import SwaggerParser from "@apidevtools/swagger-parser";
 
 async function parseSwagger(source: string) {
   try {
-    return await parse(source);
+    return await SwaggerParser.parse(source);
   } catch (err) {
     console.log("parseSwagger ~ err:", err);
     return null;
