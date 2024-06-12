@@ -62,7 +62,7 @@ export const getRequestContractType = (
     !!post &&
     post.requestBody?.content["multipart/form-data"]
   ) {
-    return getContractType(post, 'multipart/form-data');
+    return getContractType(post, "multipart/form-data");
   }
 
   const put = endpointDescription.pathObject.put;
@@ -74,6 +74,15 @@ export const getRequestContractType = (
     return getContractType(put);
   }
 
+  if (
+    methodType === "PUT" &&
+    !!put &&
+    put.requestBody?.content["multipart/form-data"]
+  ) {
+    return getContractType(put, "multipart/form-data");
+  }
+
+
   const patch = endpointDescription.pathObject.patch;
   if (
     methodType === "PATCH" &&
@@ -81,6 +90,13 @@ export const getRequestContractType = (
     patch.requestBody?.content["application/json"]
   ) {
     return getContractType(patch);
+  }
+  if (
+    methodType === "PATCH" &&
+    !!patch &&
+    patch.requestBody?.content["multipart/form-data"]
+  ) {
+    return getContractType(patch,"multipart/form-data");
   }
 
   return Nothing;
@@ -411,19 +427,15 @@ const bodyBasedMethod = (
 
   let isMultipart = endpointDescription.pathObject.post?.requestBody?.content['multipart/form-data'];
   const multipartConversion = isMultipart ? `
-  //this part of code is generated for multipart/form-data
-  headers.append("Content-Type", "multipart/form-data");
+  //multipart/form-data  
   const formData = new FormData();
   Object.keys(requestContract).forEach(key => {
     const value = requestContract[key as keyof ElectronicTradeFormalityRequestDTO];
-    if (value instanceof File) {
-      //file append
+    if (value instanceof File) {      
       formData.append(key, value);
-    } else if (typeof value === 'object' && value !== null) {
-      //another nested dto serialize (file in nested dto will not work - but i think its ok)
+    } else if (typeof value === 'object' && value !== null) {      
       formData.append(key, JSON.stringify(value));
-    } else {
-      // simple attributes
+    } else {      
       formData.append(key, value as any);
     }
   });
