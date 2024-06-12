@@ -246,9 +246,14 @@ export function apiPost<TResponse extends FetchResponse<unknown, number>, TReque
   headers: Headers,
   paramsObject: ParamsObject = {}
 ) {
-  const raw = JSON.stringify(request);
-
-  updateHeaders(headers);
+  let raw;
+  if(request instanceof FormData) {
+      raw = request;
+      headers.delete('Content-Type');
+  } else {
+      raw = JSON.stringify(request);
+      updateHeaders(headers);
+  }
 
   const requestOptions: FetchOptions = {
     method: "POST",
@@ -424,7 +429,10 @@ export const postPetPetIdUploadImagePath = (petId: number) => `/pet/${petId}/upl
 
 export const postPetPetIdUploadImage = (petId: number, headers = new Headers()): 
 	Promise<PostPetPetIdUploadImageFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postPetPetIdUploadImagePath(petId)}`, {}, headers) as Promise<PostPetPetIdUploadImageFetchResponse>;
+	
+    //multipart/form-data  
+    const formData = new FormData();
+    return apiPost(`${getApiUrl()}${postPetPetIdUploadImagePath(petId)}`, formData, headers) as Promise<PostPetPetIdUploadImageFetchResponse>;
 }
 
 export type PostPetFetchResponse = 

@@ -245,9 +245,14 @@ export function apiPost<TResponse extends FetchResponse<unknown, number>, TReque
   headers: Headers,
   paramsObject: ParamsObject = {}
 ) {
-  const raw = JSON.stringify(request);
-
-  updateHeaders(headers);
+  let raw;
+  if(request instanceof FormData) {
+      raw = request;
+      headers.delete('Content-Type');
+  } else {
+      raw = JSON.stringify(request);
+      updateHeaders(headers);
+  }
 
   const requestOptions: FetchOptions = {
     method: "POST",
@@ -3471,7 +3476,10 @@ export const postAuthTokenPath = () => `/api/v1/auth/token`;
 
 export const postAuthToken = (headers = new Headers()): 
 	Promise<PostAuthTokenFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postAuthTokenPath()}`, {}, headers) as Promise<PostAuthTokenFetchResponse>;
+	
+    //multipart/form-data  
+    const formData = new FormData();
+    return apiPost(`${getApiUrl()}${postAuthTokenPath()}`, formData, headers) as Promise<PostAuthTokenFetchResponse>;
 }
 
 export type PostAuthEmailVerificationFetchResponse = 

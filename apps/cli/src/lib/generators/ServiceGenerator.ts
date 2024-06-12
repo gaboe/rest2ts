@@ -19,7 +19,7 @@ import { render } from "../renderers/Renderer";
 
 export const getRequestContractType = (
   endpointDescription: EndpointDescription
-): Maybe<{ contractParameterName: string; formattedParam: string }> => {
+): Maybe<{ contractParameterName: string; formattedParam: string ; paramType: string}> => {
   const getContractType = (op: Operation, contentType: "application/json" | "multipart/form-data" = 'application/json') => {
     const schema = op.requestBody.content[contentType]!.schema;
     const isRequestParamArray = schema.type === "array" && !!schema.items;
@@ -30,6 +30,7 @@ export const getRequestContractType = (
     if (schema.type === "string" || schema.type === "number") {
       return Just({
         contractParameterName: "body",
+        paramType: schema.type,
         formattedParam: `body: ${schema.type}`,
       });
     }
@@ -39,6 +40,9 @@ export const getRequestContractType = (
       .chain((v) =>
         Just({
           contractParameterName: "requestContract",
+          paramType: `${v}${
+            isRequestParamArray ? "[]" : ""
+          }`,
           formattedParam: `requestContract: ${v}${
             isRequestParamArray ? "[]" : ""
           }`,
@@ -109,7 +113,9 @@ const getContractResult = (
   const getSchemas = (operation: Operation) =>
     Object.entries(operation.responses).map((e) => ({
       status: e[0],
-      schema: e[1]?.content?.["application/json"]?.schema ?? null,
+      schema: e[1]?.content?.["application/json"]?.schema
+        ?? e[1]?.content?.["multipart/form-data"]?.schema
+        ?? null,
     }));
 
   const getTypeName = (schema: Schema, isArray: boolean) => {
@@ -390,7 +396,8 @@ const bodyBasedMethod = (
   formattedRequestContractType: string,
   contractParameterName: string,
   contractResult: string,
-  methodType: MethodType
+  methodType: MethodType,
+  paramType: string
 ) => {
   const getMethodType = () => {
     switch (methodType) {
@@ -426,11 +433,17 @@ const bodyBasedMethod = (
   const pathName = `${name}Path`;
 
   let isMultipart = endpointDescription.pathObject.post?.requestBody?.content['multipart/form-data'];
-  const multipartConversion = isMultipart ? `
-  //multipart/form-data  
-  const formData = new FormData();
-  Object.keys(requestContract).forEach(key => {
-    const value = requestContract[key as keyof ElectronicTradeFormalityRequestDTO];
+  let multipartConversion = ``;
+  if (isMultipart){
+
+    multipartConversion = `
+    //multipart/form-data  
+    const formData = new FormData();
+    `;
+
+    if(!!formattedRequestContractType) {
+      multipartConversion += `Object.keys(requestContract).forEach(key => {
+    const value = requestContract[key as keyof ${paramType}];
     if (value instanceof File) {      
       formData.append(key, value);
     } else if (typeof value === 'object' && value !== null) {      
@@ -438,8 +451,12 @@ const bodyBasedMethod = (
     } else {      
       formData.append(key, value as any);
     }
-  });
-  ` : ``;
+  });`
+
+    }
+
+
+  }
 
   const view = {
     name: name,
@@ -475,7 +492,9 @@ export const generateServices = (swagger: SwaggerSchema) => {
       const {
         formattedParam: formattedRequestContractType,
         contractParameterName,
+        paramType
       } = getRequestContractType(endpointDescription).orDefault({
+        paramType: "",
         formattedParam: "",
         contractParameterName: "{}",
       });
@@ -493,7 +512,8 @@ export const generateServices = (swagger: SwaggerSchema) => {
           formattedRequestContractType,
           contractParameterName,
           contractResult,
-          endpointDescription.methodType
+          endpointDescription.methodType,
+          paramType
         );
       }
       if (
