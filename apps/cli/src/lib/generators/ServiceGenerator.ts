@@ -20,8 +20,8 @@ import { render } from "../renderers/Renderer";
 export const getRequestContractType = (
   endpointDescription: EndpointDescription
 ): Maybe<{ contractParameterName: string; formattedParam: string }> => {
-  const getContractType = (op: Operation) => {
-    const schema = op.requestBody.content["application/json"]!.schema;
+  const getContractType = (op: Operation, contentType: "application/json" | "multipart/form-data" = 'application/json') => {
+    const schema = op.requestBody.content[contentType]!.schema;
     const isRequestParamArray = schema.type === "array" && !!schema.items;
     const refName = isRequestParamArray
       ? (schema.items as Schema).$ref
@@ -55,6 +55,14 @@ export const getRequestContractType = (
     post.requestBody?.content["application/json"]
   ) {
     return getContractType(post);
+  }
+
+  if (
+    methodType === "POST" &&
+    !!post &&
+    post.requestBody?.content["multipart/form-data"]
+  ) {
+    return getContractType(post, 'multipart/form-data');
   }
 
   const put = endpointDescription.pathObject.put;
@@ -401,6 +409,25 @@ const bodyBasedMethod = (
 
   const pathName = `${name}Path`;
 
+  const multipartConversion = `
+  //this part of code is generated for multipart/form-data
+  headers.append("Content-Type", "multipart/form-data");
+  const formData = new FormData();
+  Object.keys(requestContract).forEach(key => {
+    const value = requestContract[key as keyof ElectronicTradeFormalityRequestDTO];
+    if (value instanceof File) {
+      //file append
+      formData.append(key, value);
+    } else if (typeof value === 'object' && value !== null) {
+      //another nested dto serialize (file in nested dto will not work - but i think its ok)
+      formData.append(key, JSON.stringify(value));
+    } else {
+      // simple attributes
+      formData.append(key, value as any);
+    }
+  });
+  `;
+
   const view = {
     name: name,
     contractParameterName,
@@ -414,13 +441,14 @@ const bodyBasedMethod = (
     queryParams,
     queryParameters,
     formattedFunctionParameters,
+    multipartConversion,
   };
 
   return render(
     [
       "export type {{contractResultName}} = \n| {{{contractResult}}};\n",
       "export const {{pathName}} = ({{{formattedFunctionParameters}}}) => {{{pathValue}}};\n",
-      `export const {{name}} = ({{{formattedParam}}}): \n\tPromise<{{contractResultName}}> => {\n\t{{{queryParams}}}return api{{method}}({{{url}}}, {{contractParameterName}}, headers{{queryParameters}}) as Promise<{{contractResultName}}>;\n}\n`,
+      `export const {{name}} = ({{{formattedParam}}}): \n\tPromise<{{contractResultName}}> => {\n\t{{{queryParams}}} \n\t{{{multipartConversion}}} \n\t return api{{method}}({{{url}}}, {{contractParameterName}}, headers{{queryParameters}}) as Promise<{{contractResultName}}>;\n}\n`,
     ].join("\n"),
 
     view
