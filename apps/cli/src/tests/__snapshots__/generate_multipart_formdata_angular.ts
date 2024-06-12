@@ -333,7 +333,19 @@ export class ApiService {
 		"fields": fields
 	}
 	
-      return apiPost<ResponseResult<void, 204>>(this.httpClient, `${this.baseUrl}/api/electronic-trade/trades/${electronicTradeId}/formality`, requestContract, queryParams);
+    //multipart/form-data  
+    const formData = new FormData();
+    Object.keys(requestContract).forEach(key => {
+    const value = requestContract[key as keyof ElectronicTradeFormalityRequestDTO];
+    if (value instanceof File) {      
+      formData.append(key, value);
+    } else if (typeof value === 'object' && value !== null) {      
+      formData.append(key, JSON.stringify(value));
+    } else {      
+      formData.append(key, value as any);
+    }
+  });
+      return apiPost<ResponseResult<void, 204>>(this.httpClient, `${this.baseUrl}/api/electronic-trade/trades/${electronicTradeId}/formality`, formData, queryParams);
     }
   
 

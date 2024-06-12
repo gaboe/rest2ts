@@ -323,7 +323,10 @@ export class ApiService {
 	
     postPetPetIdUploadImage(petId: number): Observable<ResponseResult<ApiResponse, 200>> {
 	
-      return apiPost<ResponseResult<ApiResponse, 200>>(this.httpClient, `${this.baseUrl}/pet/${petId}/uploadImage`, {});
+    //multipart/form-data  
+    const formData = new FormData();
+    
+      return apiPost<ResponseResult<ApiResponse, 200>>(this.httpClient, `${this.baseUrl}/pet/${petId}/uploadImage`, formData);
     }
   
 

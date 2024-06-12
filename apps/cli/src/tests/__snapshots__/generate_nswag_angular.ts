@@ -2576,7 +2576,10 @@ export class ApiService {
 
     postAuthToken(): Observable<ResponseResult<TokenResponse, 200> | ResponseResult<ApiProblemDetailsOfAuthError, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
 	
-      return apiPost<ResponseResult<TokenResponse, 200> | ResponseResult<ApiProblemDetailsOfAuthError, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/auth/token`, {});
+    //multipart/form-data  
+    const formData = new FormData();
+    
+      return apiPost<ResponseResult<TokenResponse, 200> | ResponseResult<ApiProblemDetailsOfAuthError, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/auth/token`, formData);
     }
   
 
