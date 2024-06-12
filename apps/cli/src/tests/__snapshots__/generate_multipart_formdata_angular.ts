@@ -306,7 +306,7 @@ export type ElectronicTradeFormalityDataRequestDTO = {
 
 export type ElectronicTradeFormalityRequestDTO = {
 	data: ElectronicTradeFormalityDataRequestDTO;
-	file?: string | null;
+	file?: File | null;
 };
 
 

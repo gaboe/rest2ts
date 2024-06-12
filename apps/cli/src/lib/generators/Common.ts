@@ -111,6 +111,8 @@ export const renderProperties =
         .join("\n\t");
     } else if (schema.type) {
       switch (schema.type) {
+        case "string":
+          return schema.format === 'binary' ? 'File' : 'string';
         case "integer":
           return "number";
         case "object":
