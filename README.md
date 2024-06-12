@@ -1,5 +1,8 @@
 # <span style="background: linear-gradient(90deg, #6bff25 41%, #1366ea 56%); -webkit-background-clip: text; color: transparent;">REST2TS</span>
 
+![NPM Version](https://img.shields.io/npm/v/rest2ts?color=%23CB3837)
+![JSR Version](https://img.shields.io/jsr/v/%40gaboe/rest2ts?color=%23F7DF1E)
+
 ## Generate beautiful TypeScript types from REST APIs
 
 ## 🚀 Usage
