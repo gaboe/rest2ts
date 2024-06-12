@@ -1,0 +1,199 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Test multipart",
+    "description": "Multipart",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "\/api\/electronic-trade\/trades\/{electronicTradeId}\/formality": {
+      "post": {
+        "description": "Adds formality to the electronic trade",
+        "operationId": "0e7b56ecc821c0858df164f848f6aea2",
+        "parameters": [
+          {
+            "name": "electronicTradeId",
+            "in": "path",
+            "description": "Electronic trade id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "description": "Specify returned fields (data.id,id,data.client.name,contract.number, ...etc)",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart\/form-data": {
+              "schema": {
+                "$ref": "#\/components\/schemas\/ElectronicTradeFormalityRequestDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Added successfully."
+          }
+        }
+      }
+    }
+
+  },
+  "components": {
+    "schemas": {
+      "ElectronicTradeFormalityEnum": {
+        "type": "string",
+        "enum": [
+          "BlueAgreement",
+          "AML",
+          "Termination",
+          "TransferUnderSAB",
+          "Change",
+          "LoanProtocolHandover",
+          "TradeProducerProtocol",
+          "Modelation",
+          "Other",
+          "ZZJ",
+          "TradeIdentificationForm",
+          "NewInstruction",
+          "LoanRequest",
+          "ESIP",
+          "Contract"
+        ]
+      },
+      "ErrorDetailDTO": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "string"
+          },
+          "message": {
+            "type": "string",
+            "example": "string"
+          }
+        },
+        "type": "object"
+      },
+      "ExceptionDTO": {
+        "properties": {
+          "errors": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "$ref": "#\/components\/schemas\/ErrorDetailDTO"
+              }
+            }
+          },
+          "type": {
+            "type": "string",
+            "example": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "example": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "example": 0,
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "example": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "example": "string",
+            "nullable": true
+          },
+          "stackTrace": {
+            "description": "Only available in development mode.",
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "$ref": "#\/components\/schemas\/ExceptionStackTraceItemDTO"
+              }
+            }
+          }
+        },
+        "type": "object"
+      },
+      "ExceptionStackTraceItemDTO": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "example": "string",
+            "nullable": true
+          },
+          "line": {
+            "type": "integer",
+            "example": "string",
+            "nullable": true
+          },
+          "function": {
+            "type": "string",
+            "example": "string",
+            "nullable": true
+          },
+          "class": {
+            "type": "string",
+            "example": "string",
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "example": "string",
+            "nullable": true
+          }
+        },
+        "type": "object"
+      },
+      "ElectronicTradeFormalityDataRequestDTO": {
+        "properties": {
+          "formalityType": {
+            "$ref": "#\/components\/schemas\/ElectronicTradeFormalityEnum"
+          },
+          "sendByPostOffice": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "targetRelationId": {
+            "type": "integer",
+            "nullable": true
+          }
+        },
+        "type": "object"
+      },
+      "ElectronicTradeFormalityRequestDTO": {
+        "properties": {
+          "data": {
+            "$ref": "#\/components\/schemas\/ElectronicTradeFormalityDataRequestDTO"
+          },
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "nullable": true
+          }
+        },
+        "type": "object"
+      }
+    }
+  },
+  "tags": []
+}
