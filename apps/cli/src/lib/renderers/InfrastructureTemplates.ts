@@ -251,9 +251,14 @@ export function apiPost<TResponse extends FetchResponse<unknown, number>, TReque
   headers: Headers,
   paramsObject: ParamsObject = {}
 ) {
-  const raw = JSON.stringify(request);
-
-  updateHeaders(headers);
+  let raw;
+  if(request instanceof FormData) {
+      raw = request;
+      headers.delete('Content-Type');
+  } else {
+      raw = JSON.stringify(request);
+      updateHeaders(headers);
+  }
 
   const requestOptions: FetchOptions = {
     method: "POST",

@@ -409,7 +409,8 @@ const bodyBasedMethod = (
 
   const pathName = `${name}Path`;
 
-  const multipartConversion = `
+  let isMultipart = endpointDescription.pathObject.post?.requestBody?.content['multipart/form-data'];
+  const multipartConversion = isMultipart ? `
   //this part of code is generated for multipart/form-data
   headers.append("Content-Type", "multipart/form-data");
   const formData = new FormData();
@@ -426,11 +427,11 @@ const bodyBasedMethod = (
       formData.append(key, value as any);
     }
   });
-  `;
+  ` : ``;
 
   const view = {
     name: name,
-    contractParameterName,
+    contractParameterName: isMultipart ? 'formData' : contractParameterName,
     contractResult,
     contractResultName,
     pathName,
@@ -448,7 +449,7 @@ const bodyBasedMethod = (
     [
       "export type {{contractResultName}} = \n| {{{contractResult}}};\n",
       "export const {{pathName}} = ({{{formattedFunctionParameters}}}) => {{{pathValue}}};\n",
-      `export const {{name}} = ({{{formattedParam}}}): \n\tPromise<{{contractResultName}}> => {\n\t{{{queryParams}}} \n\t{{{multipartConversion}}} \n\t return api{{method}}({{{url}}}, {{contractParameterName}}, headers{{queryParameters}}) as Promise<{{contractResultName}}>;\n}\n`,
+      `export const {{name}} = ({{{formattedParam}}}): \n\tPromise<{{contractResultName}}> => {\n\t{{{queryParams}}}{{{multipartConversion}}}return api{{method}}({{{url}}}, {{contractParameterName}}, headers{{queryParameters}}) as Promise<{{contractResultName}}>;\n}\n`,
     ].join("\n"),
 
     view
