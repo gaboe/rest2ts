@@ -11,6 +11,7 @@ import {
 } from "./ApiDescriptionGenerator";
 import { Maybe, Nothing, Just } from "purify-ts";
 import {
+  getMultipartConversion,
   getStatusCode,
   getTypeNameFromRef,
   getTypeNameFromSchema,
@@ -19,9 +20,9 @@ import { render } from "../renderers/Renderer";
 
 export const getRequestContractType = (
   endpointDescription: EndpointDescription
-): Maybe<{ contractParameterName: string; formattedParam: string }> => {
-  const getContractType = (op: Operation) => {
-    const schema = op.requestBody.content["application/json"]!.schema;
+): Maybe<{ contractParameterName: string; formattedParam: string ; paramType: string}> => {
+  const getContractType = (op: Operation, contentType: "application/json" | "multipart/form-data" = 'application/json') => {
+    const schema = op.requestBody.content[contentType]!.schema;
     const isRequestParamArray = schema.type === "array" && !!schema.items;
     const refName = isRequestParamArray
       ? (schema.items as Schema).$ref
@@ -30,6 +31,7 @@ export const getRequestContractType = (
     if (schema.type === "string" || schema.type === "number") {
       return Just({
         contractParameterName: "body",
+        paramType: schema.type,
         formattedParam: `body: ${schema.type}`,
       });
     }
@@ -39,6 +41,9 @@ export const getRequestContractType = (
       .chain((v) =>
         Just({
           contractParameterName: "requestContract",
+          paramType: `${v}${
+            isRequestParamArray ? "[]" : ""
+          }`,
           formattedParam: `requestContract: ${v}${
             isRequestParamArray ? "[]" : ""
           }`,
@@ -57,6 +62,14 @@ export const getRequestContractType = (
     return getContractType(post);
   }
 
+  if (
+    methodType === "POST" &&
+    !!post &&
+    post.requestBody?.content["multipart/form-data"]
+  ) {
+    return getContractType(post, "multipart/form-data");
+  }
+
   const put = endpointDescription.pathObject.put;
   if (
     methodType === "PUT" &&
@@ -66,6 +79,15 @@ export const getRequestContractType = (
     return getContractType(put);
   }
 
+  if (
+    methodType === "PUT" &&
+    !!put &&
+    put.requestBody?.content["multipart/form-data"]
+  ) {
+    return getContractType(put, "multipart/form-data");
+  }
+
+
   const patch = endpointDescription.pathObject.patch;
   if (
     methodType === "PATCH" &&
@@ -73,6 +95,13 @@ export const getRequestContractType = (
     patch.requestBody?.content["application/json"]
   ) {
     return getContractType(patch);
+  }
+  if (
+    methodType === "PATCH" &&
+    !!patch &&
+    patch.requestBody?.content["multipart/form-data"]
+  ) {
+    return getContractType(patch,"multipart/form-data");
   }
 
   return Nothing;
@@ -85,7 +114,9 @@ const getContractResult = (
   const getSchemas = (operation: Operation) =>
     Object.entries(operation.responses).map((e) => ({
       status: e[0],
-      schema: e[1]?.content?.["application/json"]?.schema ?? null,
+      schema: e[1]?.content?.["application/json"]?.schema
+        ?? e[1]?.content?.["multipart/form-data"]?.schema
+        ?? null,
     }));
 
   const getTypeName = (schema: Schema, isArray: boolean) => {
@@ -366,7 +397,8 @@ const bodyBasedMethod = (
   formattedRequestContractType: string,
   contractParameterName: string,
   contractResult: string,
-  methodType: MethodType
+  methodType: MethodType,
+  paramType: string
 ) => {
   const getMethodType = () => {
     switch (methodType) {
@@ -401,9 +433,11 @@ const bodyBasedMethod = (
 
   const pathName = `${name}Path`;
 
+  const multipartConversion = getMultipartConversion(endpointDescription, formattedRequestContractType, paramType);
+
   const view = {
     name: name,
-    contractParameterName,
+    contractParameterName: 'requestData',
     contractResult,
     contractResultName,
     pathName,
@@ -414,13 +448,14 @@ const bodyBasedMethod = (
     queryParams,
     queryParameters,
     formattedFunctionParameters,
+    multipartConversion,
   };
 
   return render(
     [
       "export type {{contractResultName}} = \n| {{{contractResult}}};\n",
       "export const {{pathName}} = ({{{formattedFunctionParameters}}}) => {{{pathValue}}};\n",
-      `export const {{name}} = ({{{formattedParam}}}): \n\tPromise<{{contractResultName}}> => {\n\t{{{queryParams}}}return api{{method}}({{{url}}}, {{contractParameterName}}, headers{{queryParameters}}) as Promise<{{contractResultName}}>;\n}\n`,
+      `export const {{name}} = ({{{formattedParam}}}): \n\tPromise<{{contractResultName}}> => {\n\t{{{queryParams}}}{{{multipartConversion}}}return api{{method}}({{{url}}}, {{contractParameterName}}, headers{{queryParameters}}) as Promise<{{contractResultName}}>;\n}\n`,
     ].join("\n"),
 
     view
@@ -434,7 +469,9 @@ export const generateServices = (swagger: SwaggerSchema) => {
       const {
         formattedParam: formattedRequestContractType,
         contractParameterName,
+        paramType
       } = getRequestContractType(endpointDescription).orDefault({
+        paramType: "",
         formattedParam: "",
         contractParameterName: "{}",
       });
@@ -452,7 +489,8 @@ export const generateServices = (swagger: SwaggerSchema) => {
           formattedRequestContractType,
           contractParameterName,
           contractResult,
-          endpointDescription.methodType
+          endpointDescription.methodType,
+          paramType
         );
       }
       if (

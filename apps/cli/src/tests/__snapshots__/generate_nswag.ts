@@ -206,6 +206,49 @@
     }
 
     return undefined;
+  } 
+  
+  
+ function getApiRequestData<Type extends object>(
+    requestContract: Type | undefined,
+    isFormData: boolean = false
+  ): FormData | Type | {} {
+  
+    if (!isFormData) {
+      return requestContract !== undefined ? requestContract : {};
+    }
+  
+    //multipart/form-data
+    const formData = new FormData();
+  
+    if (requestContract) {
+      Object.keys(requestContract).forEach(key => {
+        const value = requestContract[key as keyof Type];
+        if (value instanceof File) {
+          formData.append(key, value);
+        } else if (typeof value === 'object' && value !== null) {
+          formData.append(key, JSON.stringify(value));
+        } else {
+          formData.append(key, value as any);
+        }
+      });
+    }
+  
+    return formData;
+  }
+
+  
+  function updateHeadersAndGetBody<TResponse extends FetchResponse<unknown, number>, TRequest>(
+    request: TRequest,
+    headers: Headers
+  ) {
+    if (request instanceof FormData) {
+      headers.delete("Content-Type");
+      return request;
+    } else {
+      updateHeaders(headers);
+      return JSON.stringify(request);
+    }
   }
   
   function updateHeaders(headers: Headers) {
@@ -216,7 +259,7 @@
     if (!headers.has("Authorization") && !!token) {
       headers.append("Authorization", token);
     }
-  };
+  }
 
 export function getQueryParamsString(paramsObject: ParamsObject = {}) {
 	const queryString = Object.entries(paramsObject)
@@ -245,9 +288,8 @@ export function apiPost<TResponse extends FetchResponse<unknown, number>, TReque
   headers: Headers,
   paramsObject: ParamsObject = {}
 ) {
-  const raw = JSON.stringify(request);
-
-  updateHeaders(headers);
+  
+  const raw = updateHeadersAndGetBody(request, headers); 
 
   const requestOptions: FetchOptions = {
     method: "POST",
@@ -2035,7 +2077,9 @@ export const putUserCompanyPath = () => `/api/v1/user/company`;
 
 export const putUserCompany = (requestContract: UserCompanySetRequest, headers = new Headers()): 
 	Promise<PutUserCompanyFetchResponse> => {
-	return apiPut(`${getApiUrl()}${putUserCompanyPath()}`, requestContract, headers) as Promise<PutUserCompanyFetchResponse>;
+	
+    const requestData = getApiRequestData<UserCompanySetRequest>(requestContract, false);
+    return apiPut(`${getApiUrl()}${putUserCompanyPath()}`, requestData, headers) as Promise<PutUserCompanyFetchResponse>;
 }
 
 export type GetServicesPackagesFetchResponse = 
@@ -2082,7 +2126,9 @@ export const postServicesPackagePath = () => `/api/v1/services/package`;
 
 export const postServicesPackage = (requestContract: SaveServicePackageRequest, headers = new Headers()): 
 	Promise<PostServicesPackageFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postServicesPackagePath()}`, requestContract, headers) as Promise<PostServicesPackageFetchResponse>;
+	
+    const requestData = getApiRequestData<SaveServicePackageRequest>(requestContract, false);
+    return apiPost(`${getApiUrl()}${postServicesPackagePath()}`, requestData, headers) as Promise<PostServicesPackageFetchResponse>;
 }
 
 export type GetServicesServicePublicIDPackageFetchResponse = 
@@ -2126,7 +2172,9 @@ export const putServicesServicePublicIDPackagePath = (servicePublicID: string) =
 
 export const putServicesServicePublicIDPackage = (requestContract: SaveServicePackageRequest, servicePublicID: string, headers = new Headers()): 
 	Promise<PutServicesServicePublicIDPackageFetchResponse> => {
-	return apiPut(`${getApiUrl()}${putServicesServicePublicIDPackagePath(servicePublicID)}`, requestContract, headers) as Promise<PutServicesServicePublicIDPackageFetchResponse>;
+	
+    const requestData = getApiRequestData<SaveServicePackageRequest>(requestContract, false);
+    return apiPut(`${getApiUrl()}${putServicesServicePublicIDPackagePath(servicePublicID)}`, requestData, headers) as Promise<PutServicesServicePublicIDPackageFetchResponse>;
 }
 
 export type GetPartiesPublicIDFetchResponse = 
@@ -2224,7 +2272,9 @@ export const putOrdersPublicIDPeriodicityPath = (publicID: string) => `/api/v1/o
 
 export const putOrdersPublicIDPeriodicity = (requestContract: SetPeriodicityRequest, publicID: string, headers = new Headers()): 
 	Promise<PutOrdersPublicIDPeriodicityFetchResponse> => {
-	return apiPut(`${getApiUrl()}${putOrdersPublicIDPeriodicityPath(publicID)}`, requestContract, headers) as Promise<PutOrdersPublicIDPeriodicityFetchResponse>;
+	
+    const requestData = getApiRequestData<SetPeriodicityRequest>(requestContract, false);
+    return apiPut(`${getApiUrl()}${putOrdersPublicIDPeriodicityPath(publicID)}`, requestData, headers) as Promise<PutOrdersPublicIDPeriodicityFetchResponse>;
 }
 
 export type GetOrdersPublicIDServicesFetchResponse = 
@@ -2325,7 +2375,9 @@ export const postOrdersOrderPublicIDClientInvoiceRecurringPaymentCreateInvoiceAn
 
 export const postOrdersOrderPublicIDClientInvoiceRecurringPaymentCreateInvoiceAndSetAsPaidByClient = (requestContract: ClientInvoiceRecurringPaymentCreateInvoiceAndSetAsPaidByClientRequest, orderPublicID: string, headers = new Headers()): 
 	Promise<PostOrdersOrderPublicIDClientInvoiceRecurringPaymentCreateInvoiceAndSetAsPaidByClientFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postOrdersOrderPublicIDClientInvoiceRecurringPaymentCreateInvoiceAndSetAsPaidByClientPath(orderPublicID)}`, requestContract, headers) as Promise<PostOrdersOrderPublicIDClientInvoiceRecurringPaymentCreateInvoiceAndSetAsPaidByClientFetchResponse>;
+	
+    const requestData = getApiRequestData<ClientInvoiceRecurringPaymentCreateInvoiceAndSetAsPaidByClientRequest>(requestContract, false);
+    return apiPost(`${getApiUrl()}${postOrdersOrderPublicIDClientInvoiceRecurringPaymentCreateInvoiceAndSetAsPaidByClientPath(orderPublicID)}`, requestData, headers) as Promise<PostOrdersOrderPublicIDClientInvoiceRecurringPaymentCreateInvoiceAndSetAsPaidByClientFetchResponse>;
 }
 
 export type GetOrdersPublicIDClientZonePaymentCalendarItemsFetchResponse = 
@@ -2366,7 +2418,9 @@ export const postOrdersPublicIDOrderServiceOrderServiceIDProductCancelPath = (pu
 
 export const postOrdersPublicIDOrderServiceOrderServiceIDProductCancel = (requestContract: CancelProductInInstitutionCommandRequest, publicID: string, orderServiceID: number, headers = new Headers()): 
 	Promise<PostOrdersPublicIDOrderServiceOrderServiceIDProductCancelFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postOrdersPublicIDOrderServiceOrderServiceIDProductCancelPath(publicID, orderServiceID)}`, requestContract, headers) as Promise<PostOrdersPublicIDOrderServiceOrderServiceIDProductCancelFetchResponse>;
+	
+    const requestData = getApiRequestData<CancelProductInInstitutionCommandRequest>(requestContract, false);
+    return apiPost(`${getApiUrl()}${postOrdersPublicIDOrderServiceOrderServiceIDProductCancelPath(publicID, orderServiceID)}`, requestData, headers) as Promise<PostOrdersPublicIDOrderServiceOrderServiceIDProductCancelFetchResponse>;
 }
 
 export type PostOrdersPublicIDOrderServiceOrderServiceIDProductCreateFetchResponse = 
@@ -2380,7 +2434,9 @@ export const postOrdersPublicIDOrderServiceOrderServiceIDProductCreatePath = (pu
 
 export const postOrdersPublicIDOrderServiceOrderServiceIDProductCreate = (requestContract: CreateProductInInstitutionRequest, publicID: string, orderServiceID: number, headers = new Headers()): 
 	Promise<PostOrdersPublicIDOrderServiceOrderServiceIDProductCreateFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postOrdersPublicIDOrderServiceOrderServiceIDProductCreatePath(publicID, orderServiceID)}`, requestContract, headers) as Promise<PostOrdersPublicIDOrderServiceOrderServiceIDProductCreateFetchResponse>;
+	
+    const requestData = getApiRequestData<CreateProductInInstitutionRequest>(requestContract, false);
+    return apiPost(`${getApiUrl()}${postOrdersPublicIDOrderServiceOrderServiceIDProductCreatePath(publicID, orderServiceID)}`, requestData, headers) as Promise<PostOrdersPublicIDOrderServiceOrderServiceIDProductCreateFetchResponse>;
 }
 
 export type GetOrdersPublicIDWorkflowStepsFetchResponse = 
@@ -2406,7 +2462,9 @@ export const postOrdersWorkflowDraftPath = () => `/api/v1/orders/workflow/draft`
 
 export const postOrdersWorkflowDraft = (requestContract: SaveDraftRequest, headers = new Headers()): 
 	Promise<PostOrdersWorkflowDraftFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postOrdersWorkflowDraftPath()}`, requestContract, headers) as Promise<PostOrdersWorkflowDraftFetchResponse>;
+	
+    const requestData = getApiRequestData<SaveDraftRequest>(requestContract, false);
+    return apiPost(`${getApiUrl()}${postOrdersWorkflowDraftPath()}`, requestData, headers) as Promise<PostOrdersWorkflowDraftFetchResponse>;
 }
 
 export type PostOrdersPublicIDWorkflowDraftCompleteFetchResponse = 
@@ -2420,7 +2478,9 @@ export const postOrdersPublicIDWorkflowDraftCompletePath = (publicID: string) =>
 
 export const postOrdersPublicIDWorkflowDraftComplete = (publicID: string, headers = new Headers()): 
 	Promise<PostOrdersPublicIDWorkflowDraftCompleteFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postOrdersPublicIDWorkflowDraftCompletePath(publicID)}`, {}, headers) as Promise<PostOrdersPublicIDWorkflowDraftCompleteFetchResponse>;
+	
+    const requestData = getApiRequestData<object>(undefined, false);
+    return apiPost(`${getApiUrl()}${postOrdersPublicIDWorkflowDraftCompletePath(publicID)}`, requestData, headers) as Promise<PostOrdersPublicIDWorkflowDraftCompleteFetchResponse>;
 }
 
 export type GetOrdersWorkflowClientReviewTokenSummaryFetchResponse = 
@@ -2446,7 +2506,9 @@ export const postOrdersPublicIDWorkflowClientReviewReminderPath = (publicID: str
 
 export const postOrdersPublicIDWorkflowClientReviewReminder = (publicID: string, headers = new Headers()): 
 	Promise<PostOrdersPublicIDWorkflowClientReviewReminderFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postOrdersPublicIDWorkflowClientReviewReminderPath(publicID)}`, {}, headers) as Promise<PostOrdersPublicIDWorkflowClientReviewReminderFetchResponse>;
+	
+    const requestData = getApiRequestData<object>(undefined, false);
+    return apiPost(`${getApiUrl()}${postOrdersPublicIDWorkflowClientReviewReminderPath(publicID)}`, requestData, headers) as Promise<PostOrdersPublicIDWorkflowClientReviewReminderFetchResponse>;
 }
 
 export type PostOrdersWorkflowClientApprovalTokenRejectFetchResponse = 
@@ -2459,7 +2521,9 @@ export const postOrdersWorkflowClientApprovalTokenRejectPath = (token: string) =
 
 export const postOrdersWorkflowClientApprovalTokenReject = (requestContract: ClientApprovalRejectRequest, token: string, headers = new Headers()): 
 	Promise<PostOrdersWorkflowClientApprovalTokenRejectFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postOrdersWorkflowClientApprovalTokenRejectPath(token)}`, requestContract, headers) as Promise<PostOrdersWorkflowClientApprovalTokenRejectFetchResponse>;
+	
+    const requestData = getApiRequestData<ClientApprovalRejectRequest>(requestContract, false);
+    return apiPost(`${getApiUrl()}${postOrdersWorkflowClientApprovalTokenRejectPath(token)}`, requestData, headers) as Promise<PostOrdersWorkflowClientApprovalTokenRejectFetchResponse>;
 }
 
 export type PutOrdersWorkflowClientApprovalTokenInProgressFetchResponse = 
@@ -2472,7 +2536,9 @@ export const putOrdersWorkflowClientApprovalTokenInProgressPath = (token: string
 
 export const putOrdersWorkflowClientApprovalTokenInProgress = (token: string, headers = new Headers()): 
 	Promise<PutOrdersWorkflowClientApprovalTokenInProgressFetchResponse> => {
-	return apiPut(`${getApiUrl()}${putOrdersWorkflowClientApprovalTokenInProgressPath(token)}`, {}, headers) as Promise<PutOrdersWorkflowClientApprovalTokenInProgressFetchResponse>;
+	
+    const requestData = getApiRequestData<object>(undefined, false);
+    return apiPut(`${getApiUrl()}${putOrdersWorkflowClientApprovalTokenInProgressPath(token)}`, requestData, headers) as Promise<PutOrdersWorkflowClientApprovalTokenInProgressFetchResponse>;
 }
 
 export type PostOrdersWorkflowClientApprovalTokenCompleteFetchResponse = 
@@ -2486,7 +2552,9 @@ export const postOrdersWorkflowClientApprovalTokenCompletePath = (token: string)
 
 export const postOrdersWorkflowClientApprovalTokenComplete = (requestContract: ClientApprovalCompleteRequest, token: string, headers = new Headers()): 
 	Promise<PostOrdersWorkflowClientApprovalTokenCompleteFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postOrdersWorkflowClientApprovalTokenCompletePath(token)}`, requestContract, headers) as Promise<PostOrdersWorkflowClientApprovalTokenCompleteFetchResponse>;
+	
+    const requestData = getApiRequestData<ClientApprovalCompleteRequest>(requestContract, false);
+    return apiPost(`${getApiUrl()}${postOrdersWorkflowClientApprovalTokenCompletePath(token)}`, requestData, headers) as Promise<PostOrdersWorkflowClientApprovalTokenCompleteFetchResponse>;
 }
 
 export type PostOrdersPublicIDWorkflowProcessingServicesOrderServiceIDCompleteFetchResponse = 
@@ -2500,7 +2568,9 @@ export const postOrdersPublicIDWorkflowProcessingServicesOrderServiceIDCompleteP
 
 export const postOrdersPublicIDWorkflowProcessingServicesOrderServiceIDComplete = (publicID: string, orderServiceID: number, headers = new Headers()): 
 	Promise<PostOrdersPublicIDWorkflowProcessingServicesOrderServiceIDCompleteFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postOrdersPublicIDWorkflowProcessingServicesOrderServiceIDCompletePath(publicID, orderServiceID)}`, {}, headers) as Promise<PostOrdersPublicIDWorkflowProcessingServicesOrderServiceIDCompleteFetchResponse>;
+	
+    const requestData = getApiRequestData<object>(undefined, false);
+    return apiPost(`${getApiUrl()}${postOrdersPublicIDWorkflowProcessingServicesOrderServiceIDCompletePath(publicID, orderServiceID)}`, requestData, headers) as Promise<PostOrdersPublicIDWorkflowProcessingServicesOrderServiceIDCompleteFetchResponse>;
 }
 
 export type PostOrdersPublicIDWorkflowInvoiceIssuanceCompleteFetchResponse = 
@@ -2514,7 +2584,9 @@ export const postOrdersPublicIDWorkflowInvoiceIssuanceCompletePath = (publicID: 
 
 export const postOrdersPublicIDWorkflowInvoiceIssuanceComplete = (publicID: string, headers = new Headers()): 
 	Promise<PostOrdersPublicIDWorkflowInvoiceIssuanceCompleteFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postOrdersPublicIDWorkflowInvoiceIssuanceCompletePath(publicID)}`, {}, headers) as Promise<PostOrdersPublicIDWorkflowInvoiceIssuanceCompleteFetchResponse>;
+	
+    const requestData = getApiRequestData<object>(undefined, false);
+    return apiPost(`${getApiUrl()}${postOrdersPublicIDWorkflowInvoiceIssuanceCompletePath(publicID)}`, requestData, headers) as Promise<PostOrdersPublicIDWorkflowInvoiceIssuanceCompleteFetchResponse>;
 }
 
 export type PostOrdersPublicIDWorkflowInvoicePaymentCompleteFetchResponse = 
@@ -2528,7 +2600,9 @@ export const postOrdersPublicIDWorkflowInvoicePaymentCompletePath = (publicID: s
 
 export const postOrdersPublicIDWorkflowInvoicePaymentComplete = (publicID: string, headers = new Headers()): 
 	Promise<PostOrdersPublicIDWorkflowInvoicePaymentCompleteFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postOrdersPublicIDWorkflowInvoicePaymentCompletePath(publicID)}`, {}, headers) as Promise<PostOrdersPublicIDWorkflowInvoicePaymentCompleteFetchResponse>;
+	
+    const requestData = getApiRequestData<object>(undefined, false);
+    return apiPost(`${getApiUrl()}${postOrdersPublicIDWorkflowInvoicePaymentCompletePath(publicID)}`, requestData, headers) as Promise<PostOrdersPublicIDWorkflowInvoicePaymentCompleteFetchResponse>;
 }
 
 export type PostOrdersPublicIDWorkflowInvoicePaymentReminderFetchResponse = 
@@ -2542,7 +2616,9 @@ export const postOrdersPublicIDWorkflowInvoicePaymentReminderPath = (publicID: s
 
 export const postOrdersPublicIDWorkflowInvoicePaymentReminder = (publicID: string, headers = new Headers()): 
 	Promise<PostOrdersPublicIDWorkflowInvoicePaymentReminderFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postOrdersPublicIDWorkflowInvoicePaymentReminderPath(publicID)}`, {}, headers) as Promise<PostOrdersPublicIDWorkflowInvoicePaymentReminderFetchResponse>;
+	
+    const requestData = getApiRequestData<object>(undefined, false);
+    return apiPost(`${getApiUrl()}${postOrdersPublicIDWorkflowInvoicePaymentReminderPath(publicID)}`, requestData, headers) as Promise<PostOrdersPublicIDWorkflowInvoicePaymentReminderFetchResponse>;
 }
 
 export type GetOrdersPublicIDWorkflowEnterpriseInvoiceIssuanceAndPaymentFetchResponse = 
@@ -2571,7 +2647,9 @@ export const postOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalen
 
 export const postOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDCancel = (publicID: string, paymentCalendarItemID: number, headers = new Headers()): 
 	Promise<PostOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDCancelFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDCancelPath(publicID, paymentCalendarItemID)}`, {}, headers) as Promise<PostOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDCancelFetchResponse>;
+	
+    const requestData = getApiRequestData<object>(undefined, false);
+    return apiPost(`${getApiUrl()}${postOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDCancelPath(publicID, paymentCalendarItemID)}`, requestData, headers) as Promise<PostOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDCancelFetchResponse>;
 }
 
 export type PostOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDReminderFetchResponse = 
@@ -2586,7 +2664,9 @@ export const postOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalen
 
 export const postOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDReminder = (publicID: string, paymentCalendarItemID: number, headers = new Headers()): 
 	Promise<PostOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDReminderFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDReminderPath(publicID, paymentCalendarItemID)}`, {}, headers) as Promise<PostOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDReminderFetchResponse>;
+	
+    const requestData = getApiRequestData<object>(undefined, false);
+    return apiPost(`${getApiUrl()}${postOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDReminderPath(publicID, paymentCalendarItemID)}`, requestData, headers) as Promise<PostOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDReminderFetchResponse>;
 }
 
 export type PostOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDPrepaidReminderFetchResponse = 
@@ -2601,7 +2681,9 @@ export const postOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalen
 
 export const postOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDPrepaidReminder = (publicID: string, paymentCalendarItemID: number, headers = new Headers()): 
 	Promise<PostOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDPrepaidReminderFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDPrepaidReminderPath(publicID, paymentCalendarItemID)}`, {}, headers) as Promise<PostOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDPrepaidReminderFetchResponse>;
+	
+    const requestData = getApiRequestData<object>(undefined, false);
+    return apiPost(`${getApiUrl()}${postOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDPrepaidReminderPath(publicID, paymentCalendarItemID)}`, requestData, headers) as Promise<PostOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDPrepaidReminderFetchResponse>;
 }
 
 export type PostOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDSendInvoiceFetchResponse = 
@@ -2616,7 +2698,9 @@ export const postOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalen
 
 export const postOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDSendInvoice = (publicID: string, paymentCalendarItemID: number, headers = new Headers()): 
 	Promise<PostOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDSendInvoiceFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDSendInvoicePath(publicID, paymentCalendarItemID)}`, {}, headers) as Promise<PostOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDSendInvoiceFetchResponse>;
+	
+    const requestData = getApiRequestData<object>(undefined, false);
+    return apiPost(`${getApiUrl()}${postOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDSendInvoicePath(publicID, paymentCalendarItemID)}`, requestData, headers) as Promise<PostOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDSendInvoiceFetchResponse>;
 }
 
 export type PostOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDPayFetchResponse = 
@@ -2631,7 +2715,9 @@ export const postOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalen
 
 export const postOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDPay = (requestContract: ClientInvoiceRecurringPaymentClientPaidRequest, publicID: string, paymentCalendarItemID: number, headers = new Headers()): 
 	Promise<PostOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDPayFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDPayPath(publicID, paymentCalendarItemID)}`, requestContract, headers) as Promise<PostOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDPayFetchResponse>;
+	
+    const requestData = getApiRequestData<ClientInvoiceRecurringPaymentClientPaidRequest>(requestContract, false);
+    return apiPost(`${getApiUrl()}${postOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDPayPath(publicID, paymentCalendarItemID)}`, requestData, headers) as Promise<PostOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDPayFetchResponse>;
 }
 
 export type PostOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDPrepaidSendInvoiceAndPayFetchResponse = 
@@ -2646,7 +2732,9 @@ export const postOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalen
 
 export const postOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDPrepaidSendInvoiceAndPay = (requestContract: ClientPrepaidInvoiceRecurringPaymentSendInvoiceAndSetPaidRequest, publicID: string, paymentCalendarItemID: number, headers = new Headers()): 
 	Promise<PostOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDPrepaidSendInvoiceAndPayFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDPrepaidSendInvoiceAndPayPath(publicID, paymentCalendarItemID)}`, requestContract, headers) as Promise<PostOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDPrepaidSendInvoiceAndPayFetchResponse>;
+	
+    const requestData = getApiRequestData<ClientPrepaidInvoiceRecurringPaymentSendInvoiceAndSetPaidRequest>(requestContract, false);
+    return apiPost(`${getApiUrl()}${postOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDPrepaidSendInvoiceAndPayPath(publicID, paymentCalendarItemID)}`, requestData, headers) as Promise<PostOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDPrepaidSendInvoiceAndPayFetchResponse>;
 }
 
 export type PostOrdersPublicIDWorkflowClientAssignmentSendAssignmentEmailFetchResponse = 
@@ -2660,7 +2748,9 @@ export const postOrdersPublicIDWorkflowClientAssignmentSendAssignmentEmailPath =
 
 export const postOrdersPublicIDWorkflowClientAssignmentSendAssignmentEmail = (publicID: string, headers = new Headers()): 
 	Promise<PostOrdersPublicIDWorkflowClientAssignmentSendAssignmentEmailFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postOrdersPublicIDWorkflowClientAssignmentSendAssignmentEmailPath(publicID)}`, {}, headers) as Promise<PostOrdersPublicIDWorkflowClientAssignmentSendAssignmentEmailFetchResponse>;
+	
+    const requestData = getApiRequestData<object>(undefined, false);
+    return apiPost(`${getApiUrl()}${postOrdersPublicIDWorkflowClientAssignmentSendAssignmentEmailPath(publicID)}`, requestData, headers) as Promise<PostOrdersPublicIDWorkflowClientAssignmentSendAssignmentEmailFetchResponse>;
 }
 
 export type PostOrdersPublicIDWorkflowClientPrepaidPaymentApprovalCompleteFetchResponse = 
@@ -2674,7 +2764,9 @@ export const postOrdersPublicIDWorkflowClientPrepaidPaymentApprovalCompletePath 
 
 export const postOrdersPublicIDWorkflowClientPrepaidPaymentApprovalComplete = (requestContract: ClientPrepaidPaymentApprovalStepCompleteCommandRequest, publicID: string, headers = new Headers()): 
 	Promise<PostOrdersPublicIDWorkflowClientPrepaidPaymentApprovalCompleteFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postOrdersPublicIDWorkflowClientPrepaidPaymentApprovalCompletePath(publicID)}`, requestContract, headers) as Promise<PostOrdersPublicIDWorkflowClientPrepaidPaymentApprovalCompleteFetchResponse>;
+	
+    const requestData = getApiRequestData<ClientPrepaidPaymentApprovalStepCompleteCommandRequest>(requestContract, false);
+    return apiPost(`${getApiUrl()}${postOrdersPublicIDWorkflowClientPrepaidPaymentApprovalCompletePath(publicID)}`, requestData, headers) as Promise<PostOrdersPublicIDWorkflowClientPrepaidPaymentApprovalCompleteFetchResponse>;
 }
 
 export type PostOrdersWorkflowClientPrepaidPaymentApprovalTokenInProgressFetchResponse = 
@@ -2689,7 +2781,9 @@ export const postOrdersWorkflowClientPrepaidPaymentApprovalTokenInProgressPath =
 
 export const postOrdersWorkflowClientPrepaidPaymentApprovalTokenInProgress = (requestContract: ClientPrepaidPaymentApprovalStepInProgressRequest, token: string, headers = new Headers()): 
 	Promise<PostOrdersWorkflowClientPrepaidPaymentApprovalTokenInProgressFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postOrdersWorkflowClientPrepaidPaymentApprovalTokenInProgressPath(token)}`, requestContract, headers) as Promise<PostOrdersWorkflowClientPrepaidPaymentApprovalTokenInProgressFetchResponse>;
+	
+    const requestData = getApiRequestData<ClientPrepaidPaymentApprovalStepInProgressRequest>(requestContract, false);
+    return apiPost(`${getApiUrl()}${postOrdersWorkflowClientPrepaidPaymentApprovalTokenInProgressPath(token)}`, requestData, headers) as Promise<PostOrdersWorkflowClientPrepaidPaymentApprovalTokenInProgressFetchResponse>;
 }
 
 export type PostOrdersWorkflowClientPrepaidPaymentApprovalTokenRejectFetchResponse = 
@@ -2703,7 +2797,9 @@ export const postOrdersWorkflowClientPrepaidPaymentApprovalTokenRejectPath = (to
 
 export const postOrdersWorkflowClientPrepaidPaymentApprovalTokenReject = (requestContract: ClientPrepaidPaymentApprovalStepRejectRequest, token: string, headers = new Headers()): 
 	Promise<PostOrdersWorkflowClientPrepaidPaymentApprovalTokenRejectFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postOrdersWorkflowClientPrepaidPaymentApprovalTokenRejectPath(token)}`, requestContract, headers) as Promise<PostOrdersWorkflowClientPrepaidPaymentApprovalTokenRejectFetchResponse>;
+	
+    const requestData = getApiRequestData<ClientPrepaidPaymentApprovalStepRejectRequest>(requestContract, false);
+    return apiPost(`${getApiUrl()}${postOrdersWorkflowClientPrepaidPaymentApprovalTokenRejectPath(token)}`, requestData, headers) as Promise<PostOrdersWorkflowClientPrepaidPaymentApprovalTokenRejectFetchResponse>;
 }
 
 export type PutNotificationsUserSettingsFetchResponse = 
@@ -2716,7 +2812,9 @@ export const putNotificationsUserSettingsPath = () => `/api/v1/notifications/use
 
 export const putNotificationsUserSettings = (requestContract: UserNotificationUpdateRequest, headers = new Headers()): 
 	Promise<PutNotificationsUserSettingsFetchResponse> => {
-	return apiPut(`${getApiUrl()}${putNotificationsUserSettingsPath()}`, requestContract, headers) as Promise<PutNotificationsUserSettingsFetchResponse>;
+	
+    const requestData = getApiRequestData<UserNotificationUpdateRequest>(requestContract, false);
+    return apiPut(`${getApiUrl()}${putNotificationsUserSettingsPath()}`, requestData, headers) as Promise<PutNotificationsUserSettingsFetchResponse>;
 }
 
 export type GetInvoicesUserInvoicesFetchResponse = 
@@ -2806,7 +2904,9 @@ export const postInvoicesInvoiceForClientByOrderPublicIDCancelPath = (publicID: 
 
 export const postInvoicesInvoiceForClientByOrderPublicIDCancel = (publicID: string, headers = new Headers()): 
 	Promise<PostInvoicesInvoiceForClientByOrderPublicIDCancelFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postInvoicesInvoiceForClientByOrderPublicIDCancelPath(publicID)}`, {}, headers) as Promise<PostInvoicesInvoiceForClientByOrderPublicIDCancelFetchResponse>;
+	
+    const requestData = getApiRequestData<object>(undefined, false);
+    return apiPost(`${getApiUrl()}${postInvoicesInvoiceForClientByOrderPublicIDCancelPath(publicID)}`, requestData, headers) as Promise<PostInvoicesInvoiceForClientByOrderPublicIDCancelFetchResponse>;
 }
 
 export type PostEnterprisesFetchResponse = 
@@ -2819,7 +2919,9 @@ export const postEnterprisesPath = () => `/api/v1/enterprises`;
 
 export const postEnterprises = (requestContract: CreateEnterpriseRequest, headers = new Headers()): 
 	Promise<PostEnterprisesFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postEnterprisesPath()}`, requestContract, headers) as Promise<PostEnterprisesFetchResponse>;
+	
+    const requestData = getApiRequestData<CreateEnterpriseRequest>(requestContract, false);
+    return apiPost(`${getApiUrl()}${postEnterprisesPath()}`, requestData, headers) as Promise<PostEnterprisesFetchResponse>;
 }
 
 export type PostEnterprisesChangeModeFetchResponse = 
@@ -2833,7 +2935,9 @@ export const postEnterprisesChangeModePath = () => `/api/v1/enterprises/change-m
 
 export const postEnterprisesChangeMode = (requestContract: EnterpriseModeChangeRequest, headers = new Headers()): 
 	Promise<PostEnterprisesChangeModeFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postEnterprisesChangeModePath()}`, requestContract, headers) as Promise<PostEnterprisesChangeModeFetchResponse>;
+	
+    const requestData = getApiRequestData<EnterpriseModeChangeRequest>(requestContract, false);
+    return apiPost(`${getApiUrl()}${postEnterprisesChangeModePath()}`, requestData, headers) as Promise<PostEnterprisesChangeModeFetchResponse>;
 }
 
 export type PutEnterprisesDesignSettingsFetchResponse = 
@@ -2847,7 +2951,9 @@ export const putEnterprisesDesignSettingsPath = () => `/api/v1/enterprises/desig
 
 export const putEnterprisesDesignSettings = (requestContract: EnterpriseDesignSettingsUpdateRequest, headers = new Headers()): 
 	Promise<PutEnterprisesDesignSettingsFetchResponse> => {
-	return apiPut(`${getApiUrl()}${putEnterprisesDesignSettingsPath()}`, requestContract, headers) as Promise<PutEnterprisesDesignSettingsFetchResponse>;
+	
+    const requestData = getApiRequestData<EnterpriseDesignSettingsUpdateRequest>(requestContract, false);
+    return apiPut(`${getApiUrl()}${putEnterprisesDesignSettingsPath()}`, requestData, headers) as Promise<PutEnterprisesDesignSettingsFetchResponse>;
 }
 
 export type PutEnterprisesCommunicationSettingsFetchResponse = 
@@ -2860,7 +2966,9 @@ export const putEnterprisesCommunicationSettingsPath = () => `/api/v1/enterprise
 
 export const putEnterprisesCommunicationSettings = (requestContract: EnterpriseCommunicationSettingsUpdateRequest, headers = new Headers()): 
 	Promise<PutEnterprisesCommunicationSettingsFetchResponse> => {
-	return apiPut(`${getApiUrl()}${putEnterprisesCommunicationSettingsPath()}`, requestContract, headers) as Promise<PutEnterprisesCommunicationSettingsFetchResponse>;
+	
+    const requestData = getApiRequestData<EnterpriseCommunicationSettingsUpdateRequest>(requestContract, false);
+    return apiPut(`${getApiUrl()}${putEnterprisesCommunicationSettingsPath()}`, requestData, headers) as Promise<PutEnterprisesCommunicationSettingsFetchResponse>;
 }
 
 export type GetEnterprisesBasicSettingsFetchResponse = 
@@ -2920,7 +3028,9 @@ export const postEnterprisesCommissionSettingsPath = () => `/api/v1/enterprises/
 
 export const postEnterprisesCommissionSettings = (requestContract: CreateEnterpriseCommissionSettingsRequest, headers = new Headers()): 
 	Promise<PostEnterprisesCommissionSettingsFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postEnterprisesCommissionSettingsPath()}`, requestContract, headers) as Promise<PostEnterprisesCommissionSettingsFetchResponse>;
+	
+    const requestData = getApiRequestData<CreateEnterpriseCommissionSettingsRequest>(requestContract, false);
+    return apiPost(`${getApiUrl()}${postEnterprisesCommissionSettingsPath()}`, requestData, headers) as Promise<PostEnterprisesCommissionSettingsFetchResponse>;
 }
 
 export type GetEnterprisesServiceSettingsFetchResponse = 
@@ -2947,7 +3057,9 @@ export const putEnterprisesServiceSettingsPath = () => `/api/v1/enterprises/serv
 
 export const putEnterprisesServiceSettings = (requestContract: EnterpriseServiceSettingsUpdateRequest, headers = new Headers()): 
 	Promise<PutEnterprisesServiceSettingsFetchResponse> => {
-	return apiPut(`${getApiUrl()}${putEnterprisesServiceSettingsPath()}`, requestContract, headers) as Promise<PutEnterprisesServiceSettingsFetchResponse>;
+	
+    const requestData = getApiRequestData<EnterpriseServiceSettingsUpdateRequest>(requestContract, false);
+    return apiPut(`${getApiUrl()}${putEnterprisesServiceSettingsPath()}`, requestData, headers) as Promise<PutEnterprisesServiceSettingsFetchResponse>;
 }
 
 export type GetEnterprisesServicesFetchResponse = 
@@ -2974,7 +3086,9 @@ export const putEnterprisesServicesPath = () => `/api/v1/enterprises/services`;
 
 export const putEnterprisesServices = (requestContract: EnterpriseServicesUpdateRequest, headers = new Headers()): 
 	Promise<PutEnterprisesServicesFetchResponse> => {
-	return apiPut(`${getApiUrl()}${putEnterprisesServicesPath()}`, requestContract, headers) as Promise<PutEnterprisesServicesFetchResponse>;
+	
+    const requestData = getApiRequestData<EnterpriseServicesUpdateRequest>(requestContract, false);
+    return apiPut(`${getApiUrl()}${putEnterprisesServicesPath()}`, requestData, headers) as Promise<PutEnterprisesServicesFetchResponse>;
 }
 
 export type GetEnterprisesLogoFetchResponse = 
@@ -3068,7 +3182,9 @@ export const putEnterprisesPackageServiceSettingsPath = () => `/api/v1/enterpris
 
 export const putEnterprisesPackageServiceSettings = (requestContract: EnterprisePackageServiceSettingsUpdateRequest, headers = new Headers()): 
 	Promise<PutEnterprisesPackageServiceSettingsFetchResponse> => {
-	return apiPut(`${getApiUrl()}${putEnterprisesPackageServiceSettingsPath()}`, requestContract, headers) as Promise<PutEnterprisesPackageServiceSettingsFetchResponse>;
+	
+    const requestData = getApiRequestData<EnterprisePackageServiceSettingsUpdateRequest>(requestContract, false);
+    return apiPut(`${getApiUrl()}${putEnterprisesPackageServiceSettingsPath()}`, requestData, headers) as Promise<PutEnterprisesPackageServiceSettingsFetchResponse>;
 }
 
 export type GetCutoffsFetchResponse = 
@@ -3102,7 +3218,9 @@ export const postCutoffsPath = () => `/api/v1/cutoffs`;
 
 export const postCutoffs = (requestContract: CutoffCreateRequest, headers = new Headers()): 
 	Promise<PostCutoffsFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postCutoffsPath()}`, requestContract, headers) as Promise<PostCutoffsFetchResponse>;
+	
+    const requestData = getApiRequestData<CutoffCreateRequest>(requestContract, false);
+    return apiPost(`${getApiUrl()}${postCutoffsPath()}`, requestData, headers) as Promise<PostCutoffsFetchResponse>;
 }
 
 export type GetCutoffsPublicIDFetchResponse = 
@@ -3188,7 +3306,9 @@ export const postCutoffsPublicIDSendPaymentsPath = (publicID: string) => `/api/v
 
 export const postCutoffsPublicIDSendPayments = (publicID: string, headers = new Headers()): 
 	Promise<PostCutoffsPublicIDSendPaymentsFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postCutoffsPublicIDSendPaymentsPath(publicID)}`, {}, headers) as Promise<PostCutoffsPublicIDSendPaymentsFetchResponse>;
+	
+    const requestData = getApiRequestData<object>(undefined, false);
+    return apiPost(`${getApiUrl()}${postCutoffsPublicIDSendPaymentsPath(publicID)}`, requestData, headers) as Promise<PostCutoffsPublicIDSendPaymentsFetchResponse>;
 }
 
 export type GetCutoffsPublicIDDetailPdfFetchResponse = 
@@ -3244,7 +3364,9 @@ export const postCompaniesPath = () => `/api/v1/companies`;
 
 export const postCompanies = (requestContract: CompanyCreateRequest, headers = new Headers()): 
 	Promise<PostCompaniesFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postCompaniesPath()}`, requestContract, headers) as Promise<PostCompaniesFetchResponse>;
+	
+    const requestData = getApiRequestData<CompanyCreateRequest>(requestContract, false);
+    return apiPost(`${getApiUrl()}${postCompaniesPath()}`, requestData, headers) as Promise<PostCompaniesFetchResponse>;
 }
 
 export type PutCompaniesFetchResponse = 
@@ -3258,7 +3380,9 @@ export const putCompaniesPath = () => `/api/v1/companies`;
 
 export const putCompanies = (requestContract: CompanyUpdateRequest, headers = new Headers()): 
 	Promise<PutCompaniesFetchResponse> => {
-	return apiPut(`${getApiUrl()}${putCompaniesPath()}`, requestContract, headers) as Promise<PutCompaniesFetchResponse>;
+	
+    const requestData = getApiRequestData<CompanyUpdateRequest>(requestContract, false);
+    return apiPut(`${getApiUrl()}${putCompaniesPath()}`, requestData, headers) as Promise<PutCompaniesFetchResponse>;
 }
 
 export type GetCompaniesUserSupplierCompaniesFetchResponse = 
@@ -3285,7 +3409,9 @@ export const postCompaniesUserSupplierCompanyPath = () => `/api/v1/companies/use
 
 export const postCompaniesUserSupplierCompany = (requestContract: UserSupplierCompanySetRequest, headers = new Headers()): 
 	Promise<PostCompaniesUserSupplierCompanyFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postCompaniesUserSupplierCompanyPath()}`, requestContract, headers) as Promise<PostCompaniesUserSupplierCompanyFetchResponse>;
+	
+    const requestData = getApiRequestData<UserSupplierCompanySetRequest>(requestContract, false);
+    return apiPost(`${getApiUrl()}${postCompaniesUserSupplierCompanyPath()}`, requestData, headers) as Promise<PostCompaniesUserSupplierCompanyFetchResponse>;
 }
 
 export type GetCompaniesPublicIDDesignSettingsFetchResponse = 
@@ -3313,7 +3439,9 @@ export const putCompaniesPublicIDDesignSettingsPath = (publicID: string) => `/ap
 
 export const putCompaniesPublicIDDesignSettings = (requestContract: SaveCompanyDesignSettingsRequest, publicID: string, headers = new Headers()): 
 	Promise<PutCompaniesPublicIDDesignSettingsFetchResponse> => {
-	return apiPut(`${getApiUrl()}${putCompaniesPublicIDDesignSettingsPath(publicID)}`, requestContract, headers) as Promise<PutCompaniesPublicIDDesignSettingsFetchResponse>;
+	
+    const requestData = getApiRequestData<SaveCompanyDesignSettingsRequest>(requestContract, false);
+    return apiPut(`${getApiUrl()}${putCompaniesPublicIDDesignSettingsPath(publicID)}`, requestData, headers) as Promise<PutCompaniesPublicIDDesignSettingsFetchResponse>;
 }
 
 export type GetCompaniesPublicIDFioSettingsFetchResponse = 
@@ -3342,7 +3470,9 @@ export const putCompaniesPublicIDFioSettingsPath = (publicID: string) => `/api/v
 
 export const putCompaniesPublicIDFioSettings = (requestContract: SaveFioSettingsRequest, publicID: string, headers = new Headers()): 
 	Promise<PutCompaniesPublicIDFioSettingsFetchResponse> => {
-	return apiPut(`${getApiUrl()}${putCompaniesPublicIDFioSettingsPath(publicID)}`, requestContract, headers) as Promise<PutCompaniesPublicIDFioSettingsFetchResponse>;
+	
+    const requestData = getApiRequestData<SaveFioSettingsRequest>(requestContract, false);
+    return apiPut(`${getApiUrl()}${putCompaniesPublicIDFioSettingsPath(publicID)}`, requestData, headers) as Promise<PutCompaniesPublicIDFioSettingsFetchResponse>;
 }
 
 export type GetCompaniesPublicIDLogoFileFetchResponse = 
@@ -3428,7 +3558,9 @@ export const postCacheRefreshPath = () => `/api/v1/cache/refresh`;
 
 export const postCacheRefresh = (body: string, headers = new Headers()): 
 	Promise<PostCacheRefreshFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postCacheRefreshPath()}`, body, headers) as Promise<PostCacheRefreshFetchResponse>;
+	
+    const requestData = getApiRequestData<string>(requestContract, false);
+    return apiPost(`${getApiUrl()}${postCacheRefreshPath()}`, requestData, headers) as Promise<PostCacheRefreshFetchResponse>;
 }
 
 export type PostAuthSignUpFetchResponse = 
@@ -3443,7 +3575,9 @@ export const postAuthSignUpPath = () => `/api/v1/auth/sign-up`;
 
 export const postAuthSignUp = (requestContract: SignUpCommand, headers = new Headers()): 
 	Promise<PostAuthSignUpFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postAuthSignUpPath()}`, requestContract, headers) as Promise<PostAuthSignUpFetchResponse>;
+	
+    const requestData = getApiRequestData<SignUpCommand>(requestContract, false);
+    return apiPost(`${getApiUrl()}${postAuthSignUpPath()}`, requestData, headers) as Promise<PostAuthSignUpFetchResponse>;
 }
 
 export type PostAuthSignInFetchResponse = 
@@ -3457,7 +3591,9 @@ export const postAuthSignInPath = () => `/api/v1/auth/sign-in`;
 
 export const postAuthSignIn = (requestContract: SignInCommand, headers = new Headers()): 
 	Promise<PostAuthSignInFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postAuthSignInPath()}`, requestContract, headers) as Promise<PostAuthSignInFetchResponse>;
+	
+    const requestData = getApiRequestData<SignInCommand>(requestContract, false);
+    return apiPost(`${getApiUrl()}${postAuthSignInPath()}`, requestData, headers) as Promise<PostAuthSignInFetchResponse>;
 }
 
 export type PostAuthTokenFetchResponse = 
@@ -3471,7 +3607,9 @@ export const postAuthTokenPath = () => `/api/v1/auth/token`;
 
 export const postAuthToken = (headers = new Headers()): 
 	Promise<PostAuthTokenFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postAuthTokenPath()}`, {}, headers) as Promise<PostAuthTokenFetchResponse>;
+	
+    const requestData = getApiRequestData<object>(undefined, true);
+    return apiPost(`${getApiUrl()}${postAuthTokenPath()}`, requestData, headers) as Promise<PostAuthTokenFetchResponse>;
 }
 
 export type PostAuthEmailVerificationFetchResponse = 
@@ -3485,7 +3623,9 @@ export const postAuthEmailVerificationPath = () => `/api/v1/auth/email-verificat
 
 export const postAuthEmailVerification = (requestContract: EmailVerificationCommand, headers = new Headers()): 
 	Promise<PostAuthEmailVerificationFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postAuthEmailVerificationPath()}`, requestContract, headers) as Promise<PostAuthEmailVerificationFetchResponse>;
+	
+    const requestData = getApiRequestData<EmailVerificationCommand>(requestContract, false);
+    return apiPost(`${getApiUrl()}${postAuthEmailVerificationPath()}`, requestData, headers) as Promise<PostAuthEmailVerificationFetchResponse>;
 }
 
 export type PostAuthEmailVerificationSendFetchResponse = 
@@ -3498,7 +3638,9 @@ export const postAuthEmailVerificationSendPath = () => `/api/v1/auth/email-verif
 
 export const postAuthEmailVerificationSend = (requestContract: ResendVerificationEmailCommand, headers = new Headers()): 
 	Promise<PostAuthEmailVerificationSendFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postAuthEmailVerificationSendPath()}`, requestContract, headers) as Promise<PostAuthEmailVerificationSendFetchResponse>;
+	
+    const requestData = getApiRequestData<ResendVerificationEmailCommand>(requestContract, false);
+    return apiPost(`${getApiUrl()}${postAuthEmailVerificationSendPath()}`, requestData, headers) as Promise<PostAuthEmailVerificationSendFetchResponse>;
 }
 
 export type PostAuthSsoFetchResponse = 
@@ -3512,7 +3654,9 @@ export const postAuthSsoPath = () => `/api/v1/auth/sso`;
 
 export const postAuthSso = (requestContract: SsoSignInRequest, headers = new Headers()): 
 	Promise<PostAuthSsoFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postAuthSsoPath()}`, requestContract, headers) as Promise<PostAuthSsoFetchResponse>;
+	
+    const requestData = getApiRequestData<SsoSignInRequest>(requestContract, false);
+    return apiPost(`${getApiUrl()}${postAuthSsoPath()}`, requestData, headers) as Promise<PostAuthSsoFetchResponse>;
 }
 
 export type GetAuthSsoTokenFetchResponse = 
@@ -3543,7 +3687,9 @@ export const postAuthPasswordResetPath = () => `/api/v1/auth/password-reset`;
 
 export const postAuthPasswordReset = (requestContract: ResetPasswordCommand, headers = new Headers()): 
 	Promise<PostAuthPasswordResetFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postAuthPasswordResetPath()}`, requestContract, headers) as Promise<PostAuthPasswordResetFetchResponse>;
+	
+    const requestData = getApiRequestData<ResetPasswordCommand>(requestContract, false);
+    return apiPost(`${getApiUrl()}${postAuthPasswordResetPath()}`, requestData, headers) as Promise<PostAuthPasswordResetFetchResponse>;
 }
 
 export type PutAuthPasswordFetchResponse = 
@@ -3558,5 +3704,7 @@ export const putAuthPasswordPath = () => `/api/v1/auth/password`;
 
 export const putAuthPassword = (requestContract: SetPasswordCommand, headers = new Headers()): 
 	Promise<PutAuthPasswordFetchResponse> => {
-	return apiPut(`${getApiUrl()}${putAuthPasswordPath()}`, requestContract, headers) as Promise<PutAuthPasswordFetchResponse>;
+	
+    const requestData = getApiRequestData<SetPasswordCommand>(requestContract, false);
+    return apiPut(`${getApiUrl()}${putAuthPasswordPath()}`, requestData, headers) as Promise<PutAuthPasswordFetchResponse>;
 }

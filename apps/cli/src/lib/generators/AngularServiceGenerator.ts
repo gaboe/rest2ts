@@ -5,7 +5,7 @@ import {
   getEndpointsDescriptions,
   MethodType,
 } from "./ApiDescriptionGenerator";
-import { getStatusCode, getTypeNameFromSchema } from "./Common";
+import { getMultipartConversion, getStatusCode, getTypeNameFromSchema } from "./Common";
 import { getRequestContractType, parametrizeUrl } from "./ServiceGenerator";
 import { render } from "../renderers/Renderer";
 
@@ -14,7 +14,8 @@ const bodyBasedMethod = (
   formattedRequestContractType: string,
   contractParameterName: string,
   contractResult: string,
-  methodType: MethodType
+  methodType: MethodType,
+  paramType: string
 ) => {
   const getMethodType = () => {
     switch (methodType) {
@@ -40,9 +41,11 @@ const bodyBasedMethod = (
       : "";
   const queryParameters = unusedParameters.length > 0 ? `, queryParams` : "";
 
+  const multipartConversion = getMultipartConversion(endpointDescription, formattedRequestContractType, paramType);
+
   const view = {
     name: endpointDescription.name,
-    contractParameterName,
+    contractParameterName: 'requestData',
     contractResult,
     url: `\`\$\{this.baseUrl\}${parametrizedUrl.url}\``,
     formattedParam: `${formattedRequestContractType}${
@@ -51,11 +54,12 @@ const bodyBasedMethod = (
     method,
     queryParams,
     queryParameters,
+    multipartConversion,
   };
 
   return render(
     `
-    {{name}}({{{formattedParam}}}): Observable<{{{contractResult}}}> {\n\t{{{queryParams}}}
+    {{name}}({{{formattedParam}}}): Observable<{{{contractResult}}}> {\n\t{{{queryParams}}}{{{multipartConversion}}}
       return api{{method}}<{{{contractResult}}}>(this.httpClient, {{{url}}}, {{contractParameterName}}{{queryParameters}});
     }
   `,
@@ -116,7 +120,9 @@ const getContractResult = (
   const getSchemas = (operation: Operation) =>
     Object.entries(operation.responses).map((e) => ({
       status: e[0],
-      schema: e[1]?.content?.["application/json"]?.schema ?? null,
+      schema: e[1]?.content?.["application/json"]?.schema
+        ?? e[1]?.content?.["multipart/form-data"]?.schema
+        ?? null,
     }));
 
   const getTypeName = (schema: Schema, isArray: boolean) => {
@@ -197,7 +203,9 @@ export const generateAngularServices = (swagger: SwaggerSchema) => {
       const {
         formattedParam: formattedRequestContractType,
         contractParameterName,
+        paramType
       } = getRequestContractType(endpointDescription).orDefault({
+        paramType: "",
         formattedParam: "",
         contractParameterName: "{}",
       });
@@ -215,7 +223,8 @@ export const generateAngularServices = (swagger: SwaggerSchema) => {
           formattedRequestContractType,
           contractParameterName,
           contractResult,
-          endpointDescription.methodType
+          endpointDescription.methodType,
+          paramType
         );
       }
       if (

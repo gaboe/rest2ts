@@ -287,6 +287,24 @@ export interface FileResponse {
   fileName?: string;
 }
   
+export enum ElectronicTradeFormalityEnum {
+	BlueAgreement = "BlueAgreement",
+	AML = "AML",
+	Termination = "Termination",
+	TransferUnderSAB = "TransferUnderSAB",
+	Change = "Change",
+	LoanProtocolHandover = "LoanProtocolHandover",
+	TradeProducerProtocol = "TradeProducerProtocol",
+	Modelation = "Modelation",
+	Other = "Other",
+	ZZJ = "ZZJ",
+	TradeIdentificationForm = "TradeIdentificationForm",
+	NewInstruction = "NewInstruction",
+	LoanRequest = "LoanRequest",
+	ESIP = "ESIP",
+	Contract = "Contract"
+};
+
 export type ErrorDetailDTO = {
 	code: string;
 	message: string;
@@ -299,17 +317,26 @@ export type ExceptionDTO = {
 	status?: number | null;
 	detail?: string | null;
 	instance?: string | null;
+	stackTrace?: { [key: string | number]: ExceptionStackTraceItemDTO[] } | null;
 };
 
-export type ProducerItemDTO = {
-	id: number;
-	title: string;
+export type ExceptionStackTraceItemDTO = {
+	file?: string | null;
+	line?: number | null;
+	function?: string | null;
+	class?: string | null;
+	type?: string | null;
 };
 
-export type ProductItemDTO = {
-	id_product: number;
-	title: string;
-	hidden?: boolean | null;
+export type ElectronicTradeFormalityDataRequestDTO = {
+	formalityType: ElectronicTradeFormalityEnum;
+	sendByPostOffice?: boolean | null;
+	targetRelationId?: number | null;
+};
+
+export type ElectronicTradeFormalityRequestDTO = {
+	data: ElectronicTradeFormalityDataRequestDTO;
+	file?: File | null;
 };
 
 
@@ -331,17 +358,16 @@ export class ApiService {
 
   
 	
-    getProducers(filterTerm?: string, filterHidden?: number, filterRegion?: string, filterCategory?: string): Observable<ResponseResult<ProducerItemDTO[], 200> | ResponseResult<ExceptionDTO, 401> | ResponseResult<ExceptionDTO, 403> | ResponseResult<ExceptionDTO, 500>> {
-      const queryParams = {
-		"filter[term]": filterTerm		,
-"filter[hidden]": filterHidden		,
-"filter[region]": filterRegion		,
-"filter[category]": filterCategory
+    postElectronicTradeTradesElectronicTradeIdFormality(requestContract: ElectronicTradeFormalityRequestDTO, electronicTradeId: number, fields?: string): Observable<ResponseResult<void, 204>> {
+	const queryParams = {
+		"fields": fields
 	}
 	
-      return apiGet<ResponseResult<ProducerItemDTO[], 200> | ResponseResult<ExceptionDTO, 401> | ResponseResult<ExceptionDTO, 403> | ResponseResult<ExceptionDTO, 500>>(this.httpClient, `${this.baseUrl}/api/producers`, queryParams);
-    }
+    const requestData = getApiRequestData<ElectronicTradeFormalityRequestDTO>(requestContract, true);
     
+      return apiPost<ResponseResult<void, 204>>(this.httpClient, `${this.baseUrl}/api/electronic-trade/trades/${electronicTradeId}/formality`, requestData, queryParams);
+    }
+  
 
 
 }

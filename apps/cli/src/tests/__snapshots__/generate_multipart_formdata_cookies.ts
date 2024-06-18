@@ -413,72 +413,70 @@ export function apiPatch<TResponse extends FetchResponse<unknown, number>, TRequ
 }
 // INFRASTRUCTURE END
 
-export type SmsSignDto = {
-	signatureHash: string;
-	code?: string | null;
-	contractID?: number | null;
+export enum ElectronicTradeFormalityEnum {
+	BlueAgreement = "BlueAgreement",
+	AML = "AML",
+	Termination = "Termination",
+	TransferUnderSAB = "TransferUnderSAB",
+	Change = "Change",
+	LoanProtocolHandover = "LoanProtocolHandover",
+	TradeProducerProtocol = "TradeProducerProtocol",
+	Modelation = "Modelation",
+	Other = "Other",
+	ZZJ = "ZZJ",
+	TradeIdentificationForm = "TradeIdentificationForm",
+	NewInstruction = "NewInstruction",
+	LoanRequest = "LoanRequest",
+	ESIP = "ESIP",
+	Contract = "Contract"
 };
 
-export enum CreateNewSignatureCommandResultStatus {
-	Success = "Success",
-	Fail = "Fail"
-};
-
-export type CreateNewSignatureCommand = {
-	smsSign: SmsSignDto;
-};
-
-export type SignSmsCommandResult = {
-	signInResult?: SignInResult | null;
-	status: SignSmsCommandResultStatus;
-	error: ApiCallError;
-};
-
-export enum SignSmsCommandResultStatus {
-	Success = "Success",
-	ContractFileNotExists = "ContractFileNotExists",
-	Fail = "Fail"
-};
-
-export type SignInResult = {
-	accessToken: string;
-	encryptedAccessToken: string;
-	expireInSeconds: number;
-	userId: number;
-};
-
-export type ApiCallError = {
+export type ErrorDetailDTO = {
 	code: string;
 	message: string;
-	details: string;
-	validationErrors: {
-	message: string;
-	members: string[];
-}[];
 };
 
-export type PostSignatureSmsFetchResponse = 
-| FetchResponse<boolean, 200> 
+export type ExceptionDTO = {
+	errors?: { [key: string | number]: ErrorDetailDTO[] } | null;
+	type?: string | null;
+	title?: string | null;
+	status?: number | null;
+	detail?: string | null;
+	instance?: string | null;
+	stackTrace?: { [key: string | number]: ExceptionStackTraceItemDTO[] } | null;
+};
+
+export type ExceptionStackTraceItemDTO = {
+	file?: string | null;
+	line?: number | null;
+	function?: string | null;
+	class?: string | null;
+	type?: string | null;
+};
+
+export type ElectronicTradeFormalityDataRequestDTO = {
+	formalityType: ElectronicTradeFormalityEnum;
+	sendByPostOffice?: boolean | null;
+	targetRelationId?: number | null;
+};
+
+export type ElectronicTradeFormalityRequestDTO = {
+	data: ElectronicTradeFormalityDataRequestDTO;
+	file?: File | null;
+};
+
+export type PostElectronicTradeTradesElectronicTradeIdFormalityFetchResponse = 
+| FetchResponse<void, 204> 
 | ErrorResponse;
 
-export const postSignatureSmsPath = () => `/api/signature/sms`;
+export const postElectronicTradeTradesElectronicTradeIdFormalityPath = (electronicTradeId: number, fields?: string) => `/api/electronic-trade/trades/${electronicTradeId}/formality`;
 
-export const postSignatureSms = (requestContract: CreateNewSignatureCommand, headers = new Headers()): 
-	Promise<PostSignatureSmsFetchResponse> => {
+export const postElectronicTradeTradesElectronicTradeIdFormality = (requestContract: ElectronicTradeFormalityRequestDTO, electronicTradeId: number, fields?: string, headers = new Headers()): 
+	Promise<PostElectronicTradeTradesElectronicTradeIdFormalityFetchResponse> => {
+	const queryParams = {
+		"fields": fields
+	}
 	
-    const requestData = getApiRequestData<CreateNewSignatureCommand>(requestContract, false);
-    return apiPost(`${getApiUrl()}${postSignatureSmsPath()}`, requestData, headers) as Promise<PostSignatureSmsFetchResponse>;
-}
-
-export type PutSignatureSmsFetchResponse = 
-| FetchResponse<SignSmsCommandResult, 200> 
-| ErrorResponse;
-
-export const putSignatureSmsPath = () => `/api/signature/sms`;
-
-export const putSignatureSms = (requestContract: SmsSignDto, headers = new Headers()): 
-	Promise<PutSignatureSmsFetchResponse> => {
-	
-    const requestData = getApiRequestData<SmsSignDto>(requestContract, false);
-    return apiPut(`${getApiUrl()}${putSignatureSmsPath()}`, requestData, headers) as Promise<PutSignatureSmsFetchResponse>;
+    const requestData = getApiRequestData<ElectronicTradeFormalityRequestDTO>(requestContract, true);
+    return apiPost(`${getApiUrl()}${postElectronicTradeTradesElectronicTradeIdFormalityPath(electronicTradeId)}`, requestData, headers, queryParams) as Promise<PostElectronicTradeTradesElectronicTradeIdFormalityFetchResponse>;
 }

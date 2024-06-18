@@ -206,6 +206,49 @@
     }
 
     return undefined;
+  } 
+  
+  
+ function getApiRequestData<Type extends object>(
+    requestContract: Type | undefined,
+    isFormData: boolean = false
+  ): FormData | Type | {} {
+  
+    if (!isFormData) {
+      return requestContract !== undefined ? requestContract : {};
+    }
+  
+    //multipart/form-data
+    const formData = new FormData();
+  
+    if (requestContract) {
+      Object.keys(requestContract).forEach(key => {
+        const value = requestContract[key as keyof Type];
+        if (value instanceof File) {
+          formData.append(key, value);
+        } else if (typeof value === 'object' && value !== null) {
+          formData.append(key, JSON.stringify(value));
+        } else {
+          formData.append(key, value as any);
+        }
+      });
+    }
+  
+    return formData;
+  }
+
+  
+  function updateHeadersAndGetBody<TResponse extends FetchResponse<unknown, number>, TRequest>(
+    request: TRequest,
+    headers: Headers
+  ) {
+    if (request instanceof FormData) {
+      headers.delete("Content-Type");
+      return request;
+    } else {
+      updateHeaders(headers);
+      return JSON.stringify(request);
+    }
   }
   
   function updateHeaders(headers: Headers) {
@@ -216,7 +259,7 @@
     if (!headers.has("Authorization") && !!token) {
       headers.append("Authorization", token);
     }
-  };
+  }
 
 export function getQueryParamsString(paramsObject: ParamsObject = {}) {
 	const queryString = Object.entries(paramsObject)
@@ -245,9 +288,8 @@ export function apiPost<TResponse extends FetchResponse<unknown, number>, TReque
   headers: Headers,
   paramsObject: ParamsObject = {}
 ) {
-  const raw = JSON.stringify(request);
-
-  updateHeaders(headers);
+  
+  const raw = updateHeadersAndGetBody(request, headers); 
 
   const requestOptions: FetchOptions = {
     method: "POST",
@@ -417,7 +459,9 @@ export const postSignatureSmsPath = () => `/api/signature/sms`;
 
 export const postSignatureSms = (requestContract: CreateNewSignatureCommand, headers = new Headers()): 
 	Promise<PostSignatureSmsFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postSignatureSmsPath()}`, requestContract, headers) as Promise<PostSignatureSmsFetchResponse>;
+	
+    const requestData = getApiRequestData<CreateNewSignatureCommand>(requestContract, false);
+    return apiPost(`${getApiUrl()}${postSignatureSmsPath()}`, requestData, headers) as Promise<PostSignatureSmsFetchResponse>;
 }
 
 export type PutSignatureSmsFetchResponse = 
@@ -428,5 +472,7 @@ export const putSignatureSmsPath = () => `/api/signature/sms`;
 
 export const putSignatureSms = (requestContract: SmsSignDto, headers = new Headers()): 
 	Promise<PutSignatureSmsFetchResponse> => {
-	return apiPut(`${getApiUrl()}${putSignatureSmsPath()}`, requestContract, headers) as Promise<PutSignatureSmsFetchResponse>;
+	
+    const requestData = getApiRequestData<SmsSignDto>(requestContract, false);
+    return apiPut(`${getApiUrl()}${putSignatureSmsPath()}`, requestData, headers) as Promise<PutSignatureSmsFetchResponse>;
 }
