@@ -208,6 +208,34 @@
     return undefined;
   } 
   
+    function getApiRequestData<Type extends object>(
+    requestContract: Type | undefined,
+    isFormData: boolean = false
+  ): FormData | Type | {} {
+  
+    if (!isFormData) {
+      return requestContract !== undefined ? requestContract : {};
+    }
+  
+    //multipart/form-data
+    const formData = new FormData();
+  
+    if (requestContract) {
+      Object.keys(requestContract).forEach(key => {
+        const value = requestContract[key as keyof Type];
+        if (value instanceof File) {
+          formData.append(key, value);
+        } else if (typeof value === 'object' && value !== null) {
+          formData.append(key, JSON.stringify(value));
+        } else {
+          formData.append(key, value as any);
+        }
+      });
+    }
+  
+    return formData;
+  }
+  
   function updateHeadersAndGetBody<TResponse extends FetchResponse<unknown, number>, TRequest>(
     request: TRequest,
     headers: Headers
@@ -431,9 +459,8 @@ export const postPetPetIdUploadImagePath = (petId: number) => `/pet/${petId}/upl
 export const postPetPetIdUploadImage = (petId: number, headers = new Headers()): 
 	Promise<PostPetPetIdUploadImageFetchResponse> => {
 	
-    //multipart/form-data  
-    const formData = new FormData();
-    return apiPost(`${getApiUrl()}${postPetPetIdUploadImagePath(petId)}`, formData, headers) as Promise<PostPetPetIdUploadImageFetchResponse>;
+    const requestData = getApiRequestData<object>(undefined, true);
+    return apiPost(`${getApiUrl()}${postPetPetIdUploadImagePath(petId)}`, requestData, headers) as Promise<PostPetPetIdUploadImageFetchResponse>;
 }
 
 export type PostPetFetchResponse = 
@@ -444,7 +471,9 @@ export const postPetPath = () => `/pet`;
 
 export const postPet = (requestContract: Pet, headers = new Headers()): 
 	Promise<PostPetFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postPetPath()}`, requestContract, headers) as Promise<PostPetFetchResponse>;
+	
+    const requestData = getApiRequestData<Pet>(requestContract, false);
+    return apiPost(`${getApiUrl()}${postPetPath()}`, requestData, headers) as Promise<PostPetFetchResponse>;
 }
 
 export type PutPetFetchResponse = 
@@ -457,7 +486,9 @@ export const putPetPath = () => `/pet`;
 
 export const putPet = (requestContract: Pet, headers = new Headers()): 
 	Promise<PutPetFetchResponse> => {
-	return apiPut(`${getApiUrl()}${putPetPath()}`, requestContract, headers) as Promise<PutPetFetchResponse>;
+	
+    const requestData = getApiRequestData<Pet>(requestContract, false);
+    return apiPut(`${getApiUrl()}${putPetPath()}`, requestData, headers) as Promise<PutPetFetchResponse>;
 }
 
 export type GetPetFindByStatusFetchResponse = 
@@ -523,7 +554,9 @@ export const postPetPetIdPath = (petId: number) => `/pet/${petId}`;
 
 export const postPetPetId = (petId: number, headers = new Headers()): 
 	Promise<PostPetPetIdFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postPetPetIdPath(petId)}`, {}, headers) as Promise<PostPetPetIdFetchResponse>;
+	
+    const requestData = getApiRequestData<object>(undefined, false);
+    return apiPost(`${getApiUrl()}${postPetPetIdPath(petId)}`, requestData, headers) as Promise<PostPetPetIdFetchResponse>;
 }
 
 export type GetStoreInventoryFetchResponse = 
@@ -546,7 +579,9 @@ export const postStoreOrderPath = () => `/store/order`;
 
 export const postStoreOrder = (requestContract: Order, headers = new Headers()): 
 	Promise<PostStoreOrderFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postStoreOrderPath()}`, requestContract, headers) as Promise<PostStoreOrderFetchResponse>;
+	
+    const requestData = getApiRequestData<Order>(requestContract, false);
+    return apiPost(`${getApiUrl()}${postStoreOrderPath()}`, requestData, headers) as Promise<PostStoreOrderFetchResponse>;
 }
 
 export type GetStoreOrderOrderIdFetchResponse = 
@@ -582,7 +617,9 @@ export const postUserCreateWithListPath = () => `/user/createWithList`;
 
 export const postUserCreateWithList = (requestContract: User[], headers = new Headers()): 
 	Promise<PostUserCreateWithListFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postUserCreateWithListPath()}`, requestContract, headers) as Promise<PostUserCreateWithListFetchResponse>;
+	
+    const requestData = getApiRequestData<User[]>(requestContract, false);
+    return apiPost(`${getApiUrl()}${postUserCreateWithListPath()}`, requestData, headers) as Promise<PostUserCreateWithListFetchResponse>;
 }
 
 export type GetUserUsernameFetchResponse = 
@@ -619,7 +656,9 @@ export const putUserUsernamePath = (username: string) => `/user/${username}`;
 
 export const putUserUsername = (requestContract: User, username: string, headers = new Headers()): 
 	Promise<PutUserUsernameFetchResponse> => {
-	return apiPut(`${getApiUrl()}${putUserUsernamePath(username)}`, requestContract, headers) as Promise<PutUserUsernameFetchResponse>;
+	
+    const requestData = getApiRequestData<User>(requestContract, false);
+    return apiPut(`${getApiUrl()}${putUserUsernamePath(username)}`, requestData, headers) as Promise<PutUserUsernameFetchResponse>;
 }
 
 export type GetUserLoginFetchResponse = 
@@ -657,7 +696,9 @@ export const postUserCreateWithArrayPath = () => `/user/createWithArray`;
 
 export const postUserCreateWithArray = (requestContract: User[], headers = new Headers()): 
 	Promise<PostUserCreateWithArrayFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postUserCreateWithArrayPath()}`, requestContract, headers) as Promise<PostUserCreateWithArrayFetchResponse>;
+	
+    const requestData = getApiRequestData<User[]>(requestContract, false);
+    return apiPost(`${getApiUrl()}${postUserCreateWithArrayPath()}`, requestData, headers) as Promise<PostUserCreateWithArrayFetchResponse>;
 }
 
 export type PostUserFetchResponse = 
@@ -668,5 +709,7 @@ export const postUserPath = () => `/user`;
 
 export const postUser = (requestContract: User, headers = new Headers()): 
 	Promise<PostUserFetchResponse> => {
-	return apiPost(`${getApiUrl()}${postUserPath()}`, requestContract, headers) as Promise<PostUserFetchResponse>;
+	
+    const requestData = getApiRequestData<User>(requestContract, false);
+    return apiPost(`${getApiUrl()}${postUserPath()}`, requestData, headers) as Promise<PostUserFetchResponse>;
 }

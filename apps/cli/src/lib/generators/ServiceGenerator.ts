@@ -432,35 +432,23 @@ const bodyBasedMethod = (
 
   const pathName = `${name}Path`;
 
-  let isMultipart = endpointDescription.pathObject.post?.requestBody?.content['multipart/form-data'];
+  const isMultipart = !!endpointDescription.pathObject.post?.requestBody?.content['multipart/form-data'];
+
   let multipartConversion = ``;
-  if (isMultipart){
 
-    multipartConversion = `
-    //multipart/form-data  
-    const formData = new FormData();
-    `;
-
-    if(!!formattedRequestContractType) {
-      multipartConversion += `Object.keys(requestContract).forEach(key => {
-    const value = requestContract[key as keyof ${paramType}];
-    if (value instanceof File) {      
-      formData.append(key, value);
-    } else if (typeof value === 'object' && value !== null) {      
-      formData.append(key, JSON.stringify(value));
-    } else {      
-      formData.append(key, value as any);
-    }
-  });`
-
-    }
-
-
+  if(!!formattedRequestContractType) {
+    multipartConversion += `
+    const requestData = getApiRequestData<${paramType}>(requestContract, ${isMultipart});
+    `
+  } else {
+    multipartConversion += `
+    const requestData = getApiRequestData<object>(undefined, ${isMultipart});
+    `
   }
 
   const view = {
     name: name,
-    contractParameterName: isMultipart ? 'formData' : contractParameterName,
+    contractParameterName: 'requestData',
     contractResult,
     contractResultName,
     pathName,

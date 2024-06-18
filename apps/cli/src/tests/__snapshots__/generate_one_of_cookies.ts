@@ -209,6 +209,34 @@
     return undefined;
   } 
   
+    function getApiRequestData<Type extends object>(
+    requestContract: Type | undefined,
+    isFormData: boolean = false
+  ): FormData | Type | {} {
+  
+    if (!isFormData) {
+      return requestContract !== undefined ? requestContract : {};
+    }
+  
+    //multipart/form-data
+    const formData = new FormData();
+  
+    if (requestContract) {
+      Object.keys(requestContract).forEach(key => {
+        const value = requestContract[key as keyof Type];
+        if (value instanceof File) {
+          formData.append(key, value);
+        } else if (typeof value === 'object' && value !== null) {
+          formData.append(key, JSON.stringify(value));
+        } else {
+          formData.append(key, value as any);
+        }
+      });
+    }
+  
+    return formData;
+  }
+  
   function updateHeadersAndGetBody<TResponse extends FetchResponse<unknown, number>, TRequest>(
     request: TRequest,
     headers: Headers
