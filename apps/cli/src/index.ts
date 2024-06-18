@@ -3,6 +3,7 @@
 import { outputFile } from "fs-extra";
 import { generateApiContent } from "./lib";
 import { Command } from "commander";
+import { gradientText } from "./lib/ui/GradientRenderer";
 
 type ProgramProps = {
   source: string | undefined;
@@ -12,6 +13,8 @@ type ProgramProps = {
   generateForAngular: boolean;
   help: never;
 };
+
+console.log(`${gradientText("REST2TS")}\n`);
 
 const program = new Command();
 
@@ -46,10 +49,16 @@ if (!target) {
   process.exit(1);
 }
 
-console.log(`Getting openAPI from ${source}`);
+const unauthorizedKey = "NODE_TLS_REJECT_UNAUTHORIZED";
+process.env[unauthorizedKey] = "0";
 
-// eslint-disable-next-line turbo/no-undeclared-env-vars
-process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = "0";
+const originalEmitWarning = process.emitWarning;
+process.emitWarning = (warning, ...args) => {
+  if (typeof warning === "string" && warning.includes(unauthorizedKey)) {
+    return;
+  }
+  originalEmitWarning.call(process, warning, ...(args as any));
+};
 
 generateApiContent(source, generateForAngular, cookies)
   .then((content) => {
@@ -57,11 +66,18 @@ generateApiContent(source, generateForAngular, cookies)
       console.error("Failed to generate api content");
       process.exit(1);
     }
+    const outputFilePath = `${target}/${fileName ?? "Api.ts"}`;
+    console.log(`✏️ 3/3 - Writing generated code to ${outputFilePath}`);
 
-    outputFile(`${target}/${fileName ?? "Api.ts"}`, content).catch((err) => {
-      console.error(err);
-      process.exit(1);
-    });
+    outputFile(outputFilePath, content)
+      .then(() => {
+        console.log(`Done 🫡\n\nThanks for using ${gradientText("REST2TS")}`);
+        process.exit(0);
+      })
+      .catch((err) => {
+        console.error(err);
+        process.exit(1);
+      });
   })
   .catch((err) => {
     console.error(err);

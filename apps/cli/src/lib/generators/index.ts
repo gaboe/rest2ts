@@ -49,6 +49,8 @@ export const generate = async (
   generateForAngular: boolean = false,
   isCookiesAuthEnabled: boolean = false
 ) => {
+  const logStep = () => console.log("⚡2/3 - Generating code");
+
   if (!!api.swagger && !api.openapi) {
     const response = await axios.post(
       "https://converter.swagger.io/api/convert",
@@ -58,11 +60,14 @@ export const generate = async (
       console.error("Failed to convert Swagger 2.0 to OpenAPI 3.0", response);
       return null;
     }
+
+    logStep();
     return generateForAngular
       ? generateAngularContent(response.data)
       : generateContent(response.data, isCookiesAuthEnabled);
   }
 
+  logStep();
   return generateForAngular
     ? generateAngularContent(api)
     : generateContent(api, isCookiesAuthEnabled);

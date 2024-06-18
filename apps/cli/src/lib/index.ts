@@ -15,6 +15,8 @@ export async function generateApiContent(
   generateForAngular: boolean,
   cookies: boolean
 ): Promise<string | null> {
+  console.log(`🤖1/3 - Getting OpenAPI definition from ${source}`);
+
   const openAPI = await parseSwagger(source);
 
   if (!openAPI) {
