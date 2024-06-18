@@ -112,6 +112,19 @@ const config: Config = {
             },
           ],
         },
+        {
+          title: "Support",
+          items: [
+            {
+              label: "Buy me a coffee",
+              href: "https://www.buymeacoffee.com/gaboe",
+            },
+            {
+              label: "Donate via Lightning",
+              to: "/support/donate",
+            },
+          ],
+        },
       ],
       copyright: `Copyright © ${new Date().getFullYear()} Gabriel Ečegi`,
     },
