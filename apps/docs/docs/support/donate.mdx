@@ -1,4 +1,4 @@
-import DonateButton from "@site/src/components/LN/DonateButton";
+import BrowserOnly from "@docusaurus/BrowserOnly";
 
 # Donate
 
@@ -10,4 +10,10 @@ Buy me a coffee if you like this project! ☕
 
 Or buy me a coffee with Bitcoin Lightning:
 
-<DonateButton />
+<BrowserOnly>
+  {() => {
+    const DonateButton =
+      require("@site/src/components/LN/DonateButton").default;
+    return <DonateButton />;
+  }}
+</BrowserOnly>

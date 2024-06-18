@@ -6,7 +6,6 @@ import HomepageFeatures from "@site/src/components/HomepageFeatures";
 import Heading from "@theme/Heading";
 
 import styles from "./index.module.css";
-// import DonateButton from "@site/src/components/LN/DonateButton";
 import BrowserOnly from "@docusaurus/BrowserOnly";
 
 function HomepageHeader() {
