@@ -207,6 +207,19 @@
     }
 
     return undefined;
+  } 
+  
+  function updateHeadersAndGetBody<TResponse extends FetchResponse<unknown, number>, TRequest>(
+    request: TRequest,
+    headers: Headers
+  ) {
+    if (request instanceof FormData) {
+      headers.delete("Content-Type");
+      return request;
+    } else {
+      updateHeaders(headers);
+      return JSON.stringify(request);
+    }
   }
   
   function updateHeaders(headers: Headers) {
@@ -217,7 +230,7 @@
     if (!headers.has("Authorization") && !!token) {
       headers.append("Authorization", token);
     }
-  };
+  }
 
 export function getQueryParamsString(paramsObject: ParamsObject = {}) {
 	const queryString = Object.entries(paramsObject)
@@ -246,14 +259,8 @@ export function apiPost<TResponse extends FetchResponse<unknown, number>, TReque
   headers: Headers,
   paramsObject: ParamsObject = {}
 ) {
-  let raw;
-  if(request instanceof FormData) {
-      raw = request;
-      headers.delete('Content-Type');
-  } else {
-      raw = JSON.stringify(request);
-      updateHeaders(headers);
-  }
+  
+  const raw = updateHeadersAndGetBody(request, headers); 
 
   const requestOptions: FetchOptions = {
     method: "POST",
