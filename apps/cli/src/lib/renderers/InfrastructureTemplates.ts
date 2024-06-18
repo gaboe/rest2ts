@@ -3,6 +3,36 @@ const disclaimer = `
 // THIS FILE WAS GENERATED
 // ALL CHANGES WILL BE OVERWRITTEN\n\n`.trimStart();
 
+const commonInfrastructure = `
+ function getApiRequestData<Type extends object>(
+    requestContract: Type | undefined,
+    isFormData: boolean = false
+  ): FormData | Type | {} {
+  
+    if (!isFormData) {
+      return requestContract !== undefined ? requestContract : {};
+    }
+  
+    //multipart/form-data
+    const formData = new FormData();
+  
+    if (requestContract) {
+      Object.keys(requestContract).forEach(key => {
+        const value = requestContract[key as keyof Type];
+        if (value instanceof File) {
+          formData.append(key, value);
+        } else if (typeof value === 'object' && value !== null) {
+          formData.append(key, JSON.stringify(value));
+        } else {
+          formData.append(key, value as any);
+        }
+      });
+    }
+  
+    return formData;
+  }
+`;
+
 export const getInfrastructureTemplate = (isCookiesAuthEnabled: boolean) => {
   const credentialsTemplate = isCookiesAuthEnabled
     ? `\n\t\tcredentials: "include",`
@@ -214,33 +244,7 @@ export const getInfrastructureTemplate = (isCookiesAuthEnabled: boolean) => {
     return undefined;
   } 
   
-    function getApiRequestData<Type extends object>(
-    requestContract: Type | undefined,
-    isFormData: boolean = false
-  ): FormData | Type | {} {
-  
-    if (!isFormData) {
-      return requestContract !== undefined ? requestContract : {};
-    }
-  
-    //multipart/form-data
-    const formData = new FormData();
-  
-    if (requestContract) {
-      Object.keys(requestContract).forEach(key => {
-        const value = requestContract[key as keyof Type];
-        if (value instanceof File) {
-          formData.append(key, value);
-        } else if (typeof value === 'object' && value !== null) {
-          formData.append(key, JSON.stringify(value));
-        } else {
-          formData.append(key, value as any);
-        }
-      });
-    }
-  
-    return formData;
-  }
+  ${commonInfrastructure}
   
   function updateHeadersAndGetBody<TResponse extends FetchResponse<unknown, number>, TRequest>(
     request: TRequest,
@@ -434,6 +438,8 @@ type FlattenableValue =
     };
 
 type QueryParams = { [key: string]: FlattenableValue } | null | undefined;
+
+${commonInfrastructure}
 
 function flattenQueryParams(data: QueryParams) {
   const params: Record<string, any> = {};

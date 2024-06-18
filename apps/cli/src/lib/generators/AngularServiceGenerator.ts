@@ -5,7 +5,7 @@ import {
   getEndpointsDescriptions,
   MethodType,
 } from "./ApiDescriptionGenerator";
-import { getStatusCode, getTypeNameFromSchema } from "./Common";
+import { getMultipartConversion, getStatusCode, getTypeNameFromSchema } from "./Common";
 import { getRequestContractType, parametrizeUrl } from "./ServiceGenerator";
 import { render } from "../renderers/Renderer";
 
@@ -41,33 +41,11 @@ const bodyBasedMethod = (
       : "";
   const queryParameters = unusedParameters.length > 0 ? `, queryParams` : "";
 
-  let isMultipart = endpointDescription.pathObject.post?.requestBody?.content['multipart/form-data'];
-  let multipartConversion = ``;
-  if (isMultipart){
-
-    multipartConversion = `
-    //multipart/form-data  
-    const formData = new FormData();
-    `;
-
-    if(!!formattedRequestContractType) {
-      multipartConversion += `Object.keys(requestContract).forEach(key => {
-    const value = requestContract[key as keyof ${paramType}];
-    if (value instanceof File) {      
-      formData.append(key, value);
-    } else if (typeof value === 'object' && value !== null) {      
-      formData.append(key, JSON.stringify(value));
-    } else {      
-      formData.append(key, value as any);
-    }
-  });`
-
-    }
-  }
+  const multipartConversion = getMultipartConversion(endpointDescription, formattedRequestContractType, paramType);
 
   const view = {
     name: endpointDescription.name,
-    contractParameterName: isMultipart ? 'formData' : contractParameterName,
+    contractParameterName: 'requestData',
     contractResult,
     url: `\`\$\{this.baseUrl\}${parametrizedUrl.url}\``,
     formattedParam: `${formattedRequestContractType}${

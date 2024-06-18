@@ -23,6 +23,36 @@ type FlattenableValue =
 
 type QueryParams = { [key: string]: FlattenableValue } | null | undefined;
 
+
+ function getApiRequestData<Type extends object>(
+    requestContract: Type | undefined,
+    isFormData: boolean = false
+  ): FormData | Type | {} {
+  
+    if (!isFormData) {
+      return requestContract !== undefined ? requestContract : {};
+    }
+  
+    //multipart/form-data
+    const formData = new FormData();
+  
+    if (requestContract) {
+      Object.keys(requestContract).forEach(key => {
+        const value = requestContract[key as keyof Type];
+        if (value instanceof File) {
+          formData.append(key, value);
+        } else if (typeof value === 'object' && value !== null) {
+          formData.append(key, JSON.stringify(value));
+        } else {
+          formData.append(key, value as any);
+        }
+      });
+    }
+  
+    return formData;
+  }
+
+
 function flattenQueryParams(data: QueryParams) {
   const params: Record<string, any> = {};
   flatten(params, data, '');
@@ -323,22 +353,25 @@ export class ApiService {
 	
     postPetPetIdUploadImage(petId: number): Observable<ResponseResult<ApiResponse, 200>> {
 	
-    //multipart/form-data  
-    const formData = new FormData();
+    const requestData = getApiRequestData<object>(undefined, true);
     
-      return apiPost<ResponseResult<ApiResponse, 200>>(this.httpClient, `${this.baseUrl}/pet/${petId}/uploadImage`, formData);
+      return apiPost<ResponseResult<ApiResponse, 200>>(this.httpClient, `${this.baseUrl}/pet/${petId}/uploadImage`, requestData);
     }
   
 
     postPet(requestContract: Pet): Observable<ResponseResult<void, 405>> {
 	
-      return apiPost<ResponseResult<void, 405>>(this.httpClient, `${this.baseUrl}/pet`, requestContract);
+    const requestData = getApiRequestData<Pet>(requestContract, false);
+    
+      return apiPost<ResponseResult<void, 405>>(this.httpClient, `${this.baseUrl}/pet`, requestData);
     }
   
 
     putPet(requestContract: Pet): Observable<ResponseResult<void, 400> | ResponseResult<void, 404> | ResponseResult<void, 405>> {
 	
-      return apiPut<ResponseResult<void, 400> | ResponseResult<void, 404> | ResponseResult<void, 405>>(this.httpClient, `${this.baseUrl}/pet`, requestContract);
+    const requestData = getApiRequestData<Pet>(requestContract, false);
+    
+      return apiPut<ResponseResult<void, 400> | ResponseResult<void, 404> | ResponseResult<void, 405>>(this.httpClient, `${this.baseUrl}/pet`, requestData);
     }
   
 
@@ -374,7 +407,9 @@ export class ApiService {
 
     postPetPetId(petId: number): Observable<ResponseResult<void, 405>> {
 	
-      return apiPost<ResponseResult<void, 405>>(this.httpClient, `${this.baseUrl}/pet/${petId}`, {});
+    const requestData = getApiRequestData<object>(undefined, false);
+    
+      return apiPost<ResponseResult<void, 405>>(this.httpClient, `${this.baseUrl}/pet/${petId}`, requestData);
     }
   
 
@@ -386,7 +421,9 @@ export class ApiService {
 
     postStoreOrder(requestContract: Order): Observable<ResponseResult<Order, 200> | ResponseResult<void, 400>> {
 	
-      return apiPost<ResponseResult<Order, 200> | ResponseResult<void, 400>>(this.httpClient, `${this.baseUrl}/store/order`, requestContract);
+    const requestData = getApiRequestData<Order>(requestContract, false);
+    
+      return apiPost<ResponseResult<Order, 200> | ResponseResult<void, 400>>(this.httpClient, `${this.baseUrl}/store/order`, requestData);
     }
   
 
@@ -404,7 +441,9 @@ export class ApiService {
 
     postUserCreateWithList(requestContract: User[]): Observable<ResponseResult<void, 201>> {
 	
-      return apiPost<ResponseResult<void, 201>>(this.httpClient, `${this.baseUrl}/user/createWithList`, requestContract);
+    const requestData = getApiRequestData<User[]>(requestContract, false);
+    
+      return apiPost<ResponseResult<void, 201>>(this.httpClient, `${this.baseUrl}/user/createWithList`, requestData);
     }
   
 
@@ -422,7 +461,9 @@ export class ApiService {
 
     putUserUsername(requestContract: User, username: string): Observable<ResponseResult<void, 400> | ResponseResult<void, 404>> {
 	
-      return apiPut<ResponseResult<void, 400> | ResponseResult<void, 404>>(this.httpClient, `${this.baseUrl}/user/${username}`, requestContract);
+    const requestData = getApiRequestData<User>(requestContract, false);
+    
+      return apiPut<ResponseResult<void, 400> | ResponseResult<void, 404>>(this.httpClient, `${this.baseUrl}/user/${username}`, requestData);
     }
   
 
@@ -444,13 +485,17 @@ export class ApiService {
 
     postUserCreateWithArray(requestContract: User[]): Observable<ResponseResult<void, 201>> {
 	
-      return apiPost<ResponseResult<void, 201>>(this.httpClient, `${this.baseUrl}/user/createWithArray`, requestContract);
+    const requestData = getApiRequestData<User[]>(requestContract, false);
+    
+      return apiPost<ResponseResult<void, 201>>(this.httpClient, `${this.baseUrl}/user/createWithArray`, requestData);
     }
   
 
     postUser(requestContract: User): Observable<ResponseResult<void, 201>> {
 	
-      return apiPost<ResponseResult<void, 201>>(this.httpClient, `${this.baseUrl}/user`, requestContract);
+    const requestData = getApiRequestData<User>(requestContract, false);
+    
+      return apiPost<ResponseResult<void, 201>>(this.httpClient, `${this.baseUrl}/user`, requestData);
     }
   
 

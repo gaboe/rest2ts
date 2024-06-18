@@ -11,6 +11,7 @@ import {
 } from "./ApiDescriptionGenerator";
 import { Maybe, Nothing, Just } from "purify-ts";
 import {
+  getMultipartConversion,
   getStatusCode,
   getTypeNameFromRef,
   getTypeNameFromSchema,
@@ -432,19 +433,7 @@ const bodyBasedMethod = (
 
   const pathName = `${name}Path`;
 
-  const isMultipart = !!endpointDescription.pathObject.post?.requestBody?.content['multipart/form-data'];
-
-  let multipartConversion = ``;
-
-  if(!!formattedRequestContractType) {
-    multipartConversion += `
-    const requestData = getApiRequestData<${paramType}>(requestContract, ${isMultipart});
-    `
-  } else {
-    multipartConversion += `
-    const requestData = getApiRequestData<object>(undefined, ${isMultipart});
-    `
-  }
+  const multipartConversion = getMultipartConversion(endpointDescription, formattedRequestContractType, paramType);
 
   const view = {
     name: name,

@@ -209,7 +209,8 @@
     return undefined;
   } 
   
-    function getApiRequestData<Type extends object>(
+  
+ function getApiRequestData<Type extends object>(
     requestContract: Type | undefined,
     isFormData: boolean = false
   ): FormData | Type | {} {
@@ -236,6 +237,7 @@
   
     return formData;
   }
+
   
   function updateHeadersAndGetBody<TResponse extends FetchResponse<unknown, number>, TRequest>(
     request: TRequest,
