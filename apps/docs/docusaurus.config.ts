@@ -121,7 +121,7 @@ const config: Config = {
             },
             {
               label: "Donate via Lightning",
-              to: "/support/donate",
+              to: "/docs/support/donate",
             },
           ],
         },
