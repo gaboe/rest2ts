@@ -4,7 +4,7 @@ import type * as Preset from "@docusaurus/preset-classic";
 
 const config: Config = {
   title: "REST2TS",
-  tagline: "Generate beautiful TypeScript types from REST APIs",
+  tagline: "Generate modern TypeScript types from REST APIs",
   favicon: "img/favicon.ico",
 
   // Set the production url of your site here

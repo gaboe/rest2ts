@@ -35,7 +35,7 @@ export default function Home(): JSX.Element {
   return (
     <Layout
       title={`${siteConfig.title}`}
-      description="Generate beautiful TypeScript types from REST APIs"
+      description="Generate modern TypeScript types from REST APIs"
     >
       <HomepageHeader />
       <main>

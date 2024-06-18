@@ -3,7 +3,7 @@
 ![NPM Version](https://img.shields.io/npm/v/rest2ts?color=%23CB3837)
 ![JSR Version](https://img.shields.io/jsr/v/%40gaboe/rest2ts?color=%23F7DF1E)
 
-## Generate beautiful TypeScript types from REST APIs
+## Generate modern TypeScript types from REST APIs
 
 ## 🚀 Usage
 
