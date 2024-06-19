@@ -19,6 +19,8 @@ npx rest2ts -s https://petstore.swagger.io/v2/swagger.json -t ./api
 
 <a href="https://www.buymeacoffee.com/gaboe"><img src="https://img.buymeacoffee.com/button-api/?text=Coffee for TS types&emoji=☕&slug=gaboe&button_colour=FFDD00&font_colour=000000&font_family=Poppins&outline_colour=000000&coffee_colour=ffffff" /></a>
 
+<a href="https://gaboe.github.io/rest2ts/docs/support/donate"><img src="https://img.buymeacoffee.com/button-api/?text=Donate bitcoin&emoji=⚡&slug=gaboe&button_colour=ffffff&font_colour=000000&font_family=Inter&outline_colour=000000&coffee_colour=FFDD00" /></a>
+
 ## 📦 Contribution
 
 1. Clone the repository
