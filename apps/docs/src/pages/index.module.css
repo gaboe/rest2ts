@@ -29,3 +29,9 @@
   justify-content: center;
   gap: 2rem;
 }
+
+.donateSection{
+  padding-top: 2rem;
+  padding-bottom: 1.25rem;
+  background-color: var(--ifm-hero-background-color);
+}

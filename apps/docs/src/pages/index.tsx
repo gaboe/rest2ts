@@ -44,7 +44,7 @@ export default function Home(): JSX.Element {
       <main>
         <HomepageFeatures />
 
-        <div className={styles.buttons}>
+        <div className={clsx(styles.buttons, styles.donateSection)}>
           <a href="https://www.buymeacoffee.com/gaboe">
             <img src="https://img.buymeacoffee.com/button-api/?text=Coffee for TS types&emoji=☕&slug=gaboe&button_colour=FFDD00&font_colour=000000&font_family=Poppins&outline_colour=000000&coffee_colour=ffffff" />
           </a>
