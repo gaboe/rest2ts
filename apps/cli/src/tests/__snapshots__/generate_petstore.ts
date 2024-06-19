@@ -209,7 +209,7 @@
   } 
   
   
- function getApiRequestData<Type extends object>(
+ function getApiRequestData<Type extends any>(
     requestContract: Type | undefined,
     isFormData: boolean = false
   ): FormData | Type | {} {

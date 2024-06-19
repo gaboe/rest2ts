@@ -209,7 +209,7 @@
   } 
   
   
- function getApiRequestData<Type extends object>(
+ function getApiRequestData<Type extends any>(
     requestContract: Type | undefined,
     isFormData: boolean = false
   ): FormData | Type | {} {
@@ -3559,7 +3559,7 @@ export const postCacheRefreshPath = () => `/api/v1/cache/refresh`;
 export const postCacheRefresh = (body: string, headers = new Headers()): 
 	Promise<PostCacheRefreshFetchResponse> => {
 	
-    const requestData = getApiRequestData<string>(requestContract, false);
+    const requestData = getApiRequestData<string>(body, false);
     return apiPost(`${getApiUrl()}${postCacheRefreshPath()}`, requestData, headers) as Promise<PostCacheRefreshFetchResponse>;
 }
 

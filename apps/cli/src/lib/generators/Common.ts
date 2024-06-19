@@ -181,6 +181,7 @@ export const getMultipartConversion =
     endpointDescription: EndpointDescription,
     formattedRequestContractType: string,
     paramType: string,
+    paramName: string,
   ): string => {
 
     const isMultipart = !!endpointDescription.pathObject.post?.requestBody?.content["multipart/form-data"];
@@ -189,7 +190,7 @@ export const getMultipartConversion =
 
     if (!!formattedRequestContractType) {
       multipartConversion += `
-    const requestData = getApiRequestData<${paramType}>(requestContract, ${isMultipart});
+    const requestData = getApiRequestData<${paramType}>(${paramName}, ${isMultipart});
     `;
     } else {
       multipartConversion += `
