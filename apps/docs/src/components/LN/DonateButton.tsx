@@ -22,10 +22,6 @@ export default function DonateButton() {
     })();
   }, []);
 
-  if (!invoice) {
-    return null;
-  }
-
   return (
     <>
       <button
