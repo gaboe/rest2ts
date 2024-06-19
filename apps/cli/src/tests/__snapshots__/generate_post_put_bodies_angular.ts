@@ -24,7 +24,7 @@ type FlattenableValue =
 type QueryParams = { [key: string]: FlattenableValue } | null | undefined;
 
 
- function getApiRequestData<Type extends object>(
+ function getApiRequestData<Type extends any>(
     requestContract: Type | undefined,
     isFormData: boolean = false
   ): FormData | Type | {} {

@@ -24,7 +24,7 @@ type FlattenableValue =
 type QueryParams = { [key: string]: FlattenableValue } | null | undefined;
 
 
- function getApiRequestData<Type extends object>(
+ function getApiRequestData<Type extends any>(
     requestContract: Type | undefined,
     isFormData: boolean = false
   ): FormData | Type | {} {
@@ -2676,7 +2676,7 @@ export class ApiService {
 
     postCacheRefresh(body: string): Observable<ResponseResult<void, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 403> | ResponseResult<ProblemDetails, 500>> {
 	
-    const requestData = getApiRequestData<string>(requestContract, false);
+    const requestData = getApiRequestData<string>(body, false);
     
       return apiPost<ResponseResult<void, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 403> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/cache/refresh`, requestData);
     }

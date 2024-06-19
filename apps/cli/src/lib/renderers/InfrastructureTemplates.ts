@@ -4,7 +4,7 @@ const disclaimer = `
 // ALL CHANGES WILL BE OVERWRITTEN\n\n`.trimStart();
 
 const commonInfrastructure = `
- function getApiRequestData<Type extends object>(
+ function getApiRequestData<Type extends any>(
     requestContract: Type | undefined,
     isFormData: boolean = false
   ): FormData | Type | {} {

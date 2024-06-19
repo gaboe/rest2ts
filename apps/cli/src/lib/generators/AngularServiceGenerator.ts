@@ -41,7 +41,7 @@ const bodyBasedMethod = (
       : "";
   const queryParameters = unusedParameters.length > 0 ? `, queryParams` : "";
 
-  const multipartConversion = getMultipartConversion(endpointDescription, formattedRequestContractType, paramType);
+  const multipartConversion = getMultipartConversion(endpointDescription, formattedRequestContractType, paramType, contractParameterName);
 
   const view = {
     name: endpointDescription.name,

@@ -433,7 +433,7 @@ const bodyBasedMethod = (
 
   const pathName = `${name}Path`;
 
-  const multipartConversion = getMultipartConversion(endpointDescription, formattedRequestContractType, paramType);
+  const multipartConversion = getMultipartConversion(endpointDescription, formattedRequestContractType, paramType, contractParameterName);
 
   const view = {
     name: name,
