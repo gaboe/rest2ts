@@ -36,16 +36,20 @@ type QueryParams = { [key: string]: FlattenableValue } | null | undefined;
     //multipart/form-data
     const formData = new FormData();
   
-    if (requestContract) {
+     if (requestContract) {
       Object.keys(requestContract).forEach(key => {
         const value = requestContract[key as keyof Type];
-        if (value instanceof File) {
-          formData.append(key, value);
-        } else if (typeof value === 'object' && value !== null) {
-          formData.append(key, JSON.stringify(value));
-        } else {
-          formData.append(key, value as any);
-        }
+        const isKeyArrayAndValueIterable = key.endsWith('[]') && typeof (value as any)[Symbol.iterator] === 'function';
+        const values = isKeyArrayAndValueIterable ? Array.from(value as Iterable<any>) : [value];
+          for (const val of values) {
+              if (val instanceof File) {
+                  formData.append(key, val);
+              } else if (typeof val === 'object' && val !== null) {
+                  formData.append(key, JSON.stringify(val));
+              } else {
+                  formData.append(key, val as any);
+              }
+          }
       });
     }
   
