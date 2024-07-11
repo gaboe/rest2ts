@@ -457,28 +457,28 @@ export type ApiCallError = {
 }[];
 };
 
-export type PostSignatureSmsFetchResponse = 
+export type PostApiSignatureSmsFetchResponse = 
 | FetchResponse<boolean, 200> 
 | ErrorResponse;
 
-export const postSignatureSmsPath = () => `/api/signature/sms`;
+export const postApiSignatureSmsPath = () => `/api/signature/sms`;
 
-export const postSignatureSms = (requestContract: CreateNewSignatureCommand, headers = new Headers()): 
-	Promise<PostSignatureSmsFetchResponse> => {
-	
+export const postApiSignatureSms = (requestContract: CreateNewSignatureCommand, headers = new Headers()):
+  Promise<PostApiSignatureSmsFetchResponse> => {
     const requestData = getApiRequestData<CreateNewSignatureCommand>(requestContract, false);
-    return apiPost(`${getApiUrl()}${postSignatureSmsPath()}`, requestData, headers) as Promise<PostSignatureSmsFetchResponse>;
+
+    return apiPost(`${getApiUrl()}${postApiSignatureSmsPath()}`, requestData, headers) as Promise<PostApiSignatureSmsFetchResponse>;
 }
 
-export type PutSignatureSmsFetchResponse = 
+export type PutApiSignatureSmsFetchResponse = 
 | FetchResponse<SignSmsCommandResult, 200> 
 | ErrorResponse;
 
-export const putSignatureSmsPath = () => `/api/signature/sms`;
+export const putApiSignatureSmsPath = () => `/api/signature/sms`;
 
-export const putSignatureSms = (requestContract: SmsSignDto, headers = new Headers()): 
-	Promise<PutSignatureSmsFetchResponse> => {
-	
+export const putApiSignatureSms = (requestContract: SmsSignDto, headers = new Headers()):
+  Promise<PutApiSignatureSmsFetchResponse> => {
     const requestData = getApiRequestData<SmsSignDto>(requestContract, false);
-    return apiPut(`${getApiUrl()}${putSignatureSmsPath()}`, requestData, headers) as Promise<PutSignatureSmsFetchResponse>;
+
+    return apiPut(`${getApiUrl()}${putApiSignatureSmsPath()}`, requestData, headers) as Promise<PutApiSignatureSmsFetchResponse>;
 }

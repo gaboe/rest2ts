@@ -427,14 +427,14 @@ export type Cow = {
 	discriminator: string;
 };
 
-export type GetTestFetchResponse = 
+export type GetApiTestFetchResponse = 
 | FetchResponse<{status: string;
 	data?: Dog | Cat | Cow | null;}, 200> 
 | ErrorResponse;
 
-export const getTestPath = () => `/api/test`;
+export const getApiTestPath = () => `/api/test`;
 
-export const getTest = (headers = new Headers()): 
-	Promise<GetTestFetchResponse> => {
-	return apiGet(`${getApiUrl()}${getTestPath()}`, headers, {}) as Promise<GetTestFetchResponse>;
+export const getApiTest = (headers = new Headers()):
+  Promise<GetApiTestFetchResponse> => {
+    return apiGet(`${getApiUrl()}${getApiTestPath()}`, headers, {}) as Promise<GetApiTestFetchResponse>;
 }

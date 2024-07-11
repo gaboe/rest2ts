@@ -533,30 +533,30 @@ export type Idcard = {
 	issue_date: string;
 };
 
-export type GetBankIDVerifyBankIdFetchResponse = 
+export type GetApiBankIDVerifyBankIdFetchResponse = 
 | FetchResponse<ProcessBankIDVerificationCommandResult, 200> 
 | ErrorResponse;
 
-export const getBankIDVerifyBankIdPath = () => `/api/BankID/verify-bank-id`;
+export const getApiBankIDVerifyBankIdPath = () => `/api/BankID/verify-bank-id`;
 
-export const getBankIDVerifyBankId = (token?: string | undefined | null, headers = new Headers()): 
-	Promise<GetBankIDVerifyBankIdFetchResponse> => {
-	const queryParams = {
-		"token": token
-	}
-	return apiGet(`${getApiUrl()}${getBankIDVerifyBankIdPath()}`, headers, queryParams) as Promise<GetBankIDVerifyBankIdFetchResponse>;
+export const getApiBankIDVerifyBankId = (token?: string | undefined | null, headers = new Headers()):
+  Promise<GetApiBankIDVerifyBankIdFetchResponse> => {
+    const queryParams = {
+      "token": token
+    }
+    return apiGet(`${getApiUrl()}${getApiBankIDVerifyBankIdPath()}`, headers, queryParams) as Promise<GetApiBankIDVerifyBankIdFetchResponse>;
 }
 
-export type GetProductListFetchResponse = 
+export type GetApiProductListFetchResponse = 
 | FetchResponse<ProductItemDto[], 200> 
 | ErrorResponse;
 
-export const getProductListPath = () => `/api/product/list`;
+export const getApiProductListPath = () => `/api/product/list`;
 
-export const getProductList = (contractTypeCode?: ContractTypeCode | undefined | null, headers = new Headers()): 
-	Promise<GetProductListFetchResponse> => {
-	const queryParams = {
-		"contractTypeCode": contractTypeCode
-	}
-	return apiGet(`${getApiUrl()}${getProductListPath()}`, headers, queryParams) as Promise<GetProductListFetchResponse>;
+export const getApiProductList = (contractTypeCode?: ContractTypeCode | undefined | null, headers = new Headers()):
+  Promise<GetApiProductListFetchResponse> => {
+    const queryParams = {
+      "contractTypeCode": contractTypeCode
+    }
+    return apiGet(`${getApiUrl()}${getApiProductListPath()}`, headers, queryParams) as Promise<GetApiProductListFetchResponse>;
 }

@@ -287,10 +287,8 @@ export interface FileResponse {
   fileName?: string;
 }
   
-export type ElectronicTradeBigRiskItemResponseDTO = {
-	id: number;
-	title?: string | null;
-	validationNumber?: number | null;
+export type Session = {
+	sessionId: string;
 };
 
 
@@ -310,10 +308,19 @@ export class ApiService {
       this.baseUrl = baseUrl ?? "";
   }
 
-  getApiTest(): Observable<ResponseResult<{status: string;
-	data: ElectronicTradeBigRiskItemResponseDTO;}, 200>> {
-    return apiGet<ResponseResult<{status: string;
-	data: ElectronicTradeBigRiskItemResponseDTO;}, 200>>(this.httpClient, `${this.baseUrl}/api/test`);
+  postVerify(body: string): Observable<ResponseResult<void, 200>> {
+    const requestData = getApiRequestData<string>(body, false);
+
+    return apiPost<ResponseResult<void, 200>>(this.httpClient, `${this.baseUrl}/v1/verify`, requestData);
+  }
+
+  postCountryCodeSessions(countryCode?: string, lang?: string): Observable<ResponseResult<Session, 201>> {
+		const queryParams = {
+      "lang": lang
+    };
+    const requestData = getApiRequestData<object>(undefined, false);
+
+    return apiPost<ResponseResult<Session, 201>>(this.httpClient, `${this.baseUrl}/v1/${countryCode}/Sessions`, requestData, queryParams);
   }
 }
 

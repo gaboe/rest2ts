@@ -280,7 +280,7 @@ function apiPatch<T extends ResponseResult<unknown, number>, U = unknown>(
 		);
 }
 
-  // INFRASTRUCTURE END
+// INFRASTRUCTURE END
 
 export interface FileResponse {
   data: Blob;
@@ -349,158 +349,112 @@ export class ApiService {
       this.baseUrl = baseUrl ?? "";
   }
 
-  
-	
-    postPetPetIdUploadImage(petId: number): Observable<ResponseResult<ApiResponse, 200>> {
-	
+  postPetPetIdUploadImage(petId: number): Observable<ResponseResult<ApiResponse, 200>> {
     const requestData = getApiRequestData<object>(undefined, true);
-    
-      return apiPost<ResponseResult<ApiResponse, 200>>(this.httpClient, `${this.baseUrl}/pet/${petId}/uploadImage`, requestData);
-    }
-  
 
-    postPet(requestContract: Pet): Observable<ResponseResult<void, 405>> {
-	
+    return apiPost<ResponseResult<ApiResponse, 200>>(this.httpClient, `${this.baseUrl}/pet/${petId}/uploadImage`, requestData);
+  }
+
+  postPet(requestContract: Pet): Observable<ResponseResult<void, 405>> {
     const requestData = getApiRequestData<Pet>(requestContract, false);
-    
-      return apiPost<ResponseResult<void, 405>>(this.httpClient, `${this.baseUrl}/pet`, requestData);
-    }
-  
 
-    putPet(requestContract: Pet): Observable<ResponseResult<void, 400> | ResponseResult<void, 404> | ResponseResult<void, 405>> {
-	
+    return apiPost<ResponseResult<void, 405>>(this.httpClient, `${this.baseUrl}/pet`, requestData);
+  }
+
+  putPet(requestContract: Pet): Observable<ResponseResult<void, 400> | ResponseResult<void, 404> | ResponseResult<void, 405>> {
     const requestData = getApiRequestData<Pet>(requestContract, false);
-    
-      return apiPut<ResponseResult<void, 400> | ResponseResult<void, 404> | ResponseResult<void, 405>>(this.httpClient, `${this.baseUrl}/pet`, requestData);
-    }
-  
 
-    getPetFindByStatus(status: string[]): Observable<ResponseResult<Pet[], 200> | ResponseResult<void, 400>> {
-      const queryParams = {
-		"status": status
-	}
-	
-      return apiGet<ResponseResult<Pet[], 200> | ResponseResult<void, 400>>(this.httpClient, `${this.baseUrl}/pet/findByStatus`, queryParams);
-    }
-    
+    return apiPut<ResponseResult<void, 400> | ResponseResult<void, 404> | ResponseResult<void, 405>>(this.httpClient, `${this.baseUrl}/pet`, requestData);
+  }
 
-    getPetFindByTags(tags: string[]): Observable<ResponseResult<Pet[], 200> | ResponseResult<void, 400>> {
-      const queryParams = {
-		"tags": tags
-	}
-	
-      return apiGet<ResponseResult<Pet[], 200> | ResponseResult<void, 400>>(this.httpClient, `${this.baseUrl}/pet/findByTags`, queryParams);
-    }
-    
+  getPetFindByStatus(status: string[]): Observable<ResponseResult<Pet[], 200> | ResponseResult<void, 400>> {
+    const queryParams = {
+      "status": status
+    };
+    return apiGet<ResponseResult<Pet[], 200> | ResponseResult<void, 400>>(this.httpClient, `${this.baseUrl}/pet/findByStatus`, queryParams);
+  }
 
-    getPetPetId(petId: number): Observable<ResponseResult<Pet, 200> | ResponseResult<void, 400> | ResponseResult<void, 404>> {
-      
-      return apiGet<ResponseResult<Pet, 200> | ResponseResult<void, 400> | ResponseResult<void, 404>>(this.httpClient, `${this.baseUrl}/pet/${petId}`);
-    }
-    
+  getPetFindByTags(tags: string[]): Observable<ResponseResult<Pet[], 200> | ResponseResult<void, 400>> {
+    const queryParams = {
+      "tags": tags
+    };
+    return apiGet<ResponseResult<Pet[], 200> | ResponseResult<void, 400>>(this.httpClient, `${this.baseUrl}/pet/findByTags`, queryParams);
+  }
 
-    deletePetPetId(petId: number): Observable<ResponseResult<void, 400> | ResponseResult<void, 404>> {
-      
-      return apiDelete<ResponseResult<void, 400> | ResponseResult<void, 404>>(this.httpClient, `${this.baseUrl}/pet/${petId}`);
-    }
-    
+  getPetPetId(petId: number): Observable<ResponseResult<Pet, 200> | ResponseResult<void, 400> | ResponseResult<void, 404>> {
+    return apiGet<ResponseResult<Pet, 200> | ResponseResult<void, 400> | ResponseResult<void, 404>>(this.httpClient, `${this.baseUrl}/pet/${petId}`);
+  }
 
-    postPetPetId(petId: number): Observable<ResponseResult<void, 405>> {
-	
+  deletePetPetId(petId: number): Observable<ResponseResult<void, 400> | ResponseResult<void, 404>> {
+    return apiDelete<ResponseResult<void, 400> | ResponseResult<void, 404>>(this.httpClient, `${this.baseUrl}/pet/${petId}`);
+  }
+
+  postPetPetId(petId: number): Observable<ResponseResult<void, 405>> {
     const requestData = getApiRequestData<object>(undefined, false);
-    
-      return apiPost<ResponseResult<void, 405>>(this.httpClient, `${this.baseUrl}/pet/${petId}`, requestData);
-    }
-  
 
-    getStoreInventory(): Observable<ResponseResult<object, 200>> {
-      
-      return apiGet<ResponseResult<object, 200>>(this.httpClient, `${this.baseUrl}/store/inventory`);
-    }
-    
+    return apiPost<ResponseResult<void, 405>>(this.httpClient, `${this.baseUrl}/pet/${petId}`, requestData);
+  }
 
-    postStoreOrder(requestContract: Order): Observable<ResponseResult<Order, 200> | ResponseResult<void, 400>> {
-	
+  getStoreInventory(): Observable<ResponseResult<object, 200>> {
+    return apiGet<ResponseResult<object, 200>>(this.httpClient, `${this.baseUrl}/store/inventory`);
+  }
+
+  postStoreOrder(requestContract: Order): Observable<ResponseResult<Order, 200> | ResponseResult<void, 400>> {
     const requestData = getApiRequestData<Order>(requestContract, false);
-    
-      return apiPost<ResponseResult<Order, 200> | ResponseResult<void, 400>>(this.httpClient, `${this.baseUrl}/store/order`, requestData);
-    }
-  
 
-    getStoreOrderOrderId(orderId: number): Observable<ResponseResult<Order, 200> | ResponseResult<void, 400> | ResponseResult<void, 404>> {
-      
-      return apiGet<ResponseResult<Order, 200> | ResponseResult<void, 400> | ResponseResult<void, 404>>(this.httpClient, `${this.baseUrl}/store/order/${orderId}`);
-    }
-    
+    return apiPost<ResponseResult<Order, 200> | ResponseResult<void, 400>>(this.httpClient, `${this.baseUrl}/store/order`, requestData);
+  }
 
-    deleteStoreOrderOrderId(orderId: number): Observable<ResponseResult<void, 400> | ResponseResult<void, 404>> {
-      
-      return apiDelete<ResponseResult<void, 400> | ResponseResult<void, 404>>(this.httpClient, `${this.baseUrl}/store/order/${orderId}`);
-    }
-    
+  getStoreOrderOrderId(orderId: number): Observable<ResponseResult<Order, 200> | ResponseResult<void, 400> | ResponseResult<void, 404>> {
+    return apiGet<ResponseResult<Order, 200> | ResponseResult<void, 400> | ResponseResult<void, 404>>(this.httpClient, `${this.baseUrl}/store/order/${orderId}`);
+  }
 
-    postUserCreateWithList(requestContract: User[]): Observable<ResponseResult<void, 201>> {
-	
+  deleteStoreOrderOrderId(orderId: number): Observable<ResponseResult<void, 400> | ResponseResult<void, 404>> {
+    return apiDelete<ResponseResult<void, 400> | ResponseResult<void, 404>>(this.httpClient, `${this.baseUrl}/store/order/${orderId}`);
+  }
+
+  postUserCreateWithList(requestContract: User[]): Observable<ResponseResult<void, 201>> {
     const requestData = getApiRequestData<User[]>(requestContract, false);
-    
-      return apiPost<ResponseResult<void, 201>>(this.httpClient, `${this.baseUrl}/user/createWithList`, requestData);
-    }
-  
 
-    getUserUsername(username: string): Observable<ResponseResult<User, 200> | ResponseResult<void, 400> | ResponseResult<void, 404>> {
-      
-      return apiGet<ResponseResult<User, 200> | ResponseResult<void, 400> | ResponseResult<void, 404>>(this.httpClient, `${this.baseUrl}/user/${username}`);
-    }
-    
+    return apiPost<ResponseResult<void, 201>>(this.httpClient, `${this.baseUrl}/user/createWithList`, requestData);
+  }
 
-    deleteUserUsername(username: string): Observable<ResponseResult<void, 400> | ResponseResult<void, 404>> {
-      
-      return apiDelete<ResponseResult<void, 400> | ResponseResult<void, 404>>(this.httpClient, `${this.baseUrl}/user/${username}`);
-    }
-    
+  getUserUsername(username: string): Observable<ResponseResult<User, 200> | ResponseResult<void, 400> | ResponseResult<void, 404>> {
+    return apiGet<ResponseResult<User, 200> | ResponseResult<void, 400> | ResponseResult<void, 404>>(this.httpClient, `${this.baseUrl}/user/${username}`);
+  }
 
-    putUserUsername(requestContract: User, username: string): Observable<ResponseResult<void, 400> | ResponseResult<void, 404>> {
-	
+  deleteUserUsername(username: string): Observable<ResponseResult<void, 400> | ResponseResult<void, 404>> {
+    return apiDelete<ResponseResult<void, 400> | ResponseResult<void, 404>>(this.httpClient, `${this.baseUrl}/user/${username}`);
+  }
+
+  putUserUsername(requestContract: User, username: string): Observable<ResponseResult<void, 400> | ResponseResult<void, 404>> {
     const requestData = getApiRequestData<User>(requestContract, false);
-    
-      return apiPut<ResponseResult<void, 400> | ResponseResult<void, 404>>(this.httpClient, `${this.baseUrl}/user/${username}`, requestData);
-    }
-  
 
-    getUserLogin(username: string, password: string): Observable<ResponseResult<string, 200> | ResponseResult<void, 400>> {
-      const queryParams = {
-		"username": username		,
-"password": password
-	}
-	
-      return apiGet<ResponseResult<string, 200> | ResponseResult<void, 400>>(this.httpClient, `${this.baseUrl}/user/login`, queryParams);
-    }
-    
+    return apiPut<ResponseResult<void, 400> | ResponseResult<void, 404>>(this.httpClient, `${this.baseUrl}/user/${username}`, requestData);
+  }
 
-    getUserLogout(): Observable<ResponseResult<void, 200>> {
-      
-      return apiGet<ResponseResult<void, 200>>(this.httpClient, `${this.baseUrl}/user/logout`);
-    }
-    
+  getUserLogin(username: string, password: string): Observable<ResponseResult<string, 200> | ResponseResult<void, 400>> {
+    const queryParams = {
+      "username": username,
+      "password": password
+    };
+    return apiGet<ResponseResult<string, 200> | ResponseResult<void, 400>>(this.httpClient, `${this.baseUrl}/user/login`, queryParams);
+  }
 
-    postUserCreateWithArray(requestContract: User[]): Observable<ResponseResult<void, 201>> {
-	
+  getUserLogout(): Observable<ResponseResult<void, 200>> {
+    return apiGet<ResponseResult<void, 200>>(this.httpClient, `${this.baseUrl}/user/logout`);
+  }
+
+  postUserCreateWithArray(requestContract: User[]): Observable<ResponseResult<void, 201>> {
     const requestData = getApiRequestData<User[]>(requestContract, false);
-    
-      return apiPost<ResponseResult<void, 201>>(this.httpClient, `${this.baseUrl}/user/createWithArray`, requestData);
-    }
-  
 
-    postUser(requestContract: User): Observable<ResponseResult<void, 201>> {
-	
+    return apiPost<ResponseResult<void, 201>>(this.httpClient, `${this.baseUrl}/user/createWithArray`, requestData);
+  }
+
+  postUser(requestContract: User): Observable<ResponseResult<void, 201>> {
     const requestData = getApiRequestData<User>(requestContract, false);
-    
-      return apiPost<ResponseResult<void, 201>>(this.httpClient, `${this.baseUrl}/user`, requestData);
-    }
-  
 
-
+    return apiPost<ResponseResult<void, 201>>(this.httpClient, `${this.baseUrl}/user`, requestData);
+  }
 }
-  
-  
 

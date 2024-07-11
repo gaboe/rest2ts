@@ -413,156 +413,35 @@ export function apiPatch<TResponse extends FetchResponse<unknown, number>, TRequ
 }
 // INFRASTRUCTURE END
 
-export enum ContractTypeCode {
-	BEN = "BEN",
-	CONSIGNMENT = "CONSIGNMENT",
-	DYN = "DYN",
-	FCG = "FCG",
-	LIBERO_RS = "LIBERO_RS",
-	OKP = "OKP",
-	OKS_FKI = "OKS_FKI",
-	OKS_Investor = "OKS_Investor",
-	OKS_LC = "OKS_LC",
-	OKS_LC_EX = "OKS_LC_EX",
-	OKS_LC_EX_ = "OKS_LC_EX_",
-	OKSP_LC = "OKSP_LC",
-	OKSP_LC_EX = "OKSP_LC_EX",
-	OKSP_LC_EX_ = "OKSP_LC_EX_",
-	RS_INVCZK = "RS_INVCZK",
-	RS_INVCZKSELF = "RS_INVCZKSELF",
-	RS_INVEUR = "RS_INVEUR",
-	RS_INVEURSELF = "RS_INVEURSELF",
-	RS_INVPROFICZK = "RS_INVPROFICZK",
-	RS_OKSmartFondy = "RS_OKSmartFondy",
-	RS_OKSmartFondy_EX = "RS_OKSmartFondy_EX",
-	RS_OKSmartFondy_EX_ = "RS_OKSmartFondy_EX_",
-	RS_OKSmartProdukty = "RS_OKSmartProdukty",
-	RS_OKSmartProdukty_EX = "RS_OKSmartProdukty_EX",
-	RS_OKSmartProdukty_EX_ = "RS_OKSmartProdukty_EX_"
+export type Session = {
+	sessionId: string;
 };
 
-export type ProductItemDto = {
-	className?: string | null;
-	order?: number | null;
-	singleMinInvestment?: number | null;
-	singleMaxInvestment?: number | null;
-	singleDefaultInvestment?: number | null;
-	periodicalMinInvestment?: number | null;
-	periodicalMaxInvestment?: number | null;
-	periodicalDefaultInvestment?: number | null;
-	color?: string | null;
-	hasPeriodicalRedemption?: boolean | null;
-	minPerformance?: number | null;
-	maxPerformance?: number | null;
-	productCode?: string | null;
-	isin?: string | null;
-	productName?: string | null;
-	productSingleSS?: string | null;
-	productPeriodicalSS?: string | null;
-};
-
-export type ProcessBankIDVerificationCommandResult = {
-	status: ProcessBankIDVerificationCommandResultStatus;
-	profile?: BankIDProfileResponse | null;
-};
-
-export enum ProcessBankIDVerificationCommandResultStatus {
-	BankIDUserInfoError = "BankIDUserInfoError",
-	Success = "Success",
-	Fail = "Fail",
-	VerificationAlreadyExists = "VerificationAlreadyExists"
-};
-
-export type BankIDProfileResponse = {
-	sub: string;
-	txn: string;
-	verified_claims?: VerifiedClaimsDto | null;
-	given_name: string;
-	family_name: string;
-	gender: string;
-	birthdate: string;
-	birthnumber?: string | null;
-	age: number;
-	majority: boolean;
-	date_of_death: any;
-	birthplace: string;
-	primary_nationality: string;
-	nationalities: string[];
-	maritalstatus: string;
-	email: string;
-	phone_number: string;
-	pep: boolean;
-	limited_legal_capacity: boolean;
-	addresses: Address[];
-	idcards: Idcard[];
-	paymentAccounts: string[];
-	updated_at: number;
-};
-
-export type VerifiedClaimsDto = {
-	verification?: Verification | null;
-	claims: Claims;
-};
-
-export type Verification = {
-	trust_framework?: string | null;
-	verification_process: string;
-};
-
-export type Claims = {
-	given_name: string;
-	family_name: string;
-	gender: string;
-	birthdate: string;
-	addresses: Address[];
-	idcards: Idcard[];
-};
-
-export type Address = {
-	type: string;
-	street: string;
-	buildingapartment: string;
-	streetnumber: string;
-	city: string;
-	zipcode: string;
-	country: string;
-	ruian_reference: string;
-};
-
-export type Idcard = {
-	type: string;
-	description: string;
-	country: string;
-	number: string;
-	valid_to: string;
-	issuer: string;
-	issue_date: string;
-};
-
-export type GetApiBankIDVerifyBankIdFetchResponse = 
-| FetchResponse<ProcessBankIDVerificationCommandResult, 200> 
+export type PostCountryCodeVerifyV2FetchResponse = 
+| FetchResponse<void, 200> 
 | ErrorResponse;
 
-export const getApiBankIDVerifyBankIdPath = () => `/api/BankID/verify-bank-id`;
+export const postCountryCodeVerifyV2Path = () => `/v2/{countryCode}/verify`;
 
-export const getApiBankIDVerifyBankId = (token?: string | undefined | null, headers = new Headers()):
-  Promise<GetApiBankIDVerifyBankIdFetchResponse> => {
-    const queryParams = {
-      "token": token
-    }
-    return apiGet(`${getApiUrl()}${getApiBankIDVerifyBankIdPath()}`, headers, queryParams) as Promise<GetApiBankIDVerifyBankIdFetchResponse>;
+export const postCountryCodeVerifyV2 = (body: string, headers = new Headers()):
+  Promise<PostCountryCodeVerifyV2FetchResponse> => {
+    const requestData = getApiRequestData<string>(body, false);
+
+    return apiPost(`${getApiUrl()}${postCountryCodeVerifyV2Path()}`, requestData, headers) as Promise<PostCountryCodeVerifyV2FetchResponse>;
 }
 
-export type GetApiProductListFetchResponse = 
-| FetchResponse<ProductItemDto[], 200> 
+export type PostCountryCodeSessionsV2FetchResponse = 
+| FetchResponse<Session, 201> 
 | ErrorResponse;
 
-export const getApiProductListPath = () => `/api/product/list`;
+export const postCountryCodeSessionsV2Path = (countryCode?: string, lang?: string) => `/v2/${countryCode}/Sessions`;
 
-export const getApiProductList = (contractTypeCode?: ContractTypeCode | undefined | null, headers = new Headers()):
-  Promise<GetApiProductListFetchResponse> => {
+export const postCountryCodeSessionsV2 = (countryCode?: string, lang?: string, headers = new Headers()):
+  Promise<PostCountryCodeSessionsV2FetchResponse> => {
     const queryParams = {
-      "contractTypeCode": contractTypeCode
-    }
-    return apiGet(`${getApiUrl()}${getApiProductListPath()}`, headers, queryParams) as Promise<GetApiProductListFetchResponse>;
+      "lang": lang
+    };
+    const requestData = getApiRequestData<object>(undefined, false);
+
+    return apiPost(`${getApiUrl()}${postCountryCodeSessionsV2Path(countryCode)}`, requestData, headers, queryParams) as Promise<PostCountryCodeSessionsV2FetchResponse>;
 }

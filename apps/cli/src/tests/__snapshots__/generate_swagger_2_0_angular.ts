@@ -280,7 +280,7 @@ function apiPatch<T extends ResponseResult<unknown, number>, U = unknown>(
 		);
 }
 
-  // INFRASTRUCTURE END
+// INFRASTRUCTURE END
 
 export interface FileResponse {
   data: Blob;
@@ -351,44 +351,30 @@ export class ApiService {
       this.baseUrl = baseUrl ?? "";
   }
 
-  
-	
-    getAgendaSearch(do_num: string, dO_Id?: number): Observable<ResponseResult<SearchResponse[], 200>> {
-      const queryParams = {
-		"do_num": do_num		,
-"dO_Id": dO_Id
-	}
-	
-      return apiGet<ResponseResult<SearchResponse[], 200>>(this.httpClient, `${this.baseUrl}/api/Agenda/Search`, queryParams);
-    }
-    
+  getApiAgendaSearch(do_num: string, dO_Id?: number): Observable<ResponseResult<SearchResponse[], 200>> {
+    const queryParams = {
+      "do_num": do_num,
+      "dO_Id": dO_Id
+    };
+    return apiGet<ResponseResult<SearchResponse[], 200>>(this.httpClient, `${this.baseUrl}/api/Agenda/Search`, queryParams);
+  }
 
-    postApiUsersIsUserValid(requestContract: LoginDataDataContract): Observable<ResponseResult<object, 200> | ResponseResult<number, 201>> {
-	
+  postApiApiUsersIsUserValid(requestContract: LoginDataDataContract): Observable<ResponseResult<object, 200> | ResponseResult<number, 201>> {
     const requestData = getApiRequestData<LoginDataDataContract>(requestContract, false);
-    
-      return apiPost<ResponseResult<object, 200> | ResponseResult<number, 201>>(this.httpClient, `${this.baseUrl}/api/ApiUsers/IsUserValid`, requestData);
-    }
-  
 
-    postContractEditContractSignatures(requestContract: IPA_PlexDbContext_ContractSignature[]): Observable<ResponseResult<object, 200>> {
-	
+    return apiPost<ResponseResult<object, 200> | ResponseResult<number, 201>>(this.httpClient, `${this.baseUrl}/api/ApiUsers/IsUserValid`, requestData);
+  }
+
+  postApiContractEditContractSignatures(requestContract: IPA_PlexDbContext_ContractSignature[]): Observable<ResponseResult<object, 200>> {
     const requestData = getApiRequestData<IPA_PlexDbContext_ContractSignature[]>(requestContract, false);
-    
-      return apiPost<ResponseResult<object, 200>>(this.httpClient, `${this.baseUrl}/api/Contract/EditContractSignatures`, requestData);
-    }
-  
 
-    patchCaseUpdateCaseTypeCaseNoCaseType(caseNo: string, caseType: string): Observable<ResponseResult<object, 200>> {
-	
+    return apiPost<ResponseResult<object, 200>>(this.httpClient, `${this.baseUrl}/api/Contract/EditContractSignatures`, requestData);
+  }
+
+  patchApiCaseUpdateCaseTypeCaseNoCaseType(caseNo: string, caseType: string): Observable<ResponseResult<object, 200>> {
     const requestData = getApiRequestData<object>(undefined, false);
-    
-      return apiPatch<ResponseResult<object, 200>>(this.httpClient, `${this.baseUrl}/api/Case/UpdateCaseType/${caseNo}/${caseType}`, requestData);
-    }
-  
 
-
+    return apiPatch<ResponseResult<object, 200>>(this.httpClient, `${this.baseUrl}/api/Case/UpdateCaseType/${caseNo}/${caseType}`, requestData);
+  }
 }
-  
-  
 

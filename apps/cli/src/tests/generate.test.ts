@@ -13,6 +13,9 @@ const cases = [
   "post_put_bodies",
   "swagger_2_0",
   "multipart_formdata",
+  "common_prefix_countryCode",
+  "common_prefix_v1",
+  "common_prefix_v2",
 ];
 
 function fixturePath(name: string) {

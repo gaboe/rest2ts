@@ -18,10 +18,21 @@ import {
 } from "./Common";
 import { render } from "../renderers/Renderer";
 
+export type RequestContractType = {
+  contractParameterName: string;
+  formattedParam: string;
+  paramType: string;
+};
+
 export const getRequestContractType = (
-  endpointDescription: EndpointDescription
-): Maybe<{ contractParameterName: string; formattedParam: string ; paramType: string}> => {
-  const getContractType = (op: Operation, contentType: "application/json" | "multipart/form-data" = 'application/json') => {
+  endpointDescription: EndpointDescription,
+): Maybe<RequestContractType> | typeof Nothing => {
+  const getContractType = (
+    op: Operation,
+    contentType:
+      | "application/json"
+      | "multipart/form-data" = "application/json",
+  ) => {
     const schema = op.requestBody.content[contentType]!.schema;
     const isRequestParamArray = schema.type === "array" && !!schema.items;
     const refName = isRequestParamArray
@@ -37,17 +48,15 @@ export const getRequestContractType = (
     }
 
     return Maybe.fromNullable(refName)
-      .chain((e) => Just(getTypeNameFromRef(e)))
-      .chain((v) =>
+      .chain(e => Just(getTypeNameFromRef(e)))
+      .chain(v =>
         Just({
           contractParameterName: "requestContract",
-          paramType: `${v}${
-            isRequestParamArray ? "[]" : ""
-          }`,
+          paramType: `${v}${isRequestParamArray ? "[]" : ""}`,
           formattedParam: `requestContract: ${v}${
             isRequestParamArray ? "[]" : ""
           }`,
-        })
+        }),
       );
   };
 
@@ -87,7 +96,6 @@ export const getRequestContractType = (
     return getContractType(put, "multipart/form-data");
   }
 
-
   const patch = endpointDescription.pathObject.patch;
   if (
     methodType === "PATCH" &&
@@ -101,7 +109,7 @@ export const getRequestContractType = (
     !!patch &&
     patch.requestBody?.content["multipart/form-data"]
   ) {
-    return getContractType(patch,"multipart/form-data");
+    return getContractType(patch, "multipart/form-data");
   }
 
   return Nothing;
@@ -109,20 +117,21 @@ export const getRequestContractType = (
 
 const getContractResult = (
   endpointDescription: EndpointDescription,
-  swagger: SwaggerSchema
-): Maybe<string> => {
+  swagger: SwaggerSchema,
+): Maybe<string> | typeof Nothing => {
   const getSchemas = (operation: Operation) =>
-    Object.entries(operation.responses).map((e) => ({
+    Object.entries(operation.responses).map(e => ({
       status: e[0],
-      schema: e[1]?.content?.["application/json"]?.schema
-        ?? e[1]?.content?.["multipart/form-data"]?.schema
-        ?? null,
+      schema:
+        e[1]?.content?.["application/json"]?.schema ??
+        e[1]?.content?.["multipart/form-data"]?.schema ??
+        null,
     }));
 
   const getTypeName = (schema: Schema, isArray: boolean) => {
     if (schema.oneOf) {
       const typeNames = schema.oneOf
-        .map((s) => getTypeNameFromSchema(s, swagger))
+        .map(s => getTypeNameFromSchema(s, swagger))
         .join(" | ");
       return isArray ? `(${typeNames})[]` : typeNames;
     }
@@ -136,7 +145,7 @@ const getContractResult = (
       .map(({ schema, status }) => {
         const statusCode = getStatusCode(
           status,
-          endpointDescription.methodType
+          endpointDescription.methodType,
         );
 
         if (!schema) {
@@ -147,9 +156,9 @@ const getContractResult = (
 
         if (schema.type === "array") {
           const typeName = Maybe.fromNullable(schema.items)
-            .chain((e) => (e instanceof Array ? Just(e[0]) : Just(e)))
-            .chain((e) =>
-              Just(isFileSchema ? "FileResponse" : getTypeName(e!, true))
+            .chain(e => (e instanceof Array ? Just(e[0]) : Just(e)))
+            .chain(e =>
+              Just(isFileSchema ? "FileResponse" : getTypeName(e!, true)),
             )
             .orDefault("");
           return `FetchResponse<${typeName}, ${statusCode}>`;
@@ -207,9 +216,11 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
         return `{}${nullability}`;
       case "array": {
         const arrayTypeSchema = Maybe.fromNullable(schema.items)
-          .chain((e) => (e instanceof Array ? Just(e[0]) : Just(e)))
-          .chain((e) =>
-            Just(e!.$ref ? getTypeNameFromRef(e!.$ref) : getType(parameter, e!))
+          .chain(e => (e instanceof Array ? Just(e[0]) : Just(e)))
+          .chain(e =>
+            Just(
+              e!.$ref ? getTypeNameFromRef(e!.$ref) : getType(parameter, e!),
+            ),
           )
           .orDefault("");
         return `${arrayTypeSchema}[]${nullability}`;
@@ -219,8 +230,8 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
 
         if (!!oneOf) {
           const types = oneOf
-            .filter((e) => !!e.$ref)
-            .map((e) => getTypeNameFromRef(e.$ref!))
+            .filter(e => !!e.$ref)
+            .map(e => getTypeNameFromRef(e.$ref!))
             .join(" | ");
 
           return `${types}${nullability}`;
@@ -282,9 +293,9 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
         innerMatch
           .split("")
           .map((char: string, i: number) =>
-            i === 0 ? char.toUpperCase() : char.toLowerCase()
+            i === 0 ? char.toUpperCase() : char.toLowerCase(),
           )
-          .join("")
+          .join(""),
       )
       .trim();
 
@@ -296,7 +307,7 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
     `${formatParamName(parameter.name)}${parameter.required ? "" : "?"}: ${parameter.type}`;
 
   const formattedFunctionParameters = parameters
-    .map((e) => formatAsArgument(e))
+    .map(e => formatAsArgument(e))
     .join(", ");
 
   const parametrizedUrl = parameters.reduce(
@@ -319,12 +330,12 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
       url: endpointDescription.originalPath,
       usedParameters: new Array<string>(),
       usedFormattedParameters: new Array<string>(),
-    }
+    },
   );
 
   const unusedParameters = parameters
-    .filter((e) => !parametrizedUrl.usedParameters.some((x) => x === e.name))
-    .map((e) => `"${e.name}": ${formatParamName(e.name)}`);
+    .filter(e => !parametrizedUrl.usedParameters.some(x => x === e.name))
+    .map(e => `"${e.name}": ${formatParamName(e.name)}`);
 
   return { parametrizedUrl, formattedFunctionParameters, unusedParameters };
 };
@@ -332,7 +343,7 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
 const parametrizedMethod = (
   endpointDescription: EndpointDescription,
   contractParameterName: string,
-  contractResult: string
+  contractResult: string,
 ) => {
   const { unusedParameters, parametrizedUrl, formattedFunctionParameters } =
     parametrizeUrl(endpointDescription);
@@ -342,8 +353,8 @@ const parametrizedMethod = (
 
   const queryParams =
     unusedParameters.length > 0
-      ? render("const queryParams = {\n{{{rows}}}\n\t}\n\t", {
-          rows: unusedParameters.map((e) => `\t\t${e}`).join(",\n"),
+      ? render("const queryParams = {\n{{{rows}}}\n    }\n    ", {
+          rows: unusedParameters.map(e => `      ${e}`).join(",\n"),
         })
       : "";
 
@@ -386,9 +397,12 @@ const parametrizedMethod = (
     [
       "export type {{contractResultName}} = \n| {{{contractResult}}};\n",
       "export const {{pathName}} = ({{{formattedPathFunctionParameters}}}) => {{{pathValue}}};\n",
-      "export const {{name}} = ({{{formattedParam}}}): \n\tPromise<{{contractResultName}}> => {\n\t{{{queryParams}}}return api{{method}}({{{parameters}}}) as Promise<{{contractResultName}}>;\n}\n",
+      `export const {{name}} = ({{{formattedParam}}}):
+  Promise<{{contractResultName}}> => {
+    {{{queryParams}}}return api{{method}}({{{parameters}}}) as Promise<{{contractResultName}}>;
+}\n`,
     ].join("\n"),
-    view
+    view,
   );
 };
 
@@ -398,7 +412,7 @@ const bodyBasedMethod = (
   contractParameterName: string,
   contractResult: string,
   methodType: MethodType,
-  paramType: string
+  paramType: string,
 ) => {
   const getMethodType = () => {
     switch (methodType) {
@@ -420,8 +434,8 @@ const bodyBasedMethod = (
 
   const queryParams =
     unusedParameters.length > 0
-      ? render("const queryParams = {\n{{{rows}}}\n\t}\n\t", {
-          rows: unusedParameters.map((e) => `\t\t${e}`).join(",\n"),
+      ? render("const queryParams = {\n{{{rows}}}\n    };\n    ", {
+          rows: unusedParameters.map(e => `      ${e}`).join(",\n"),
         })
       : "";
 
@@ -433,11 +447,16 @@ const bodyBasedMethod = (
 
   const pathName = `${name}Path`;
 
-  const multipartConversion = getMultipartConversion(endpointDescription, formattedRequestContractType, paramType, contractParameterName);
+  const multipartConversion = getMultipartConversion(
+    endpointDescription,
+    formattedRequestContractType,
+    paramType,
+    contractParameterName,
+  );
 
   const view = {
     name: name,
-    contractParameterName: 'requestData',
+    contractParameterName: "requestData",
     contractResult,
     contractResultName,
     pathName,
@@ -455,29 +474,36 @@ const bodyBasedMethod = (
     [
       "export type {{contractResultName}} = \n| {{{contractResult}}};\n",
       "export const {{pathName}} = ({{{formattedFunctionParameters}}}) => {{{pathValue}}};\n",
-      `export const {{name}} = ({{{formattedParam}}}): \n\tPromise<{{contractResultName}}> => {\n\t{{{queryParams}}}{{{multipartConversion}}}return api{{method}}({{{url}}}, {{contractParameterName}}, headers{{queryParameters}}) as Promise<{{contractResultName}}>;\n}\n`,
+      `export const {{name}} = ({{{formattedParam}}}):
+  Promise<{{contractResultName}}> => {
+    {{{queryParams}}}{{{multipartConversion}}}
+    return api{{method}}({{{url}}}, {{contractParameterName}}, headers{{queryParameters}}) as Promise<{{contractResultName}}>;\n}\n`,
     ].join("\n"),
 
-    view
+    view,
   );
 };
 
 export const generateServices = (swagger: SwaggerSchema) => {
   const endpoints = getEndpointsDescriptions(swagger);
   const view = endpoints
-    .map((endpointDescription) => {
+    .map(endpointDescription => {
       const {
         formattedParam: formattedRequestContractType,
         contractParameterName,
-        paramType
-      } = getRequestContractType(endpointDescription).orDefault({
+        paramType,
+      } = getRequestContractType(
+        endpointDescription,
+      ).orDefault<RequestContractType>({
         paramType: "",
         formattedParam: "",
         contractParameterName: "{}",
       });
 
-      const contractResult =
-        getContractResult(endpointDescription, swagger).orDefault("any");
+      const contractResult = getContractResult(
+        endpointDescription,
+        swagger,
+      ).orDefault("any");
 
       if (
         endpointDescription.methodType === "POST" ||
@@ -490,7 +516,7 @@ export const generateServices = (swagger: SwaggerSchema) => {
           contractParameterName,
           contractResult,
           endpointDescription.methodType,
-          paramType
+          paramType,
         );
       }
       if (
@@ -500,7 +526,7 @@ export const generateServices = (swagger: SwaggerSchema) => {
         return parametrizedMethod(
           endpointDescription,
           contractParameterName,
-          contractResult
+          contractResult,
         );
       }
 
