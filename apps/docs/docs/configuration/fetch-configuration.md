@@ -15,7 +15,7 @@ type Configuration = {
   responseMiddlewares?: Array<{
     name: string;
     fn: (
-      response: FetchResponse<unknown, any>
+      response: FetchResponse<unknown, any>,
     ) => FetchResponse<unknown, any> | TerminateResponse;
   }>;
 };
@@ -50,7 +50,7 @@ setupClient({
   requestMiddlewares: [
     {
       name: "Add JWT token",
-      fn: (request) => {
+      fn: request => {
         const jwt = localStorage.getItem("jwt");
         if (jwt) {
           request.headers["Authorization"] = `Bearer ${jwt}`;
@@ -71,7 +71,7 @@ setupClient({
   responseMiddlewares: [
     {
       name: "Handle 401",
-      fn: (response) => {
+      fn: response => {
         if (response.status === 401) {
           alert("You are not authorized");
           return TerminateResponse;
@@ -95,7 +95,7 @@ function App() {
     requestMiddlewares: [
       {
         name: "Add JWT token",
-        fn: (request) => {
+        fn: request => {
           const jwt = localStorage.getItem("jwt");
           if (jwt) {
             request.headers["Authorization"] = `Bearer ${jwt}`;
@@ -107,7 +107,7 @@ function App() {
     responseMiddlewares: [
       {
         name: "Handle 401",
-        fn: (response) => {
+        fn: response => {
           if (response.status === 401) {
             alert("You are not authorized");
             return TerminateResponse;

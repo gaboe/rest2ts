@@ -25,7 +25,7 @@ program
   .option("-t, --target <path>", "Target path")
   .option(
     "-ng, --generate-for-angular",
-    "Generate output for Angular with HttpClient and RxJS"
+    "Generate output for Angular with HttpClient and RxJS",
   )
   .option("-f, --file-name <name>", "Output file name (defaults to Api.ts)")
   .option("--cookies", "Generate API with cookies auth")
@@ -61,7 +61,7 @@ process.emitWarning = (warning, ...args) => {
 };
 
 generateApiContent(source, generateForAngular, cookies)
-  .then((content) => {
+  .then(content => {
     if (content === null) {
       console.error("Failed to generate api content");
       process.exit(1);
@@ -74,12 +74,12 @@ generateApiContent(source, generateForAngular, cookies)
         console.log(`Done 🫡\n\nThanks for using ${gradientText("REST2TS")}`);
         process.exit(0);
       })
-      .catch((err) => {
+      .catch(err => {
         console.error(err);
         process.exit(1);
       });
   })
-  .catch((err) => {
+  .catch(err => {
     console.error(err);
     process.exit(1);
   });
