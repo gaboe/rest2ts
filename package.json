@@ -8,7 +8,9 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "test": "turbo test",
     "test:watch": "turbo run test:watch",
-    "tsc": "turbo run tsc"
+    "tsc": "turbo run tsc",
+    "update-turborepo": "pnpm dlx @turbo/codemod@latest update",
+    "update-packages": "pnpm dlx npm-check-updates -i -u"
   },
   "devDependencies": {
     "@rest2ts/eslint-config": "workspace:*",
