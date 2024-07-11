@@ -13,6 +13,7 @@ const cases = [
   "post_put_bodies",
   "swagger_2_0",
   "multipart_formdata",
+  "multipart_formdata_multiplefiles",
 ];
 
 function fixturePath(name: string) {

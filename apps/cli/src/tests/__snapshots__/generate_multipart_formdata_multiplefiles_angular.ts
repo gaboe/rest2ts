@@ -295,49 +295,56 @@ export interface FileResponse {
   fileName?: string;
 }
   
-export type ApiResponse = {
-	code: number;
-	type: string;
+export enum ElectronicTradeFormalityEnum {
+	BlueAgreement = "BlueAgreement",
+	AML = "AML",
+	Termination = "Termination",
+	TransferUnderSAB = "TransferUnderSAB",
+	Change = "Change",
+	LoanProtocolHandover = "LoanProtocolHandover",
+	TradeProducerProtocol = "TradeProducerProtocol",
+	Modelation = "Modelation",
+	Other = "Other",
+	ZZJ = "ZZJ",
+	TradeIdentificationForm = "TradeIdentificationForm",
+	NewInstruction = "NewInstruction",
+	LoanRequest = "LoanRequest",
+	ESIP = "ESIP",
+	Contract = "Contract"
+};
+
+export type ErrorDetailDTO = {
+	code: string;
 	message: string;
 };
 
-export type Category = {
-	id: number;
-	name: string;
+export type ExceptionDTO = {
+	errors?: { [key: string | number]: ErrorDetailDTO[] } | null;
+	type?: string | null;
+	title?: string | null;
+	status?: number | null;
+	detail?: string | null;
+	instance?: string | null;
+	stackTrace?: { [key: string | number]: ExceptionStackTraceItemDTO[] } | null;
 };
 
-export type Pet = {
-	id: number;
-	category: Category;
-	name: string;
-	photoUrls: string[];
-	tags: Tag[];
-	status: "available" | "pending" | "sold";
+export type ExceptionStackTraceItemDTO = {
+	file?: string | null;
+	line?: number | null;
+	function?: string | null;
+	class?: string | null;
+	type?: string | null;
 };
 
-export type Tag = {
-	id: number;
-	name: string;
+export type ElectronicTradeFormalityDataRequestDTO = {
+	formalityType: ElectronicTradeFormalityEnum;
+	sendByPostOffice?: boolean | null;
+	targetRelationId?: number | null;
 };
 
-export type Order = {
-	id: number;
-	petId: number;
-	quantity: number;
-	shipDate: string;
-	status: "placed" | "approved" | "delivered";
-	complete: boolean;
-};
-
-export type User = {
-	id: number;
-	username: string;
-	firstName: string;
-	lastName: string;
-	email: string;
-	password: string;
-	phone: string;
-	userStatus: number;
+export type ElectronicTradeFormalityRequestDTO = {
+	data: ElectronicTradeFormalityDataRequestDTO;
+	"files[]": File[];
 };
 
 
@@ -359,151 +366,14 @@ export class ApiService {
 
   
 	
-    postPetPetIdUploadImage(petId: number): Observable<ResponseResult<ApiResponse, 200>> {
-	
-    const requestData = getApiRequestData<object>(undefined, true);
-    
-      return apiPost<ResponseResult<ApiResponse, 200>>(this.httpClient, `${this.baseUrl}/pet/${petId}/uploadImage`, requestData);
-    }
-  
-
-    postPet(requestContract: Pet): Observable<ResponseResult<void, 405>> {
-	
-    const requestData = getApiRequestData<Pet>(requestContract, false);
-    
-      return apiPost<ResponseResult<void, 405>>(this.httpClient, `${this.baseUrl}/pet`, requestData);
-    }
-  
-
-    putPet(requestContract: Pet): Observable<ResponseResult<void, 400> | ResponseResult<void, 404> | ResponseResult<void, 405>> {
-	
-    const requestData = getApiRequestData<Pet>(requestContract, false);
-    
-      return apiPut<ResponseResult<void, 400> | ResponseResult<void, 404> | ResponseResult<void, 405>>(this.httpClient, `${this.baseUrl}/pet`, requestData);
-    }
-  
-
-    getPetFindByStatus(status: string[]): Observable<ResponseResult<Pet[], 200> | ResponseResult<void, 400>> {
-      const queryParams = {
-		"status": status
+    postElectronicTradeTradesElectronicTradeIdFormality(requestContract: ElectronicTradeFormalityRequestDTO, electronicTradeId: number, fields?: string): Observable<ResponseResult<void, 204>> {
+	const queryParams = {
+		"fields": fields
 	}
 	
-      return apiGet<ResponseResult<Pet[], 200> | ResponseResult<void, 400>>(this.httpClient, `${this.baseUrl}/pet/findByStatus`, queryParams);
-    }
+    const requestData = getApiRequestData<ElectronicTradeFormalityRequestDTO>(requestContract, true);
     
-
-    getPetFindByTags(tags: string[]): Observable<ResponseResult<Pet[], 200> | ResponseResult<void, 400>> {
-      const queryParams = {
-		"tags": tags
-	}
-	
-      return apiGet<ResponseResult<Pet[], 200> | ResponseResult<void, 400>>(this.httpClient, `${this.baseUrl}/pet/findByTags`, queryParams);
-    }
-    
-
-    getPetPetId(petId: number): Observable<ResponseResult<Pet, 200> | ResponseResult<void, 400> | ResponseResult<void, 404>> {
-      
-      return apiGet<ResponseResult<Pet, 200> | ResponseResult<void, 400> | ResponseResult<void, 404>>(this.httpClient, `${this.baseUrl}/pet/${petId}`);
-    }
-    
-
-    deletePetPetId(petId: number): Observable<ResponseResult<void, 400> | ResponseResult<void, 404>> {
-      
-      return apiDelete<ResponseResult<void, 400> | ResponseResult<void, 404>>(this.httpClient, `${this.baseUrl}/pet/${petId}`);
-    }
-    
-
-    postPetPetId(petId: number): Observable<ResponseResult<void, 405>> {
-	
-    const requestData = getApiRequestData<object>(undefined, false);
-    
-      return apiPost<ResponseResult<void, 405>>(this.httpClient, `${this.baseUrl}/pet/${petId}`, requestData);
-    }
-  
-
-    getStoreInventory(): Observable<ResponseResult<object, 200>> {
-      
-      return apiGet<ResponseResult<object, 200>>(this.httpClient, `${this.baseUrl}/store/inventory`);
-    }
-    
-
-    postStoreOrder(requestContract: Order): Observable<ResponseResult<Order, 200> | ResponseResult<void, 400>> {
-	
-    const requestData = getApiRequestData<Order>(requestContract, false);
-    
-      return apiPost<ResponseResult<Order, 200> | ResponseResult<void, 400>>(this.httpClient, `${this.baseUrl}/store/order`, requestData);
-    }
-  
-
-    getStoreOrderOrderId(orderId: number): Observable<ResponseResult<Order, 200> | ResponseResult<void, 400> | ResponseResult<void, 404>> {
-      
-      return apiGet<ResponseResult<Order, 200> | ResponseResult<void, 400> | ResponseResult<void, 404>>(this.httpClient, `${this.baseUrl}/store/order/${orderId}`);
-    }
-    
-
-    deleteStoreOrderOrderId(orderId: number): Observable<ResponseResult<void, 400> | ResponseResult<void, 404>> {
-      
-      return apiDelete<ResponseResult<void, 400> | ResponseResult<void, 404>>(this.httpClient, `${this.baseUrl}/store/order/${orderId}`);
-    }
-    
-
-    postUserCreateWithList(requestContract: User[]): Observable<ResponseResult<void, 201>> {
-	
-    const requestData = getApiRequestData<User[]>(requestContract, false);
-    
-      return apiPost<ResponseResult<void, 201>>(this.httpClient, `${this.baseUrl}/user/createWithList`, requestData);
-    }
-  
-
-    getUserUsername(username: string): Observable<ResponseResult<User, 200> | ResponseResult<void, 400> | ResponseResult<void, 404>> {
-      
-      return apiGet<ResponseResult<User, 200> | ResponseResult<void, 400> | ResponseResult<void, 404>>(this.httpClient, `${this.baseUrl}/user/${username}`);
-    }
-    
-
-    deleteUserUsername(username: string): Observable<ResponseResult<void, 400> | ResponseResult<void, 404>> {
-      
-      return apiDelete<ResponseResult<void, 400> | ResponseResult<void, 404>>(this.httpClient, `${this.baseUrl}/user/${username}`);
-    }
-    
-
-    putUserUsername(requestContract: User, username: string): Observable<ResponseResult<void, 400> | ResponseResult<void, 404>> {
-	
-    const requestData = getApiRequestData<User>(requestContract, false);
-    
-      return apiPut<ResponseResult<void, 400> | ResponseResult<void, 404>>(this.httpClient, `${this.baseUrl}/user/${username}`, requestData);
-    }
-  
-
-    getUserLogin(username: string, password: string): Observable<ResponseResult<string, 200> | ResponseResult<void, 400>> {
-      const queryParams = {
-		"username": username		,
-"password": password
-	}
-	
-      return apiGet<ResponseResult<string, 200> | ResponseResult<void, 400>>(this.httpClient, `${this.baseUrl}/user/login`, queryParams);
-    }
-    
-
-    getUserLogout(): Observable<ResponseResult<void, 200>> {
-      
-      return apiGet<ResponseResult<void, 200>>(this.httpClient, `${this.baseUrl}/user/logout`);
-    }
-    
-
-    postUserCreateWithArray(requestContract: User[]): Observable<ResponseResult<void, 201>> {
-	
-    const requestData = getApiRequestData<User[]>(requestContract, false);
-    
-      return apiPost<ResponseResult<void, 201>>(this.httpClient, `${this.baseUrl}/user/createWithArray`, requestData);
-    }
-  
-
-    postUser(requestContract: User): Observable<ResponseResult<void, 201>> {
-	
-    const requestData = getApiRequestData<User>(requestContract, false);
-    
-      return apiPost<ResponseResult<void, 201>>(this.httpClient, `${this.baseUrl}/user`, requestData);
+      return apiPost<ResponseResult<void, 204>>(this.httpClient, `${this.baseUrl}/api/electronic-trade/trades/${electronicTradeId}/formality`, requestData, queryParams);
     }
   
 

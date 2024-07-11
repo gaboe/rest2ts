@@ -126,6 +126,7 @@
     headers: Headers;
     body?: any;
     redirect: RequestRedirect;
+		credentials?: RequestCredentials;
   };
 
   export type FetchArgs = {
@@ -304,6 +305,7 @@ export function apiPost<TResponse extends FetchResponse<unknown, number>, TReque
     headers,
     body: raw,
     redirect: "follow",
+		credentials: "include",
   };
 
   const maybeQueryString = getQueryParamsString(paramsObject);
@@ -331,6 +333,7 @@ export function apiGet<TResponse extends FetchResponse<unknown, number>>(
     method: "GET",
     headers,
     redirect: "follow",
+		credentials: "include",
   };
 
   return fetchJson<TResponse>({
@@ -354,6 +357,7 @@ export function apiPut<TResponse extends FetchResponse<unknown, number>, TReques
     headers,
     body: raw,
     redirect: "follow",
+		credentials: "include",
   };
 
   const maybeQueryString = getQueryParamsString(paramsObject);
@@ -382,6 +386,7 @@ export function apiDelete<TResponse extends FetchResponse<unknown, number>>(
     method: "DELETE",
     headers,
     redirect: "follow",
+		credentials: "include",
   };
 
   return fetchJson<TResponse>({
@@ -405,6 +410,7 @@ export function apiPatch<TResponse extends FetchResponse<unknown, number>, TRequ
     headers,
     body: raw,
     redirect: "follow",
+		credentials: "include",
   };
   const maybeQueryString = getQueryParamsString(paramsObject);
 
@@ -464,7 +470,7 @@ export type ElectronicTradeFormalityDataRequestDTO = {
 
 export type ElectronicTradeFormalityRequestDTO = {
 	data: ElectronicTradeFormalityDataRequestDTO;
-	file?: File | null;
+	"files[]": File[];
 };
 
 export type PostElectronicTradeTradesElectronicTradeIdFormalityFetchResponse = 

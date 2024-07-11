@@ -464,7 +464,7 @@ export type ElectronicTradeFormalityDataRequestDTO = {
 
 export type ElectronicTradeFormalityRequestDTO = {
 	data: ElectronicTradeFormalityDataRequestDTO;
-	file?: File | null;
+	"files[]": File[];
 };
 
 export type PostElectronicTradeTradesElectronicTradeIdFormalityFetchResponse = 
