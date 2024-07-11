@@ -472,10 +472,10 @@ export type PostPetPetIdUploadImageFetchResponse =
 
 export const postPetPetIdUploadImagePath = (petId: number) => `/pet/${petId}/uploadImage`;
 
-export const postPetPetIdUploadImage = (petId: number, headers = new Headers()): 
-	Promise<PostPetPetIdUploadImageFetchResponse> => {
-	
+export const postPetPetIdUploadImage = (petId: number, headers = new Headers()):
+  Promise<PostPetPetIdUploadImageFetchResponse> => {
     const requestData = getApiRequestData<object>(undefined, true);
+
     return apiPost(`${getApiUrl()}${postPetPetIdUploadImagePath(petId)}`, requestData, headers) as Promise<PostPetPetIdUploadImageFetchResponse>;
 }
 
@@ -485,10 +485,10 @@ export type PostPetFetchResponse =
 
 export const postPetPath = () => `/pet`;
 
-export const postPet = (requestContract: Pet, headers = new Headers()): 
-	Promise<PostPetFetchResponse> => {
-	
+export const postPet = (requestContract: Pet, headers = new Headers()):
+  Promise<PostPetFetchResponse> => {
     const requestData = getApiRequestData<Pet>(requestContract, false);
+
     return apiPost(`${getApiUrl()}${postPetPath()}`, requestData, headers) as Promise<PostPetFetchResponse>;
 }
 
@@ -500,10 +500,10 @@ export type PutPetFetchResponse =
 
 export const putPetPath = () => `/pet`;
 
-export const putPet = (requestContract: Pet, headers = new Headers()): 
-	Promise<PutPetFetchResponse> => {
-	
+export const putPet = (requestContract: Pet, headers = new Headers()):
+  Promise<PutPetFetchResponse> => {
     const requestData = getApiRequestData<Pet>(requestContract, false);
+
     return apiPut(`${getApiUrl()}${putPetPath()}`, requestData, headers) as Promise<PutPetFetchResponse>;
 }
 
@@ -514,12 +514,12 @@ export type GetPetFindByStatusFetchResponse =
 
 export const getPetFindByStatusPath = () => `/pet/findByStatus`;
 
-export const getPetFindByStatus = (status: string[], headers = new Headers()): 
-	Promise<GetPetFindByStatusFetchResponse> => {
-	const queryParams = {
-		"status": status
-	}
-	return apiGet(`${getApiUrl()}${getPetFindByStatusPath()}`, headers, queryParams) as Promise<GetPetFindByStatusFetchResponse>;
+export const getPetFindByStatus = (status: string[], headers = new Headers()):
+  Promise<GetPetFindByStatusFetchResponse> => {
+    const queryParams = {
+      "status": status
+    }
+    return apiGet(`${getApiUrl()}${getPetFindByStatusPath()}`, headers, queryParams) as Promise<GetPetFindByStatusFetchResponse>;
 }
 
 export type GetPetFindByTagsFetchResponse = 
@@ -529,12 +529,12 @@ export type GetPetFindByTagsFetchResponse =
 
 export const getPetFindByTagsPath = () => `/pet/findByTags`;
 
-export const getPetFindByTags = (tags: string[], headers = new Headers()): 
-	Promise<GetPetFindByTagsFetchResponse> => {
-	const queryParams = {
-		"tags": tags
-	}
-	return apiGet(`${getApiUrl()}${getPetFindByTagsPath()}`, headers, queryParams) as Promise<GetPetFindByTagsFetchResponse>;
+export const getPetFindByTags = (tags: string[], headers = new Headers()):
+  Promise<GetPetFindByTagsFetchResponse> => {
+    const queryParams = {
+      "tags": tags
+    }
+    return apiGet(`${getApiUrl()}${getPetFindByTagsPath()}`, headers, queryParams) as Promise<GetPetFindByTagsFetchResponse>;
 }
 
 export type GetPetPetIdFetchResponse = 
@@ -545,9 +545,9 @@ export type GetPetPetIdFetchResponse =
 
 export const getPetPetIdPath = (petId: number) => `/pet/${petId}`;
 
-export const getPetPetId = (petId: number, headers = new Headers()): 
-	Promise<GetPetPetIdFetchResponse> => {
-	return apiGet(`${getApiUrl()}${getPetPetIdPath(petId)}`, headers, {}) as Promise<GetPetPetIdFetchResponse>;
+export const getPetPetId = (petId: number, headers = new Headers()):
+  Promise<GetPetPetIdFetchResponse> => {
+    return apiGet(`${getApiUrl()}${getPetPetIdPath(petId)}`, headers, {}) as Promise<GetPetPetIdFetchResponse>;
 }
 
 export type DeletePetPetIdFetchResponse = 
@@ -557,9 +557,9 @@ export type DeletePetPetIdFetchResponse =
 
 export const deletePetPetIdPath = (petId: number) => `/pet/${petId}`;
 
-export const deletePetPetId = (petId: number, headers = new Headers()): 
-	Promise<DeletePetPetIdFetchResponse> => {
-	return apiDelete(`${getApiUrl()}${deletePetPetIdPath(petId)}`, headers, {}) as Promise<DeletePetPetIdFetchResponse>;
+export const deletePetPetId = (petId: number, headers = new Headers()):
+  Promise<DeletePetPetIdFetchResponse> => {
+    return apiDelete(`${getApiUrl()}${deletePetPetIdPath(petId)}`, headers, {}) as Promise<DeletePetPetIdFetchResponse>;
 }
 
 export type PostPetPetIdFetchResponse = 
@@ -568,10 +568,10 @@ export type PostPetPetIdFetchResponse =
 
 export const postPetPetIdPath = (petId: number) => `/pet/${petId}`;
 
-export const postPetPetId = (petId: number, headers = new Headers()): 
-	Promise<PostPetPetIdFetchResponse> => {
-	
+export const postPetPetId = (petId: number, headers = new Headers()):
+  Promise<PostPetPetIdFetchResponse> => {
     const requestData = getApiRequestData<object>(undefined, false);
+
     return apiPost(`${getApiUrl()}${postPetPetIdPath(petId)}`, requestData, headers) as Promise<PostPetPetIdFetchResponse>;
 }
 
@@ -581,9 +581,9 @@ export type GetStoreInventoryFetchResponse =
 
 export const getStoreInventoryPath = () => `/store/inventory`;
 
-export const getStoreInventory = (headers = new Headers()): 
-	Promise<GetStoreInventoryFetchResponse> => {
-	return apiGet(`${getApiUrl()}${getStoreInventoryPath()}`, headers, {}) as Promise<GetStoreInventoryFetchResponse>;
+export const getStoreInventory = (headers = new Headers()):
+  Promise<GetStoreInventoryFetchResponse> => {
+    return apiGet(`${getApiUrl()}${getStoreInventoryPath()}`, headers, {}) as Promise<GetStoreInventoryFetchResponse>;
 }
 
 export type PostStoreOrderFetchResponse = 
@@ -593,10 +593,10 @@ export type PostStoreOrderFetchResponse =
 
 export const postStoreOrderPath = () => `/store/order`;
 
-export const postStoreOrder = (requestContract: Order, headers = new Headers()): 
-	Promise<PostStoreOrderFetchResponse> => {
-	
+export const postStoreOrder = (requestContract: Order, headers = new Headers()):
+  Promise<PostStoreOrderFetchResponse> => {
     const requestData = getApiRequestData<Order>(requestContract, false);
+
     return apiPost(`${getApiUrl()}${postStoreOrderPath()}`, requestData, headers) as Promise<PostStoreOrderFetchResponse>;
 }
 
@@ -608,9 +608,9 @@ export type GetStoreOrderOrderIdFetchResponse =
 
 export const getStoreOrderOrderIdPath = (orderId: number) => `/store/order/${orderId}`;
 
-export const getStoreOrderOrderId = (orderId: number, headers = new Headers()): 
-	Promise<GetStoreOrderOrderIdFetchResponse> => {
-	return apiGet(`${getApiUrl()}${getStoreOrderOrderIdPath(orderId)}`, headers, {}) as Promise<GetStoreOrderOrderIdFetchResponse>;
+export const getStoreOrderOrderId = (orderId: number, headers = new Headers()):
+  Promise<GetStoreOrderOrderIdFetchResponse> => {
+    return apiGet(`${getApiUrl()}${getStoreOrderOrderIdPath(orderId)}`, headers, {}) as Promise<GetStoreOrderOrderIdFetchResponse>;
 }
 
 export type DeleteStoreOrderOrderIdFetchResponse = 
@@ -620,9 +620,9 @@ export type DeleteStoreOrderOrderIdFetchResponse =
 
 export const deleteStoreOrderOrderIdPath = (orderId: number) => `/store/order/${orderId}`;
 
-export const deleteStoreOrderOrderId = (orderId: number, headers = new Headers()): 
-	Promise<DeleteStoreOrderOrderIdFetchResponse> => {
-	return apiDelete(`${getApiUrl()}${deleteStoreOrderOrderIdPath(orderId)}`, headers, {}) as Promise<DeleteStoreOrderOrderIdFetchResponse>;
+export const deleteStoreOrderOrderId = (orderId: number, headers = new Headers()):
+  Promise<DeleteStoreOrderOrderIdFetchResponse> => {
+    return apiDelete(`${getApiUrl()}${deleteStoreOrderOrderIdPath(orderId)}`, headers, {}) as Promise<DeleteStoreOrderOrderIdFetchResponse>;
 }
 
 export type PostUserCreateWithListFetchResponse = 
@@ -631,10 +631,10 @@ export type PostUserCreateWithListFetchResponse =
 
 export const postUserCreateWithListPath = () => `/user/createWithList`;
 
-export const postUserCreateWithList = (requestContract: User[], headers = new Headers()): 
-	Promise<PostUserCreateWithListFetchResponse> => {
-	
+export const postUserCreateWithList = (requestContract: User[], headers = new Headers()):
+  Promise<PostUserCreateWithListFetchResponse> => {
     const requestData = getApiRequestData<User[]>(requestContract, false);
+
     return apiPost(`${getApiUrl()}${postUserCreateWithListPath()}`, requestData, headers) as Promise<PostUserCreateWithListFetchResponse>;
 }
 
@@ -646,9 +646,9 @@ export type GetUserUsernameFetchResponse =
 
 export const getUserUsernamePath = (username: string) => `/user/${username}`;
 
-export const getUserUsername = (username: string, headers = new Headers()): 
-	Promise<GetUserUsernameFetchResponse> => {
-	return apiGet(`${getApiUrl()}${getUserUsernamePath(username)}`, headers, {}) as Promise<GetUserUsernameFetchResponse>;
+export const getUserUsername = (username: string, headers = new Headers()):
+  Promise<GetUserUsernameFetchResponse> => {
+    return apiGet(`${getApiUrl()}${getUserUsernamePath(username)}`, headers, {}) as Promise<GetUserUsernameFetchResponse>;
 }
 
 export type DeleteUserUsernameFetchResponse = 
@@ -658,9 +658,9 @@ export type DeleteUserUsernameFetchResponse =
 
 export const deleteUserUsernamePath = (username: string) => `/user/${username}`;
 
-export const deleteUserUsername = (username: string, headers = new Headers()): 
-	Promise<DeleteUserUsernameFetchResponse> => {
-	return apiDelete(`${getApiUrl()}${deleteUserUsernamePath(username)}`, headers, {}) as Promise<DeleteUserUsernameFetchResponse>;
+export const deleteUserUsername = (username: string, headers = new Headers()):
+  Promise<DeleteUserUsernameFetchResponse> => {
+    return apiDelete(`${getApiUrl()}${deleteUserUsernamePath(username)}`, headers, {}) as Promise<DeleteUserUsernameFetchResponse>;
 }
 
 export type PutUserUsernameFetchResponse = 
@@ -670,10 +670,10 @@ export type PutUserUsernameFetchResponse =
 
 export const putUserUsernamePath = (username: string) => `/user/${username}`;
 
-export const putUserUsername = (requestContract: User, username: string, headers = new Headers()): 
-	Promise<PutUserUsernameFetchResponse> => {
-	
+export const putUserUsername = (requestContract: User, username: string, headers = new Headers()):
+  Promise<PutUserUsernameFetchResponse> => {
     const requestData = getApiRequestData<User>(requestContract, false);
+
     return apiPut(`${getApiUrl()}${putUserUsernamePath(username)}`, requestData, headers) as Promise<PutUserUsernameFetchResponse>;
 }
 
@@ -684,13 +684,13 @@ export type GetUserLoginFetchResponse =
 
 export const getUserLoginPath = () => `/user/login`;
 
-export const getUserLogin = (username: string, password: string, headers = new Headers()): 
-	Promise<GetUserLoginFetchResponse> => {
-	const queryParams = {
-		"username": username,
-		"password": password
-	}
-	return apiGet(`${getApiUrl()}${getUserLoginPath()}`, headers, queryParams) as Promise<GetUserLoginFetchResponse>;
+export const getUserLogin = (username: string, password: string, headers = new Headers()):
+  Promise<GetUserLoginFetchResponse> => {
+    const queryParams = {
+      "username": username,
+      "password": password
+    }
+    return apiGet(`${getApiUrl()}${getUserLoginPath()}`, headers, queryParams) as Promise<GetUserLoginFetchResponse>;
 }
 
 export type GetUserLogoutFetchResponse = 
@@ -699,9 +699,9 @@ export type GetUserLogoutFetchResponse =
 
 export const getUserLogoutPath = () => `/user/logout`;
 
-export const getUserLogout = (headers = new Headers()): 
-	Promise<GetUserLogoutFetchResponse> => {
-	return apiGet(`${getApiUrl()}${getUserLogoutPath()}`, headers, {}) as Promise<GetUserLogoutFetchResponse>;
+export const getUserLogout = (headers = new Headers()):
+  Promise<GetUserLogoutFetchResponse> => {
+    return apiGet(`${getApiUrl()}${getUserLogoutPath()}`, headers, {}) as Promise<GetUserLogoutFetchResponse>;
 }
 
 export type PostUserCreateWithArrayFetchResponse = 
@@ -710,10 +710,10 @@ export type PostUserCreateWithArrayFetchResponse =
 
 export const postUserCreateWithArrayPath = () => `/user/createWithArray`;
 
-export const postUserCreateWithArray = (requestContract: User[], headers = new Headers()): 
-	Promise<PostUserCreateWithArrayFetchResponse> => {
-	
+export const postUserCreateWithArray = (requestContract: User[], headers = new Headers()):
+  Promise<PostUserCreateWithArrayFetchResponse> => {
     const requestData = getApiRequestData<User[]>(requestContract, false);
+
     return apiPost(`${getApiUrl()}${postUserCreateWithArrayPath()}`, requestData, headers) as Promise<PostUserCreateWithArrayFetchResponse>;
 }
 
@@ -723,9 +723,9 @@ export type PostUserFetchResponse =
 
 export const postUserPath = () => `/user`;
 
-export const postUser = (requestContract: User, headers = new Headers()): 
-	Promise<PostUserFetchResponse> => {
-	
+export const postUser = (requestContract: User, headers = new Headers()):
+  Promise<PostUserFetchResponse> => {
     const requestData = getApiRequestData<User>(requestContract, false);
+
     return apiPost(`${getApiUrl()}${postUserPath()}`, requestData, headers) as Promise<PostUserFetchResponse>;
 }

@@ -9,7 +9,7 @@ const trimStart = (s: string, c: string) =>
   s[0] === c ? s.substring(1, s.length) : s;
 
 const snakeToCamel = (str: string) =>
-  str.replace(/([-_]\w)/g, (g) => g[1]!.toUpperCase());
+  str.replace(/([-_]\w)/g, g => g[1]!.toUpperCase());
 
 export type MethodType = "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | "";
 
@@ -29,16 +29,11 @@ export type EndpointDescription = {
 };
 
 export const getEndpointsDescriptions = (swagger: SwaggerSchema) => {
-  const commonPrefix = Object.keys(swagger.paths).reduce(
-    (acc, e) => (getCommonPrefix(e) === acc ? acc : ""),
-    getCommonPrefix(Object.keys(swagger.paths)[0]!)
-  );
-
   const endpoints: EndpointDescription[][] = Object.keys(swagger.paths).map(
-    (e) => {
+    e => {
       const pathObject = swagger.paths[e]!;
 
-      const prop = formatUrlToCamelCase(e).replace(commonPrefix, "");
+      const prop = formatUrlToCamelCase(e);
 
       const versionPattern = /^v\d+(\.\d+)?/;
       const versionMatch = prop.match(versionPattern);
@@ -49,7 +44,7 @@ export const getEndpointsDescriptions = (swagger: SwaggerSchema) => {
       const methods = [];
       const generate = (methodType: MethodType, operation: Operation) => {
         const formattedName = snakeToCamel(
-          `${methodType.toLowerCase()}_${prop}`
+          `${methodType.toLowerCase()}_${prop}`,
         );
         const name = `${formattedName.replace(version, "")}${
           version === "V1" ? "" : version
@@ -68,7 +63,7 @@ export const getEndpointsDescriptions = (swagger: SwaggerSchema) => {
       };
       const filterHeaderParameters = (operation: Operation) => {
         operation.parameters = (operation.parameters ?? []).filter(
-          (x) => x.in !== "header"
+          x => x.in !== "header",
         );
       };
 
@@ -93,7 +88,7 @@ export const getEndpointsDescriptions = (swagger: SwaggerSchema) => {
         methods.push(generate("PATCH", pathObject.patch));
       }
       return methods;
-    }
+    },
   );
   return endpoints.flat();
 };

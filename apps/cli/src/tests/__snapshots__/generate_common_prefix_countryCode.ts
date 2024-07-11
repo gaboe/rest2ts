@@ -415,47 +415,36 @@ export function apiPatch<TResponse extends FetchResponse<unknown, number>, TRequ
 }
 // INFRASTRUCTURE END
 
-export type ErrorDetailDTO = {
-	code: string;
-	message: string;
+export type Session = {
+	sessionId: string;
 };
 
-export type ExceptionDTO = {
-	errors?: { [key: string | number]: ErrorDetailDTO[] } | null;
-	type?: string | null;
-	title?: string | null;
-	status?: number | null;
-	detail?: string | null;
-	instance?: string | null;
-};
-
-export type ProducerItemDTO = {
-	id: number;
-	title: string;
-};
-
-export type ProductItemDTO = {
-	id_product: number;
-	title: string;
-	hidden?: boolean | null;
-};
-
-export type GetApiProducersFetchResponse = 
-| FetchResponse<ProducerItemDTO[], 200> 
-| FetchResponse<ExceptionDTO, 401> 
-| FetchResponse<ExceptionDTO, 403> 
-| FetchResponse<ExceptionDTO, 500> 
+export type PostCountryCodeVerifyFetchResponse = 
+| FetchResponse<void, 200> 
 | ErrorResponse;
 
-export const getApiProducersPath = () => `/api/producers`;
+export const postCountryCodeVerifyPath = () => `/{countryCode}/verify`;
 
-export const getApiProducers = (filterTerm?: string, filterHidden?: number, filterRegion?: string, filterCategory?: string, headers = new Headers()):
-  Promise<GetApiProducersFetchResponse> => {
+export const postCountryCodeVerify = (body: string, headers = new Headers()):
+  Promise<PostCountryCodeVerifyFetchResponse> => {
+    const requestData = getApiRequestData<string>(body, false);
+
+    return apiPost(`${getApiUrl()}${postCountryCodeVerifyPath()}`, requestData, headers) as Promise<PostCountryCodeVerifyFetchResponse>;
+}
+
+export type PostCountryCodeSessionsFetchResponse = 
+| FetchResponse<Session, 201> 
+| ErrorResponse;
+
+export const postCountryCodeSessionsPath = (countryCode?: string, lang?: string, type?: string) => `/${countryCode}/Sessions`;
+
+export const postCountryCodeSessions = (countryCode?: string, lang?: string, type?: string, headers = new Headers()):
+  Promise<PostCountryCodeSessionsFetchResponse> => {
     const queryParams = {
-      "filter[term]": filterTerm,
-      "filter[hidden]": filterHidden,
-      "filter[region]": filterRegion,
-      "filter[category]": filterCategory
-    }
-    return apiGet(`${getApiUrl()}${getApiProducersPath()}`, headers, queryParams) as Promise<GetApiProducersFetchResponse>;
+      "lang": lang,
+      "type": type
+    };
+    const requestData = getApiRequestData<object>(undefined, false);
+
+    return apiPost(`${getApiUrl()}${postCountryCodeSessionsPath(countryCode)}`, requestData, headers, queryParams) as Promise<PostCountryCodeSessionsFetchResponse>;
 }

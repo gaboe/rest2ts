@@ -288,7 +288,7 @@ function apiPatch<T extends ResponseResult<unknown, number>, U = unknown>(
 		);
 }
 
-  // INFRASTRUCTURE END
+// INFRASTRUCTURE END
 
 export interface FileResponse {
   data: Blob;
@@ -364,21 +364,13 @@ export class ApiService {
       this.baseUrl = baseUrl ?? "";
   }
 
-  
-	
-    postElectronicTradeTradesElectronicTradeIdFormality(requestContract: ElectronicTradeFormalityRequestDTO, electronicTradeId: number, fields?: string): Observable<ResponseResult<void, 204>> {
-	const queryParams = {
-		"fields": fields
-	}
-	
+  postApiElectronicTradeTradesElectronicTradeIdFormality(requestContract: ElectronicTradeFormalityRequestDTO, electronicTradeId: number, fields?: string): Observable<ResponseResult<void, 204>> {
+		const queryParams = {
+      "fields": fields
+    };
     const requestData = getApiRequestData<ElectronicTradeFormalityRequestDTO>(requestContract, true);
-    
-      return apiPost<ResponseResult<void, 204>>(this.httpClient, `${this.baseUrl}/api/electronic-trade/trades/${electronicTradeId}/formality`, requestData, queryParams);
-    }
-  
 
-
+    return apiPost<ResponseResult<void, 204>>(this.httpClient, `${this.baseUrl}/api/electronic-trade/trades/${electronicTradeId}/formality`, requestData, queryParams);
+  }
 }
-  
-  
 

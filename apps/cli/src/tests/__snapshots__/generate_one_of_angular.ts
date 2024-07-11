@@ -288,7 +288,7 @@ function apiPatch<T extends ResponseResult<unknown, number>, U = unknown>(
 		);
 }
 
-  // INFRASTRUCTURE END
+// INFRASTRUCTURE END
 
 export interface FileResponse {
   data: Blob;
@@ -438,28 +438,18 @@ export class ApiService {
       this.baseUrl = baseUrl ?? "";
   }
 
-  
-	
-    getBankIDVerifyBankId(token?: string | undefined | null): Observable<ResponseResult<ProcessBankIDVerificationCommandResult, 200>> {
-      const queryParams = {
-		"token": token
-	}
-	
-      return apiGet<ResponseResult<ProcessBankIDVerificationCommandResult, 200>>(this.httpClient, `${this.baseUrl}/api/BankID/verify-bank-id`, queryParams);
-    }
-    
+  getApiBankIDVerifyBankId(token?: string | undefined | null): Observable<ResponseResult<ProcessBankIDVerificationCommandResult, 200>> {
+    const queryParams = {
+      "token": token
+    };
+    return apiGet<ResponseResult<ProcessBankIDVerificationCommandResult, 200>>(this.httpClient, `${this.baseUrl}/api/BankID/verify-bank-id`, queryParams);
+  }
 
-    getProductList(contractTypeCode?: ContractTypeCode | undefined | null): Observable<ResponseResult<ProductItemDto[], 200>> {
-      const queryParams = {
-		"contractTypeCode": contractTypeCode
-	}
-	
-      return apiGet<ResponseResult<ProductItemDto[], 200>>(this.httpClient, `${this.baseUrl}/api/product/list`, queryParams);
-    }
-    
-
-
+  getApiProductList(contractTypeCode?: ContractTypeCode | undefined | null): Observable<ResponseResult<ProductItemDto[], 200>> {
+    const queryParams = {
+      "contractTypeCode": contractTypeCode
+    };
+    return apiGet<ResponseResult<ProductItemDto[], 200>>(this.httpClient, `${this.baseUrl}/api/product/list`, queryParams);
+  }
 }
-  
-  
 

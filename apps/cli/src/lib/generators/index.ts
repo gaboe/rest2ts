@@ -11,7 +11,7 @@ import { render } from "../renderers/Renderer";
 
 const generateContent = (
   schema: any,
-  isCookiesAuthEnabled: boolean = false
+  isCookiesAuthEnabled: boolean = false,
 ) => {
   const swaggerSchema = schema as SwaggerSchema;
   const contracts = generateContracts(swaggerSchema);
@@ -23,7 +23,7 @@ const generateContent = (
   };
   const content = render(
     "{{{ infrastructure }}}\n{{{ contracts }}}\n{{{ services }}}",
-    view
+    view,
   );
   return content;
 };
@@ -39,7 +39,7 @@ const generateAngularContent = (schema: any) => {
   };
   const content = render(
     "{{{ infrastructure }}}\n{{{ contracts }}}\n\n{{{ services }}}\n",
-    view
+    view,
   );
   return content;
 };
@@ -47,14 +47,14 @@ const generateAngularContent = (schema: any) => {
 export const generate = async (
   api: any,
   generateForAngular: boolean = false,
-  isCookiesAuthEnabled: boolean = false
+  isCookiesAuthEnabled: boolean = false,
 ) => {
   const logStep = () => console.log("⚡2/3 - Generating code");
 
   if (!!api.swagger && !api.openapi) {
     const response = await axios.post(
       "https://converter.swagger.io/api/convert",
-      api
+      api,
     );
     if (response.status !== 200) {
       console.error("Failed to convert Swagger 2.0 to OpenAPI 3.0", response);

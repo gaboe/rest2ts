@@ -288,7 +288,7 @@ function apiPatch<T extends ResponseResult<unknown, number>, U = unknown>(
 		);
 }
 
-  // INFRASTRUCTURE END
+// INFRASTRUCTURE END
 
 export interface FileResponse {
   data: Blob;
@@ -332,18 +332,10 @@ export class ApiService {
       this.baseUrl = baseUrl ?? "";
   }
 
-  
-	
-    getTest(): Observable<ResponseResult<{status: string;
+  getApiTest(): Observable<ResponseResult<{status: string;
 	data?: Dog | Cat | Cow | null;}, 200>> {
-      
-      return apiGet<ResponseResult<{status: string;
+    return apiGet<ResponseResult<{status: string;
 	data?: Dog | Cat | Cow | null;}, 200>>(this.httpClient, `${this.baseUrl}/api/test`);
-    }
-    
-
-
+  }
 }
-  
-  
 

@@ -462,57 +462,57 @@ export enum Status {
 	InvalidOperation = "InvalidOperation"
 };
 
-export type GetAgendaSearchFetchResponse = 
+export type GetApiAgendaSearchFetchResponse = 
 | FetchResponse<SearchResponse[], 200> 
 | ErrorResponse;
 
-export const getAgendaSearchPath = () => `/api/Agenda/Search`;
+export const getApiAgendaSearchPath = () => `/api/Agenda/Search`;
 
-export const getAgendaSearch = (do_num: string, dO_Id?: number, headers = new Headers()): 
-	Promise<GetAgendaSearchFetchResponse> => {
-	const queryParams = {
-		"do_num": do_num,
-		"dO_Id": dO_Id
-	}
-	return apiGet(`${getApiUrl()}${getAgendaSearchPath()}`, headers, queryParams) as Promise<GetAgendaSearchFetchResponse>;
+export const getApiAgendaSearch = (do_num: string, dO_Id?: number, headers = new Headers()):
+  Promise<GetApiAgendaSearchFetchResponse> => {
+    const queryParams = {
+      "do_num": do_num,
+      "dO_Id": dO_Id
+    }
+    return apiGet(`${getApiUrl()}${getApiAgendaSearchPath()}`, headers, queryParams) as Promise<GetApiAgendaSearchFetchResponse>;
 }
 
-export type PostApiUsersIsUserValidFetchResponse = 
+export type PostApiApiUsersIsUserValidFetchResponse = 
 | FetchResponse<object, 200> 
 | FetchResponse<number, 201> 
 | ErrorResponse;
 
-export const postApiUsersIsUserValidPath = () => `/api/ApiUsers/IsUserValid`;
+export const postApiApiUsersIsUserValidPath = () => `/api/ApiUsers/IsUserValid`;
 
-export const postApiUsersIsUserValid = (requestContract: LoginDataDataContract, headers = new Headers()): 
-	Promise<PostApiUsersIsUserValidFetchResponse> => {
-	
+export const postApiApiUsersIsUserValid = (requestContract: LoginDataDataContract, headers = new Headers()):
+  Promise<PostApiApiUsersIsUserValidFetchResponse> => {
     const requestData = getApiRequestData<LoginDataDataContract>(requestContract, false);
-    return apiPost(`${getApiUrl()}${postApiUsersIsUserValidPath()}`, requestData, headers) as Promise<PostApiUsersIsUserValidFetchResponse>;
+
+    return apiPost(`${getApiUrl()}${postApiApiUsersIsUserValidPath()}`, requestData, headers) as Promise<PostApiApiUsersIsUserValidFetchResponse>;
 }
 
-export type PostContractEditContractSignaturesFetchResponse = 
+export type PostApiContractEditContractSignaturesFetchResponse = 
 | FetchResponse<object, 200> 
 | ErrorResponse;
 
-export const postContractEditContractSignaturesPath = () => `/api/Contract/EditContractSignatures`;
+export const postApiContractEditContractSignaturesPath = () => `/api/Contract/EditContractSignatures`;
 
-export const postContractEditContractSignatures = (requestContract: IPA_PlexDbContext_ContractSignature[], headers = new Headers()): 
-	Promise<PostContractEditContractSignaturesFetchResponse> => {
-	
+export const postApiContractEditContractSignatures = (requestContract: IPA_PlexDbContext_ContractSignature[], headers = new Headers()):
+  Promise<PostApiContractEditContractSignaturesFetchResponse> => {
     const requestData = getApiRequestData<IPA_PlexDbContext_ContractSignature[]>(requestContract, false);
-    return apiPost(`${getApiUrl()}${postContractEditContractSignaturesPath()}`, requestData, headers) as Promise<PostContractEditContractSignaturesFetchResponse>;
+
+    return apiPost(`${getApiUrl()}${postApiContractEditContractSignaturesPath()}`, requestData, headers) as Promise<PostApiContractEditContractSignaturesFetchResponse>;
 }
 
-export type PatchCaseUpdateCaseTypeCaseNoCaseTypeFetchResponse = 
+export type PatchApiCaseUpdateCaseTypeCaseNoCaseTypeFetchResponse = 
 | FetchResponse<object, 200> 
 | ErrorResponse;
 
-export const patchCaseUpdateCaseTypeCaseNoCaseTypePath = (caseNo: string, caseType: string) => `/api/Case/UpdateCaseType/${caseNo}/${caseType}`;
+export const patchApiCaseUpdateCaseTypeCaseNoCaseTypePath = (caseNo: string, caseType: string) => `/api/Case/UpdateCaseType/${caseNo}/${caseType}`;
 
-export const patchCaseUpdateCaseTypeCaseNoCaseType = (caseNo: string, caseType: string, headers = new Headers()): 
-	Promise<PatchCaseUpdateCaseTypeCaseNoCaseTypeFetchResponse> => {
-	
+export const patchApiCaseUpdateCaseTypeCaseNoCaseType = (caseNo: string, caseType: string, headers = new Headers()):
+  Promise<PatchApiCaseUpdateCaseTypeCaseNoCaseTypeFetchResponse> => {
     const requestData = getApiRequestData<object>(undefined, false);
-    return apiPatch(`${getApiUrl()}${patchCaseUpdateCaseTypeCaseNoCaseTypePath(caseNo, caseType)}`, requestData, headers) as Promise<PatchCaseUpdateCaseTypeCaseNoCaseTypeFetchResponse>;
+
+    return apiPatch(`${getApiUrl()}${patchApiCaseUpdateCaseTypeCaseNoCaseTypePath(caseNo, caseType)}`, requestData, headers) as Promise<PatchApiCaseUpdateCaseTypeCaseNoCaseTypeFetchResponse>;
 }

@@ -295,51 +295,8 @@ export interface FileResponse {
   fileName?: string;
 }
   
-export type SearchResponse = {
-	Data: SearchDto;
-	Errors: string[];
-	Status: Status;
-};
-
-export type LoginDataDataContract = {
-	Login: string;
-	Password: string;
-};
-
-export type SearchDto = {
-	DO_NUM: string;
-	EV_RANG: number;
-	EV_LIB: string;
-	EV_DATREAL: string;
-	EV_HREREAL: string;
-	EV_URGENCE: string;
-	EV_AGENDA: string;
-	EV_COD: string;
-	EV_PSEUDO: string;
-	EV_Deadline: string;
-	EV_DeadlineTime: string;
-	EV_DeadlineSendCounter: number;
-	EV_Alarm: boolean;
-	EV_AgendaWorkerKey: string;
-	EV_Status: string;
-	EV_InsertUser: string;
-};
-
-export type IPA_PlexDbContext_ContractSignature = {
-	ID: number;
-	ContractNo: string;
-	RoleProviderId: number;
-	Signature: string;
-	UP_Id: number;
-	SignatureType: number;
-	VisibilityTypes: ("None" | "Partners" | "Client")[];
-};
-
-export enum Status {
-	ValidationError = "ValidationError",
-	OK = "OK",
-	Exception = "Exception",
-	InvalidOperation = "InvalidOperation"
+export type Session = {
+	sessionId: string;
 };
 
 
@@ -359,30 +316,19 @@ export class ApiService {
       this.baseUrl = baseUrl ?? "";
   }
 
-  getApiAgendaSearch(do_num: string, dO_Id?: number): Observable<ResponseResult<SearchResponse[], 200>> {
-    const queryParams = {
-      "do_num": do_num,
-      "dO_Id": dO_Id
+  postVerify(body: string): Observable<ResponseResult<void, 200>> {
+    const requestData = getApiRequestData<string>(body, false);
+
+    return apiPost<ResponseResult<void, 200>>(this.httpClient, `${this.baseUrl}/v1/verify`, requestData);
+  }
+
+  postCountryCodeSessions(countryCode?: string, lang?: string): Observable<ResponseResult<Session, 201>> {
+		const queryParams = {
+      "lang": lang
     };
-    return apiGet<ResponseResult<SearchResponse[], 200>>(this.httpClient, `${this.baseUrl}/api/Agenda/Search`, queryParams);
-  }
-
-  postApiApiUsersIsUserValid(requestContract: LoginDataDataContract): Observable<ResponseResult<object, 200> | ResponseResult<number, 201>> {
-    const requestData = getApiRequestData<LoginDataDataContract>(requestContract, false);
-
-    return apiPost<ResponseResult<object, 200> | ResponseResult<number, 201>>(this.httpClient, `${this.baseUrl}/api/ApiUsers/IsUserValid`, requestData);
-  }
-
-  postApiContractEditContractSignatures(requestContract: IPA_PlexDbContext_ContractSignature[]): Observable<ResponseResult<object, 200>> {
-    const requestData = getApiRequestData<IPA_PlexDbContext_ContractSignature[]>(requestContract, false);
-
-    return apiPost<ResponseResult<object, 200>>(this.httpClient, `${this.baseUrl}/api/Contract/EditContractSignatures`, requestData);
-  }
-
-  patchApiCaseUpdateCaseTypeCaseNoCaseType(caseNo: string, caseType: string): Observable<ResponseResult<object, 200>> {
     const requestData = getApiRequestData<object>(undefined, false);
 
-    return apiPatch<ResponseResult<object, 200>>(this.httpClient, `${this.baseUrl}/api/Case/UpdateCaseType/${caseNo}/${caseType}`, requestData);
+    return apiPost<ResponseResult<Session, 201>>(this.httpClient, `${this.baseUrl}/v1/${countryCode}/Sessions`, requestData, queryParams);
   }
 }
 

@@ -288,7 +288,7 @@ function apiPatch<T extends ResponseResult<unknown, number>, U = unknown>(
 		);
 }
 
-  // INFRASTRUCTURE END
+// INFRASTRUCTURE END
 
 export interface FileResponse {
   data: Blob;
@@ -346,18 +346,10 @@ export class ApiService {
       this.baseUrl = baseUrl ?? "";
   }
 
-  
-	
-    postAuthLogin(requestContract: AuthRequest): Observable<ResponseResult<AuthResult, 200> | ResponseResult<ProblemDetails, 400>> {
-	
+  postApiAuthLogin(requestContract: AuthRequest): Observable<ResponseResult<AuthResult, 200> | ResponseResult<ProblemDetails, 400>> {
     const requestData = getApiRequestData<AuthRequest>(requestContract, false);
-    
-      return apiPost<ResponseResult<AuthResult, 200> | ResponseResult<ProblemDetails, 400>>(this.httpClient, `${this.baseUrl}/api/Auth/login`, requestData);
-    }
-  
 
-
+    return apiPost<ResponseResult<AuthResult, 200> | ResponseResult<ProblemDetails, 400>>(this.httpClient, `${this.baseUrl}/api/Auth/login`, requestData);
+  }
 }
-  
-  
 

@@ -288,7 +288,7 @@ function apiPatch<T extends ResponseResult<unknown, number>, U = unknown>(
 		);
 }
 
-  // INFRASTRUCTURE END
+// INFRASTRUCTURE END
 
 export interface FileResponse {
   data: Blob;
@@ -337,22 +337,14 @@ export class ApiService {
       this.baseUrl = baseUrl ?? "";
   }
 
-  
-	
-    getProducers(filterTerm?: string, filterHidden?: number, filterRegion?: string, filterCategory?: string): Observable<ResponseResult<ProducerItemDTO[], 200> | ResponseResult<ExceptionDTO, 401> | ResponseResult<ExceptionDTO, 403> | ResponseResult<ExceptionDTO, 500>> {
-      const queryParams = {
-		"filter[term]": filterTerm		,
-"filter[hidden]": filterHidden		,
-"filter[region]": filterRegion		,
-"filter[category]": filterCategory
-	}
-	
-      return apiGet<ResponseResult<ProducerItemDTO[], 200> | ResponseResult<ExceptionDTO, 401> | ResponseResult<ExceptionDTO, 403> | ResponseResult<ExceptionDTO, 500>>(this.httpClient, `${this.baseUrl}/api/producers`, queryParams);
-    }
-    
-
-
+  getApiProducers(filterTerm?: string, filterHidden?: number, filterRegion?: string, filterCategory?: string): Observable<ResponseResult<ProducerItemDTO[], 200> | ResponseResult<ExceptionDTO, 401> | ResponseResult<ExceptionDTO, 403> | ResponseResult<ExceptionDTO, 500>> {
+    const queryParams = {
+      "filter[term]": filterTerm,
+      "filter[hidden]": filterHidden,
+      "filter[region]": filterRegion,
+      "filter[category]": filterCategory
+    };
+    return apiGet<ResponseResult<ProducerItemDTO[], 200> | ResponseResult<ExceptionDTO, 401> | ResponseResult<ExceptionDTO, 403> | ResponseResult<ExceptionDTO, 500>>(this.httpClient, `${this.baseUrl}/api/producers`, queryParams);
+  }
 }
-  
-  
 

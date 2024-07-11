@@ -2,13 +2,11 @@ import { render } from "../renderers/Renderer";
 import { SwaggerSchema } from "../models/SwaggerSchema";
 import { renderProperties } from "./Common";
 
-
-
 export const generateContracts = (swaggerSchema: SwaggerSchema) => {
   const rp = renderProperties(swaggerSchema);
 
   const rows = Object.keys(swaggerSchema.components?.schemas || [])
-    .map((k) => {
+    .map(k => {
       const o = swaggerSchema.components.schemas[k]!;
 
       if (o.enum) {
@@ -18,7 +16,7 @@ export const generateContracts = (swaggerSchema: SwaggerSchema) => {
         };
         return render(
           `export enum {{ name }} {\n\t{{{ properties }}}\n};\n`,
-          view
+          view,
         );
       }
 
@@ -31,7 +29,7 @@ export const generateContracts = (swaggerSchema: SwaggerSchema) => {
         return view.properties.length > 0 && view.properties !== "unknown"
           ? render(
               `export type {{ name }} = {\n\t{{{ properties }}}\n};\n`,
-              view
+              view,
             )
           : render(`export type {{ name }} = {};\n`, view);
       }
