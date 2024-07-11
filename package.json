@@ -9,8 +9,7 @@
     "test": "turbo test",
     "test:watch": "turbo run test:watch",
     "tsc": "turbo run tsc",
-    "update-turborepo": "pnpm dlx @turbo/codemod@latest update",
-    "update-packages": "pnpm dlx npm-check-updates -i"
+    "update-turborepo": "pnpm dlx @turbo/codemod@latest update"
   },
   "devDependencies": {
     "@rest2ts/eslint-config": "workspace:*",

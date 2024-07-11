@@ -13,7 +13,8 @@
     "serve": "docusaurus serve",
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
-    "tsc": "tsc --noEmit"
+    "tsc": "tsc --noEmit",
+    "update-packages": "pnpm dlx npm-check-updates -i"
   },
   "dependencies": {
     "@docusaurus/core": "3.4.0",
@@ -31,7 +32,7 @@
     "@docusaurus/tsconfig": "3.4.0",
     "@docusaurus/types": "3.4.0",
     "gh-pages": "^6.1.1",
-    "typescript": "~5.4.5"
+    "typescript": "~5.5.3"
   },
   "browserslist": {
     "production": [

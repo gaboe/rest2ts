@@ -34,7 +34,8 @@
     "test:snapshot:update": "vitest -u",
     "tsc": "tsc --noEmit",
     "publish:npm": "pnpm publish",
-    "publish:jsr": "pnpm jsr publish"
+    "publish:jsr": "pnpm jsr publish",
+    "update-packages": "pnpm dlx npm-check-updates -i"
   },
   "dependencies": {
     "@apidevtools/swagger-parser": "^10.1.0",
@@ -42,19 +43,19 @@
     "commander": "^12.1.0",
     "fs-extra": "^11.2.0",
     "handlebars": "^4.7.8",
-    "purify-ts": "^2.0.3"
+    "purify-ts": "^2.1.0"
   },
   "devDependencies": {
-    "@next/eslint-plugin-next": "^14.2.3",
+    "@next/eslint-plugin-next": "^14.2.5",
     "@rest2ts/eslint-config": "workspace:*",
     "@rest2ts/typescript-config": "workspace:*",
     "@types/eslint": "^8.56.10",
     "@types/fs-extra": "^11.0.4",
-    "@types/node": "^20.14.2",
-    "@vitest/coverage-istanbul": "^1.6.0",
-    "eslint": "^9.4.0",
+    "@types/node": "^20.14.10",
+    "@vitest/coverage-istanbul": "^2.0.2",
+    "eslint": "^9.6.0",
     "tsup": "^8.1.0",
-    "typescript": "^5.4.5",
-    "vitest": "^1.6.0"
+    "typescript": "^5.5.3",
+    "vitest": "^2.0.2"
   }
 }
