@@ -415,6 +415,24 @@ export function apiPatch<TResponse extends FetchResponse<unknown, number>, TRequ
 }
 // INFRASTRUCTURE END
 
+export enum ElectronicTradeFormalityEnum {
+	BlueAgreement = "BlueAgreement",
+	AML = "AML",
+	Termination = "Termination",
+	TransferUnderSAB = "TransferUnderSAB",
+	Change = "Change",
+	LoanProtocolHandover = "LoanProtocolHandover",
+	TradeProducerProtocol = "TradeProducerProtocol",
+	Modelation = "Modelation",
+	Other = "Other",
+	ZZJ = "ZZJ",
+	TradeIdentificationForm = "TradeIdentificationForm",
+	NewInstruction = "NewInstruction",
+	LoanRequest = "LoanRequest",
+	ESIP = "ESIP",
+	Contract = "Contract"
+};
+
 export type ErrorDetailDTO = {
 	code: string;
 	message: string;
@@ -427,35 +445,40 @@ export type ExceptionDTO = {
 	status?: number | null;
 	detail?: string | null;
 	instance?: string | null;
+	stackTrace?: { [key: string | number]: ExceptionStackTraceItemDTO[] } | null;
 };
 
-export type ProducerItemDTO = {
-	id: number;
-	title: string;
+export type ExceptionStackTraceItemDTO = {
+	file?: string | null;
+	line?: number | null;
+	function?: string | null;
+	class?: string | null;
+	type?: string | null;
 };
 
-export type ProductItemDTO = {
-	id_product: number;
-	title: string;
-	hidden?: boolean | null;
+export type ElectronicTradeFormalityDataRequestDTO = {
+	formalityType: ElectronicTradeFormalityEnum;
+	sendByPostOffice?: boolean | null;
+	targetRelationId?: number | null;
 };
 
-export type GetApiProducersFetchResponse = 
-| FetchResponse<ProducerItemDTO[], 200> 
-| FetchResponse<ExceptionDTO, 401> 
-| FetchResponse<ExceptionDTO, 403> 
-| FetchResponse<ExceptionDTO, 500> 
+export type ElectronicTradeFormalityRequestDTO = {
+	data: ElectronicTradeFormalityDataRequestDTO;
+	"files[]": File[];
+};
+
+export type PostApiElectronicTradeTradesElectronicTradeIdFormalityFetchResponse = 
+| FetchResponse<void, 204> 
 | ErrorResponse;
 
-export const getApiProducersPath = () => `/api/producers`;
+export const postApiElectronicTradeTradesElectronicTradeIdFormalityPath = (electronicTradeId: number, fields?: string) => `/api/electronic-trade/trades/${electronicTradeId}/formality`;
 
-export const getApiProducers = (filterTerm?: string, filterHidden?: number, filterRegion?: string, filterCategory?: string, headers = new Headers()):
-  Promise<GetApiProducersFetchResponse> => {
+export const postApiElectronicTradeTradesElectronicTradeIdFormality = (requestContract: ElectronicTradeFormalityRequestDTO, electronicTradeId: number, fields?: string, headers = new Headers()):
+  Promise<PostApiElectronicTradeTradesElectronicTradeIdFormalityFetchResponse> => {
     const queryParams = {
-      "filter[term]": filterTerm,
-      "filter[hidden]": filterHidden,
-      "filter[region]": filterRegion,
-      "filter[category]": filterCategory
-    }
-    return apiGet(`${getApiUrl()}${getApiProducersPath()}`, headers, queryParams) as Promise<GetApiProducersFetchResponse>;
+      "fields": fields
+    };
+    const requestData = getApiRequestData<ElectronicTradeFormalityRequestDTO>(requestContract, true);
+
+    return apiPost(`${getApiUrl()}${postApiElectronicTradeTradesElectronicTradeIdFormalityPath(electronicTradeId)}`, requestData, headers, queryParams) as Promise<PostApiElectronicTradeTradesElectronicTradeIdFormalityFetchResponse>;
 }

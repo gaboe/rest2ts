@@ -61,12 +61,14 @@ export const renderProperties =
           const type = renderProperties(swagger)(childProp);
 
           const isNullable: boolean = (childProp as any).nullable;
+          const isNameArray = op.endsWith("[]");
+          const propertyName = isNameArray ? `"${op}"` : op;
 
           const view = {
-            name: isNullable ? `${op}?` : op,
+            name: isNullable ? `${propertyName}?` : propertyName,
             type: isNullable ? `${type} | null` : type,
           };
-          return render("{{ name }}: {{{ type }}};", view);
+          return render("{{{ name }}}: {{{ type }}};", view);
         })
         .join("\n\t");
       return properties.concat(addSchemaAllOf(schema.allOf ?? null, swagger));

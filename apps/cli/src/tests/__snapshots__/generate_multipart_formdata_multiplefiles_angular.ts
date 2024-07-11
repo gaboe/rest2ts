@@ -295,8 +295,56 @@ export interface FileResponse {
   fileName?: string;
 }
   
-export type Session = {
-	sessionId: string;
+export enum ElectronicTradeFormalityEnum {
+	BlueAgreement = "BlueAgreement",
+	AML = "AML",
+	Termination = "Termination",
+	TransferUnderSAB = "TransferUnderSAB",
+	Change = "Change",
+	LoanProtocolHandover = "LoanProtocolHandover",
+	TradeProducerProtocol = "TradeProducerProtocol",
+	Modelation = "Modelation",
+	Other = "Other",
+	ZZJ = "ZZJ",
+	TradeIdentificationForm = "TradeIdentificationForm",
+	NewInstruction = "NewInstruction",
+	LoanRequest = "LoanRequest",
+	ESIP = "ESIP",
+	Contract = "Contract"
+};
+
+export type ErrorDetailDTO = {
+	code: string;
+	message: string;
+};
+
+export type ExceptionDTO = {
+	errors?: { [key: string | number]: ErrorDetailDTO[] } | null;
+	type?: string | null;
+	title?: string | null;
+	status?: number | null;
+	detail?: string | null;
+	instance?: string | null;
+	stackTrace?: { [key: string | number]: ExceptionStackTraceItemDTO[] } | null;
+};
+
+export type ExceptionStackTraceItemDTO = {
+	file?: string | null;
+	line?: number | null;
+	function?: string | null;
+	class?: string | null;
+	type?: string | null;
+};
+
+export type ElectronicTradeFormalityDataRequestDTO = {
+	formalityType: ElectronicTradeFormalityEnum;
+	sendByPostOffice?: boolean | null;
+	targetRelationId?: number | null;
+};
+
+export type ElectronicTradeFormalityRequestDTO = {
+	data: ElectronicTradeFormalityDataRequestDTO;
+	"files[]": File[];
 };
 
 
@@ -316,20 +364,13 @@ export class ApiService {
       this.baseUrl = baseUrl ?? "";
   }
 
-  postCountryCodeVerify(body: string): Observable<ResponseResult<void, 200>> {
-    const requestData = getApiRequestData<string>(body, false);
-
-    return apiPost<ResponseResult<void, 200>>(this.httpClient, `${this.baseUrl}/{countryCode}/verify`, requestData);
-  }
-
-  postCountryCodeSessions(countryCode?: string, lang?: string, type?: string): Observable<ResponseResult<Session, 201>> {
+  postApiElectronicTradeTradesElectronicTradeIdFormality(requestContract: ElectronicTradeFormalityRequestDTO, electronicTradeId: number, fields?: string): Observable<ResponseResult<void, 204>> {
 		const queryParams = {
-      "lang": lang,
-      "type": type
+      "fields": fields
     };
-    const requestData = getApiRequestData<object>(undefined, false);
+    const requestData = getApiRequestData<ElectronicTradeFormalityRequestDTO>(requestContract, true);
 
-    return apiPost<ResponseResult<Session, 201>>(this.httpClient, `${this.baseUrl}/${countryCode}/Sessions`, requestData, queryParams);
+    return apiPost<ResponseResult<void, 204>>(this.httpClient, `${this.baseUrl}/api/electronic-trade/trades/${electronicTradeId}/formality`, requestData, queryParams);
   }
 }
 
