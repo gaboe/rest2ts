@@ -1,16 +1,14 @@
-name: Publish NPM package
+name: PR Check
+
 on:
-  workflow_dispatch:
-  push:
+  pull_request:
     branches:
       - master
-    # Run this only when the package.json file changes
-    paths:
-      - "apps/cli/package.json"
+  workflow_dispatch:
 
 jobs:
-  publish:
-    runs-on: ubuntu-latest
+  build:
+   runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -29,3 +27,14 @@ jobs:
         with:
           package: ./apps/cli
           token: ${{ secrets.NPM_TOKEN }}
+      
+      - name: Run tests
+        run: |
+          cd ./apps/cli
+          pnpm test
+```   
+      - name: Build docs
+        run: |
+          cd ./apps/docs
+          pnpm build
+
