@@ -24,10 +24,14 @@ jobs:
           pnpm i
           pnpm build
 
-      - uses: JS-DevTools/npm-publish@v3
-        with:
-          package: ./apps/cli
-          token: ${{ secrets.NPM_TOKEN }}
+      - name: Run built CLI app
+        run: |
+          cd ./apps/cli/dist
+          node index.js -s https://petstore.swagger.io/v2/swagger.json -t ./api
+
+      - name: Check if Api.ts was created
+        run: |
+          if [ -f ./apps/cli/api/Api.ts ]; then echo "Api.ts exists"; else echo "Api.ts does not exist" && exit 1; fi
 
       - name: Run tests
         run: |
