@@ -5,7 +5,7 @@
 
 ## Generate modern TypeScript types from REST APIs
 
-## 🚀 Usage
+## 🚀 Usage test
 
 ```bash
 npx rest2ts -s https://petstore.swagger.io/v2/swagger.json -t ./api
