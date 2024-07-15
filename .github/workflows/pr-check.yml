@@ -31,7 +31,10 @@ jobs:
 
       - name: Check if Api.ts was created
         run: |
-          if [ -f ./apps/cli/api/Api.ts ]; then echo "Api.ts exists"; else echo "Api.ts does not exist" && exit 1; fi
+          if [ -f ./apps/cli/dist/api/Api.ts ]; 
+          then echo "Api.ts exists"; 
+          else echo "Api.ts does not exist" && exit 1;
+          fi
 
       - name: Run tests
         run: |
