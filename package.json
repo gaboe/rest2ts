@@ -15,7 +15,7 @@
     "@rest2ts/eslint-config": "workspace:*",
     "@rest2ts/typescript-config": "workspace:*",
     "prettier": "^3.3.2",
-    "turbo": "2.0.6"
+    "turbo": "2.0.9"
   },
   "packageManager": "pnpm@9.5.0",
   "engines": {
