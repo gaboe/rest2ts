@@ -304,6 +304,31 @@ export enum CountryCode {
 	bg = "bg"
 };
 
+export type Session = {
+	sessionId: string;
+	createdDate: string;
+	updatedAt?: string | null;
+	countryCode: typeof CountryCode;
+	claimNumber?: string | null;
+	policyId?: string | null;
+	policyNumber: string;
+	isPolicyVerified?: boolean | null;
+	policyTypeCode: string;
+	sectionCode: string;
+	stepNumber: number;
+	maxStepNumber: number;
+	sessionUUID?: string | null;
+};
+
+export type UpdateSessionModel = {
+	sessionId: string;
+	policyNumber: string;
+	policyTypeCode: string;
+	stepNumber: number;
+	maxStepNumber: number;
+	sectionCode: string;
+};
+
 
 
 export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
@@ -326,6 +351,15 @@ export class ApiService {
       "lang": lang
     };
     return apiGet<ResponseResult<string, 200>>(this.httpClient, `${this.baseUrl}/${countryCode}/Entity/${id}`, queryParams);
+  }
+
+  putCountryCodeSessionsSessionId(requestContract: UpdateSessionModel, countryCode: CountryCode, sessionId: string, lang?: string): Observable<ResponseResult<Session, 200>> {
+		const queryParams = {
+      "lang": lang
+    };
+    const requestData = getApiRequestData<UpdateSessionModel>(requestContract, false);
+
+    return apiPut<ResponseResult<Session, 200>>(this.httpClient, `${this.baseUrl}/${countryCode}/Sessions/${sessionId}`, requestData, queryParams);
   }
 }
 

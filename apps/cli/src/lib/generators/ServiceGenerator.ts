@@ -35,9 +35,9 @@ export const getRequestContractType = (
   ) => {
     const schema = op.requestBody.content[contentType]!.schema;
     const isRequestParamArray = schema.type === "array" && !!schema.items;
-    const refName = isRequestParamArray
+    const ref = isRequestParamArray
       ? (schema.items as Schema).$ref
-      : schema.$ref;
+      : (schema.$ref ?? schema.allOf?.[0]?.$ref);
 
     if (schema.type === "string" || schema.type === "number") {
       return Just({
@@ -47,7 +47,7 @@ export const getRequestContractType = (
       });
     }
 
-    return Maybe.fromNullable(refName)
+    return Maybe.fromNullable(ref)
       .chain(e => Just(getTypeNameFromRef(e)))
       .chain(v =>
         Just({

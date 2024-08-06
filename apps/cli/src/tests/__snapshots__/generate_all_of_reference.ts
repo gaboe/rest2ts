@@ -424,6 +424,31 @@ export enum CountryCode {
 	bg = "bg"
 };
 
+export type Session = {
+	sessionId: string;
+	createdDate: string;
+	updatedAt?: string | null;
+	countryCode: typeof CountryCode;
+	claimNumber?: string | null;
+	policyId?: string | null;
+	policyNumber: string;
+	isPolicyVerified?: boolean | null;
+	policyTypeCode: string;
+	sectionCode: string;
+	stepNumber: number;
+	maxStepNumber: number;
+	sessionUUID?: string | null;
+};
+
+export type UpdateSessionModel = {
+	sessionId: string;
+	policyNumber: string;
+	policyTypeCode: string;
+	stepNumber: number;
+	maxStepNumber: number;
+	sectionCode: string;
+};
+
 export type GetCountryCodeEntityIdFetchResponse = 
 | FetchResponse<string, 200> 
 | ErrorResponse;
@@ -436,4 +461,20 @@ export const getCountryCodeEntityId = (countryCode: CountryCode, id: string, lan
       "lang": lang
     }
     return apiGet(`${getApiUrl()}${getCountryCodeEntityIdPath(countryCode, id)}`, headers, queryParams) as Promise<GetCountryCodeEntityIdFetchResponse>;
+}
+
+export type PutCountryCodeSessionsSessionIdFetchResponse = 
+| FetchResponse<Session, 200> 
+| ErrorResponse;
+
+export const putCountryCodeSessionsSessionIdPath = (countryCode: CountryCode, sessionId: string, lang?: string) => `/${countryCode}/Sessions/${sessionId}`;
+
+export const putCountryCodeSessionsSessionId = (requestContract: UpdateSessionModel, countryCode: CountryCode, sessionId: string, lang?: string, headers = new Headers()):
+  Promise<PutCountryCodeSessionsSessionIdFetchResponse> => {
+    const queryParams = {
+      "lang": lang
+    };
+    const requestData = getApiRequestData<UpdateSessionModel>(requestContract, false);
+
+    return apiPut(`${getApiUrl()}${putCountryCodeSessionsSessionIdPath(countryCode, sessionId)}`, requestData, headers, queryParams) as Promise<PutCountryCodeSessionsSessionIdFetchResponse>;
 }
