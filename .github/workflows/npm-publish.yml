@@ -1,18 +1,18 @@
-name: Publish NPM package
+name: Publish NPM package and Create GitHub Release
 on:
   workflow_dispatch:
   push:
     branches:
       - master
-    # Run this only when the package.json file changes
     paths:
       - "apps/cli/package.json"
 
 jobs:
-  publish:
+  publish-and-release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v4.0.0
 
@@ -22,7 +22,26 @@ jobs:
           pnpm i
           pnpm build
 
-      - uses: JS-DevTools/npm-publish@v3
+      - name: Publish to NPM
+        uses: JS-DevTools/npm-publish@v3
         with:
           package: ./apps/cli
           token: ${{ secrets.NPM_TOKEN }}
+
+      - name: Get version from package.json
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
+        with:
+          path: ./apps/cli
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.package-version.outputs.current-version}}
+          release_name: Release v${{ steps.package-version.outputs.current-version }}
+          body: |
+            Release of version ${{ steps.package-version.outputs.current-version }}
+          draft: false
+          prerelease: false
