@@ -103,7 +103,10 @@ export const renderProperties =
             const tt = swagger.components.schemas[typeName]!;
             if (schema.type === "object") {
               return renderProperties(swagger)(tt);
-            } else if (tt.type === "object") {
+            } else if (
+              tt.type === "object" ||
+              (schema.allOf?.length ?? 0) > 0
+            ) {
               return typeName!;
             }
             return `typeof ${typeName}`;

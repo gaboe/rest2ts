@@ -437,7 +437,7 @@ export type AuthResult = {
 	firstName?: string | null;
 	lastName?: string | null;
 	enterpriseID: number;
-	error: typeof AuthError;
+	error: AuthError;
 	errorMessage?: string | null;
 };
 

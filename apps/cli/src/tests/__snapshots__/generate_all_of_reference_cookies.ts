@@ -434,7 +434,7 @@ export type Session = {
 	sessionId: string;
 	createdDate: string;
 	updatedAt?: string | null;
-	countryCode: typeof CountryCode;
+	countryCode: CountryCode;
 	claimNumber?: string | null;
 	policyId?: string | null;
 	policyNumber: string;
