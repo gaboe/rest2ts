@@ -17,6 +17,7 @@ const cases = [
   "common_prefix_countryCode",
   "common_prefix_v1",
   "common_prefix_v2",
+  "all_of_reference",
 ];
 
 function fixturePath(name: string) {

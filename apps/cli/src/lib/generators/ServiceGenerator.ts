@@ -237,10 +237,12 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
           return `${types}${nullability}`;
         }
 
+        const ref = schema.$ref ?? schema.allOf?.[0]?.$ref;
+
         return `${
           schema.type ||
-          schema.allOf ||
-          (schema.$ref && getTypeNameFromRef(schema.$ref))
+          (!Array.isArray(schema.allOf) && schema.allOf) ||
+          (ref && getTypeNameFromRef(ref))
         }${nullability}`;
       }
     }

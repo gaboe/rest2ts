@@ -1,0 +1,95 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "API",
+    "version": "v1"
+  },
+  "paths": {
+    "/{countryCode}/Entity/{id}": {
+      "get": {
+        "parameters": [
+          {
+            "name": "countryCode",
+            "in": "path",
+            "description": "The country code.\n\nsk\n\ncz\n\npl\n\nhu\n\nro\n\nbg",
+            "required": true,
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/CountryCode"
+                }
+              ],
+              "description": "Enumeration for country code.",
+              "x-enumNames": ["Sk", "Cz", "Pl", "Hu", "Ro", "Bg"]
+            },
+            "x-enumNames": ["Sk", "Cz", "Pl", "Hu", "Ro", "Bg"]
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The issued unique identifier.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "lang",
+            "in": "query",
+            "description": "The language.",
+            "schema": {
+              "type": "string",
+              "default": "en"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CountryCode": {
+        "enum": ["sk", "cz", "pl", "hu", "ro", "bg"],
+        "type": "string",
+        "description": "Enumeration for country code.\n\nsk\n\ncz\n\npl\n\nhu\n\nro\n\nbg",
+        "x-enumNames": ["Sk", "Cz", "Pl", "Hu", "Ro", "Bg"]
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "description": "Please enter a valid token",
+        "scheme": "Bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "Bearer": []
+    }
+  ],
+  "tags": []
+}
