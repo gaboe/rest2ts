@@ -251,11 +251,11 @@
     request: TRequest,
     headers: Headers
   ) {
+    updateHeaders(headers);
     if (request instanceof FormData) {
       headers.delete("Content-Type");
       return request;
-    } else {
-      updateHeaders(headers);
+    } else {      
       return JSON.stringify(request);
     }
   }
