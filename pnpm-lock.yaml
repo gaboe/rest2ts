@@ -86,7 +86,7 @@ importers:
         version: 3.5.1(@algolia/client-search@4.24.0)(@types/react@18.3.3)(eslint@9.9.0(jiti@1.21.6))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(search-insights@2.16.2)(typescript@5.5.4)
       '@getalby/bitcoin-connect-react':
         specifier: ^3.5.3
-        version: 3.6.1(@types/react@18.3.3)(immer@9.0.21)(react@18.3.1)(typescript@5.5.4)
+        version: 3.6.2(@types/react@18.3.3)(immer@9.0.21)(react@18.3.1)(typescript@5.5.4)
       '@getalby/lightning-tools':
         specifier: ^5.0.3
         version: 5.0.3
@@ -1381,13 +1381,13 @@ packages:
     resolution: {integrity: sha512-BsWiH1yFGjXXS2yvrf5LyuoSIIbPrGUWob917o+BTKuZ7qJdxX8aJLRxs1fS9n6r7vESrq1OUqb68dANcFXuQQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@getalby/bitcoin-connect-react@3.6.1':
-    resolution: {integrity: sha512-nUpCE34uVIN6z/sfl8HJNyoC3Hv3+vkpQqVW4W6/NwhMKlE2uTNRPrjAgc/Kei8VhE/OqXMWtsN/FWc3dQx0XA==}
+  '@getalby/bitcoin-connect-react@3.6.2':
+    resolution: {integrity: sha512-5XeqBoiT7BuZHwGWSsCAMOrEqDrgJyyyOFnBi/hZZ+AsMBXRVqhgwst07Zbf4t7bNyXvphEYRTgisMvDQ42ErQ==}
     peerDependencies:
       react: ^18.2.0
 
-  '@getalby/bitcoin-connect@3.6.1':
-    resolution: {integrity: sha512-zrBOc956MQVYmFEULh7C38TBK8Ks+xCgRBcLDu06mBB8aCL/HH/4y7TsKkqM34+jqWUP92j3KBkVAbmtEUjHkw==}
+  '@getalby/bitcoin-connect@3.6.2':
+    resolution: {integrity: sha512-JttIpbKWbkS5WA62S2xHQ2I6Ld5azJi99BLVcgjJoM6szpE4tlSuZi+oASduG8XTFMsiQ1GU57nqfiVXrv9ZyA==}
 
   '@getalby/lightning-tools@5.0.3':
     resolution: {integrity: sha512-QG3/SBI5n2py5IgsjP3K+c8eq55eiI3PQB12yo9Pot0b5hcN7TNNoTKn0fgLJjO1iEVCUkF513kDOpjjXwK0hQ==}
@@ -6339,8 +6339,8 @@ packages:
       file-loader:
         optional: true
 
-  use-sync-external-store@1.2.0:
-    resolution: {integrity: sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA==}
+  use-sync-external-store@1.2.2:
+    resolution: {integrity: sha512-PElTlVMwpblvbNqQ82d2n6RjStvdSoNe9FG28kNfz3WiXilJm4DdNkEzRhCZuIDwY8U08WVihhGR5iRqAwfDiw==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
 
@@ -6618,8 +6618,8 @@ packages:
     resolution: {integrity: sha512-b4JR1PFR10y1mKjhHY9LaGo6tmrgjit7hxVIeAmyMw3jegXR4dhYqLaQF5zMXZxY7tLpMyJeLjr1C4rLmkVe8g==}
     engines: {node: '>=12.20'}
 
-  zustand@4.5.4:
-    resolution: {integrity: sha512-/BPMyLKJPtFEvVL0E9E9BTUM63MNyhPGlvxk1XjrfWTUlV+BR8jufjsovHzrtR6YNcBEcL7cMHovL1n9xHawEg==}
+  zustand@4.5.5:
+    resolution: {integrity: sha512-+0PALYNJNgK6hldkgDq2vLrw5f6g/jCInz52n9RTpropGgeAf/ioFUCdtsjCqu4gNhW9D01rUQBROoRjdzyn2Q==}
     engines: {node: '>=12.7.0'}
     peerDependencies:
       '@types/react': '>=16.8'
@@ -8492,22 +8492,22 @@ snapshots:
 
   '@eslint/object-schema@2.1.4': {}
 
-  '@getalby/bitcoin-connect-react@3.6.1(@types/react@18.3.3)(immer@9.0.21)(react@18.3.1)(typescript@5.5.4)':
+  '@getalby/bitcoin-connect-react@3.6.2(@types/react@18.3.3)(immer@9.0.21)(react@18.3.1)(typescript@5.5.4)':
     dependencies:
-      '@getalby/bitcoin-connect': 3.6.1(@types/react@18.3.3)(immer@9.0.21)(react@18.3.1)(typescript@5.5.4)
+      '@getalby/bitcoin-connect': 3.6.2(@types/react@18.3.3)(immer@9.0.21)(react@18.3.1)(typescript@5.5.4)
       react: 18.3.1
     transitivePeerDependencies:
       - '@types/react'
       - immer
       - typescript
 
-  '@getalby/bitcoin-connect@3.6.1(@types/react@18.3.3)(immer@9.0.21)(react@18.3.1)(typescript@5.5.4)':
+  '@getalby/bitcoin-connect@3.6.2(@types/react@18.3.3)(immer@9.0.21)(react@18.3.1)(typescript@5.5.4)':
     dependencies:
       '@getalby/lightning-tools': 5.0.3
       '@getalby/sdk': 3.6.1(typescript@5.5.4)
       '@lightninglabs/lnc-web': 0.3.1-alpha
       qrcode-generator: 1.4.4
-      zustand: 4.5.4(@types/react@18.3.3)(immer@9.0.21)(react@18.3.1)
+      zustand: 4.5.5(@types/react@18.3.3)(immer@9.0.21)(react@18.3.1)
     transitivePeerDependencies:
       - '@types/react'
       - immer
@@ -14440,7 +14440,7 @@ snapshots:
     optionalDependencies:
       file-loader: 6.2.0(webpack@5.93.0)
 
-  use-sync-external-store@1.2.0(react@18.3.1):
+  use-sync-external-store@1.2.2(react@18.3.1):
     dependencies:
       react: 18.3.1
 
@@ -14781,9 +14781,9 @@ snapshots:
 
   yocto-queue@1.1.1: {}
 
-  zustand@4.5.4(@types/react@18.3.3)(immer@9.0.21)(react@18.3.1):
+  zustand@4.5.5(@types/react@18.3.3)(immer@9.0.21)(react@18.3.1):
     dependencies:
-      use-sync-external-store: 1.2.0(react@18.3.1)
+      use-sync-external-store: 1.2.2(react@18.3.1)
     optionalDependencies:
       '@types/react': 18.3.3
       immer: 9.0.21
