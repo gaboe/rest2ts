@@ -1,5 +1,6 @@
 {
   "name": "@gaboe/rest2ts",
   "version": "5.3.1",
-  "exports": "./src/index.ts"
+  "exports": "./src/index.ts",
+  "license": "MIT"
 }
