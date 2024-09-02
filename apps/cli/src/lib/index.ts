@@ -14,6 +14,7 @@ export async function generateApiContent(
   source: string,
   generateForAngular: boolean,
   cookies: boolean,
+  prefixesToRemove: string[],
 ): Promise<string | null> {
   console.log(`🤖1/3 - Getting OpenAPI definition from ${source}`);
 
@@ -24,5 +25,10 @@ export async function generateApiContent(
     return null;
   }
 
-  return await generate(openAPI, generateForAngular == true, cookies == true);
+  return await generate(
+    openAPI,
+    generateForAngular == true,
+    cookies == true,
+    prefixesToRemove,
+  );
 }

@@ -11,6 +11,7 @@ type ProgramProps = {
   fileName: string | undefined;
   cookies: boolean;
   generateForAngular: boolean;
+  prefixesToRemove?: string[];
   help: never;
 };
 
@@ -29,13 +30,24 @@ program
   )
   .option("-f, --file-name <name>", "Output file name (defaults to Api.ts)")
   .option("--cookies", "Generate API with cookies auth")
+  .option(
+    "-ptr, --prefixes-to-remove <prefixes>",
+    "Prefixes to remove from the generated code",
+  )
   .helpOption("-h, --help", "Show help");
 
 program.parse(process.argv);
 
 const options = program.opts<ProgramProps>();
 
-const { source, target, generateForAngular, fileName, cookies } = options;
+const {
+  source,
+  target,
+  generateForAngular,
+  fileName,
+  cookies,
+  prefixesToRemove,
+} = options;
 
 if (!source) {
   console.error("Error: Source -s is required.");
@@ -60,7 +72,7 @@ process.emitWarning = (warning, ...args) => {
   originalEmitWarning.call(process, warning, ...(args as any));
 };
 
-generateApiContent(source, generateForAngular, cookies)
+generateApiContent(source, generateForAngular, cookies, prefixesToRemove ?? [])
   .then(content => {
     if (content === null) {
       console.error("Failed to generate api content");

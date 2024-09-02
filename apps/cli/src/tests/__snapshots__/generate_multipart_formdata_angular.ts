@@ -364,7 +364,7 @@ export class ApiService {
       this.baseUrl = baseUrl ?? "";
   }
 
-  postApiElectronicTradeTradesElectronicTradeIdFormality(requestContract: ElectronicTradeFormalityRequestDTO, electronicTradeId: number, fields?: string): Observable<ResponseResult<void, 204>> {
+  postElectronicTradeTradesElectronicTradeIdFormality(requestContract: ElectronicTradeFormalityRequestDTO, electronicTradeId: number, fields?: string): Observable<ResponseResult<void, 204>> {
 		const queryParams = {
       "fields": fields
     };

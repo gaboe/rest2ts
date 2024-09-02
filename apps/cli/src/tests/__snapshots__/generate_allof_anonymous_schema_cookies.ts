@@ -441,14 +441,14 @@ export type Cow = {
 	discriminator: string;
 };
 
-export type GetApiTestFetchResponse = 
+export type GetTestFetchResponse = 
 | FetchResponse<{status: string;
 	data?: Dog | Cat | Cow | null;}, 200> 
 | ErrorResponse;
 
-export const getApiTestPath = () => `/api/test`;
+export const getTestPath = () => `/api/test`;
 
-export const getApiTest = (headers = new Headers()):
-  Promise<GetApiTestFetchResponse> => {
-    return apiGet(`${getApiUrl()}${getApiTestPath()}`, headers, {}) as Promise<GetApiTestFetchResponse>;
+export const getTest = (headers = new Headers()):
+  Promise<GetTestFetchResponse> => {
+    return apiGet(`${getApiUrl()}${getTestPath()}`, headers, {}) as Promise<GetTestFetchResponse>;
 }
