@@ -35,7 +35,7 @@ export const getEndpointsDescriptions = (swagger: SwaggerSchema) => {
 
       const prop = formatUrlToCamelCase(e);
 
-      const versionPattern = /^v\d+(\.\d+)?/;
+      const versionPattern = /v\d+(_\d+)?/;
       const versionMatch = prop.match(versionPattern);
       const version = (versionMatch?.[0] ?? "").toUpperCase();
 
