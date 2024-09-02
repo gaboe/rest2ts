@@ -541,30 +541,30 @@ export type Idcard = {
 	issue_date: string;
 };
 
-export type GetApiBankIDVerifyBankIdFetchResponse = 
+export type GetBankIDVerifyBankIdFetchResponse = 
 | FetchResponse<ProcessBankIDVerificationCommandResult, 200> 
 | ErrorResponse;
 
-export const getApiBankIDVerifyBankIdPath = () => `/api/BankID/verify-bank-id`;
+export const getBankIDVerifyBankIdPath = () => `/api/BankID/verify-bank-id`;
 
-export const getApiBankIDVerifyBankId = (token?: string | undefined | null, headers = new Headers()):
-  Promise<GetApiBankIDVerifyBankIdFetchResponse> => {
+export const getBankIDVerifyBankId = (token?: string | undefined | null, headers = new Headers()):
+  Promise<GetBankIDVerifyBankIdFetchResponse> => {
     const queryParams = {
       "token": token
     }
-    return apiGet(`${getApiUrl()}${getApiBankIDVerifyBankIdPath()}`, headers, queryParams) as Promise<GetApiBankIDVerifyBankIdFetchResponse>;
+    return apiGet(`${getApiUrl()}${getBankIDVerifyBankIdPath()}`, headers, queryParams) as Promise<GetBankIDVerifyBankIdFetchResponse>;
 }
 
-export type GetApiProductListFetchResponse = 
+export type GetProductListFetchResponse = 
 | FetchResponse<ProductItemDto[], 200> 
 | ErrorResponse;
 
-export const getApiProductListPath = () => `/api/product/list`;
+export const getProductListPath = () => `/api/product/list`;
 
-export const getApiProductList = (contractTypeCode?: ContractTypeCode | undefined | null, headers = new Headers()):
-  Promise<GetApiProductListFetchResponse> => {
+export const getProductList = (contractTypeCode?: ContractTypeCode | undefined | null, headers = new Headers()):
+  Promise<GetProductListFetchResponse> => {
     const queryParams = {
       "contractTypeCode": contractTypeCode
     }
-    return apiGet(`${getApiUrl()}${getApiProductListPath()}`, headers, queryParams) as Promise<GetApiProductListFetchResponse>;
+    return apiGet(`${getApiUrl()}${getProductListPath()}`, headers, queryParams) as Promise<GetProductListFetchResponse>;
 }

@@ -346,7 +346,7 @@ export class ApiService {
       this.baseUrl = baseUrl ?? "";
   }
 
-  postApiAuthLogin(requestContract: AuthRequest): Observable<ResponseResult<AuthResult, 200> | ResponseResult<ProblemDetails, 400>> {
+  postAuthLogin(requestContract: AuthRequest): Observable<ResponseResult<AuthResult, 200> | ResponseResult<ProblemDetails, 400>> {
     const requestData = getApiRequestData<AuthRequest>(requestContract, false);
 
     return apiPost<ResponseResult<AuthResult, 200> | ResponseResult<ProblemDetails, 400>>(this.httpClient, `${this.baseUrl}/api/Auth/login`, requestData);

@@ -440,22 +440,22 @@ export type ProductItemDTO = {
 	hidden?: boolean | null;
 };
 
-export type GetApiProducersFetchResponse = 
+export type GetProducersFetchResponse = 
 | FetchResponse<ProducerItemDTO[], 200> 
 | FetchResponse<ExceptionDTO, 401> 
 | FetchResponse<ExceptionDTO, 403> 
 | FetchResponse<ExceptionDTO, 500> 
 | ErrorResponse;
 
-export const getApiProducersPath = () => `/api/producers`;
+export const getProducersPath = () => `/api/producers`;
 
-export const getApiProducers = (filterTerm?: string, filterHidden?: number, filterRegion?: string, filterCategory?: string, headers = new Headers()):
-  Promise<GetApiProducersFetchResponse> => {
+export const getProducers = (filterTerm?: string, filterHidden?: number, filterRegion?: string, filterCategory?: string, headers = new Headers()):
+  Promise<GetProducersFetchResponse> => {
     const queryParams = {
       "filter[term]": filterTerm,
       "filter[hidden]": filterHidden,
       "filter[region]": filterRegion,
       "filter[category]": filterCategory
     }
-    return apiGet(`${getApiUrl()}${getApiProducersPath()}`, headers, queryParams) as Promise<GetApiProducersFetchResponse>;
+    return apiGet(`${getApiUrl()}${getProducersPath()}`, headers, queryParams) as Promise<GetProducersFetchResponse>;
 }

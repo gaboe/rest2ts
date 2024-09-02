@@ -486,8 +486,11 @@ const bodyBasedMethod = (
   );
 };
 
-export const generateServices = (swagger: SwaggerSchema) => {
-  const endpoints = getEndpointsDescriptions(swagger);
+export const generateServices = (
+  swagger: SwaggerSchema,
+  prefixesToRemove: string[],
+) => {
+  const endpoints = getEndpointsDescriptions(swagger, prefixesToRemove);
   const view = endpoints
     .map(endpointDescription => {
       const {

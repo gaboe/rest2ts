@@ -473,18 +473,18 @@ export type ElectronicTradeFormalityRequestDTO = {
 	file?: File | null;
 };
 
-export type PostApiElectronicTradeTradesElectronicTradeIdFormalityFetchResponse = 
+export type PostElectronicTradeTradesElectronicTradeIdFormalityFetchResponse = 
 | FetchResponse<void, 204> 
 | ErrorResponse;
 
-export const postApiElectronicTradeTradesElectronicTradeIdFormalityPath = (electronicTradeId: number, fields?: string) => `/api/electronic-trade/trades/${electronicTradeId}/formality`;
+export const postElectronicTradeTradesElectronicTradeIdFormalityPath = (electronicTradeId: number, fields?: string) => `/api/electronic-trade/trades/${electronicTradeId}/formality`;
 
-export const postApiElectronicTradeTradesElectronicTradeIdFormality = (requestContract: ElectronicTradeFormalityRequestDTO, electronicTradeId: number, fields?: string, headers = new Headers()):
-  Promise<PostApiElectronicTradeTradesElectronicTradeIdFormalityFetchResponse> => {
+export const postElectronicTradeTradesElectronicTradeIdFormality = (requestContract: ElectronicTradeFormalityRequestDTO, electronicTradeId: number, fields?: string, headers = new Headers()):
+  Promise<PostElectronicTradeTradesElectronicTradeIdFormalityFetchResponse> => {
     const queryParams = {
       "fields": fields
     };
     const requestData = getApiRequestData<ElectronicTradeFormalityRequestDTO>(requestContract, true);
 
-    return apiPost(`${getApiUrl()}${postApiElectronicTradeTradesElectronicTradeIdFormalityPath(electronicTradeId)}`, requestData, headers, queryParams) as Promise<PostApiElectronicTradeTradesElectronicTradeIdFormalityFetchResponse>;
+    return apiPost(`${getApiUrl()}${postElectronicTradeTradesElectronicTradeIdFormalityPath(electronicTradeId)}`, requestData, headers, queryParams) as Promise<PostElectronicTradeTradesElectronicTradeIdFormalityFetchResponse>;
 }

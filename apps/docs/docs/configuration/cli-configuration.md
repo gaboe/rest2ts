@@ -58,6 +58,18 @@ Default value is `Api.ts`.
  npx rest2ts --source https://petstore.swagger.io/v2/swagger.json --target ./generated --generate-for-angular --file-name MyApi.ts
 ```
 
+### --prefixes-to-remove / -ptr
+
+When API contains same prefix over and over again, you can use this option to remove it.
+
+For example, if you have `/api/v1/` prefix in your API, you can remove it with this option.
+
+#### Example
+
+```bash
+npx rest2ts --source https://petstore.swagger.io/v2/swagger.json --target ./generated --prefixes-to-remove api_,v1_
+```
+
 ### --cookies
 
 Generates API with cookies auth.

@@ -332,7 +332,7 @@ export class ApiService {
       this.baseUrl = baseUrl ?? "";
   }
 
-  getApiTest(): Observable<ResponseResult<{status: string;
+  getTest(): Observable<ResponseResult<{status: string;
 	data?: Dog | Cat | Cow | null;}, 200>> {
     return apiGet<ResponseResult<{status: string;
 	data?: Dog | Cat | Cow | null;}, 200>>(this.httpClient, `${this.baseUrl}/api/test`);

@@ -14,10 +14,10 @@ const cases = [
   "swagger_2_0",
   "multipart_formdata",
   "multipart_formdata_multiplefiles",
+  "common_prefix_api_v1",
   "common_prefix_countryCode",
   "common_prefix_v1",
   "common_prefix_v2",
-  "common_prefix_v3",
   "all_of_reference",
 ];
 
@@ -33,19 +33,19 @@ for (const name of cases) {
   describe(name, () => {
     test("Generate", async () => {
       const api = await SwaggerParser.parse(fixturePath(name));
-      const content = await generate(api);
+      const content = await generate(api, false, false, ["api_", "v1_"]);
       expect(content).toMatchFileSnapshot(snapshotPath(name));
     });
 
     test("Generate with cookies", async () => {
       const api = await SwaggerParser.parse(fixturePath(name));
-      const content = await generate(api, false, true);
+      const content = await generate(api, false, true, ["api_", "v1_"]);
       expect(content).toMatchFileSnapshot(snapshotPath(`${name}_cookies`));
     });
 
     test("Generate angular", async () => {
       const api = await SwaggerParser.parse(fixturePath(name));
-      const content = await generate(api, true, true);
+      const content = await generate(api, true, true, ["api_", "v1_"]);
       expect(content).toMatchFileSnapshot(snapshotPath(`${name}_angular`));
     });
   });

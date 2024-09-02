@@ -438,14 +438,14 @@ export class ApiService {
       this.baseUrl = baseUrl ?? "";
   }
 
-  getApiBankIDVerifyBankId(token?: string | undefined | null): Observable<ResponseResult<ProcessBankIDVerificationCommandResult, 200>> {
+  getBankIDVerifyBankId(token?: string | undefined | null): Observable<ResponseResult<ProcessBankIDVerificationCommandResult, 200>> {
     const queryParams = {
       "token": token
     };
     return apiGet<ResponseResult<ProcessBankIDVerificationCommandResult, 200>>(this.httpClient, `${this.baseUrl}/api/BankID/verify-bank-id`, queryParams);
   }
 
-  getApiProductList(contractTypeCode?: ContractTypeCode | undefined | null): Observable<ResponseResult<ProductItemDto[], 200>> {
+  getProductList(contractTypeCode?: ContractTypeCode | undefined | null): Observable<ResponseResult<ProductItemDto[], 200>> {
     const queryParams = {
       "contractTypeCode": contractTypeCode
     };
