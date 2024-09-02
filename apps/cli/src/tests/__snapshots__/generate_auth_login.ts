@@ -449,16 +449,16 @@ export type ProblemDetails = {
 	instance?: string | null;
 };
 
-export type PostApiAuthLoginFetchResponse = 
+export type PostAuthLoginFetchResponse = 
 | FetchResponse<AuthResult, 200> 
 | FetchResponse<ProblemDetails, 400> 
 | ErrorResponse;
 
-export const postApiAuthLoginPath = () => `/api/Auth/login`;
+export const postAuthLoginPath = () => `/api/Auth/login`;
 
-export const postApiAuthLogin = (requestContract: AuthRequest, headers = new Headers()):
-  Promise<PostApiAuthLoginFetchResponse> => {
+export const postAuthLogin = (requestContract: AuthRequest, headers = new Headers()):
+  Promise<PostAuthLoginFetchResponse> => {
     const requestData = getApiRequestData<AuthRequest>(requestContract, false);
 
-    return apiPost(`${getApiUrl()}${postApiAuthLoginPath()}`, requestData, headers) as Promise<PostApiAuthLoginFetchResponse>;
+    return apiPost(`${getApiUrl()}${postAuthLoginPath()}`, requestData, headers) as Promise<PostAuthLoginFetchResponse>;
 }

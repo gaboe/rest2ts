@@ -403,7 +403,7 @@ export class ApiService {
       this.baseUrl = baseUrl ?? "";
   }
 
-  getApiUsers(offset?: number, limit?: number): Observable<ResponseResult<EntityListOfUserListItemDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  getUsers(offset?: number, limit?: number): Observable<ResponseResult<EntityListOfUserListItemDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     const queryParams = {
       "offset": offset,
       "limit": limit
@@ -411,7 +411,7 @@ export class ApiService {
     return apiGet<ResponseResult<EntityListOfUserListItemDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/users`, queryParams);
   }
 
-  getApiUsersUserID(userID: number): Observable<ResponseResult<UserDetailDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  getUsersUserID(userID: number): Observable<ResponseResult<UserDetailDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     return apiGet<ResponseResult<UserDetailDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/users/${userID}`);
   }
 }

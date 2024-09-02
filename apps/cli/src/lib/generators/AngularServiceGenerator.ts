@@ -206,8 +206,11 @@ const getContractResult = (
   return Nothing;
 };
 
-export const generateAngularServices = (swagger: SwaggerSchema) => {
-  const endpoints = getEndpointsDescriptions(swagger).map(
+export const generateAngularServices = (
+  swagger: SwaggerSchema,
+  prefixesToRemove: string[],
+) => {
+  const endpoints = getEndpointsDescriptions(swagger, prefixesToRemove).map(
     endpointDescription => {
       const {
         formattedParam: formattedRequestContractType,

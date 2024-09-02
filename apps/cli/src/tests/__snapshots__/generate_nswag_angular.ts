@@ -1946,21 +1946,21 @@ export class ApiService {
       this.baseUrl = baseUrl ?? "";
   }
 
-  getApiWorkflowsSteps(): Observable<ResponseResult<EntityListOfStepDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  getWorkflowsSteps(): Observable<ResponseResult<EntityListOfStepDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     return apiGet<ResponseResult<EntityListOfStepDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/workflows/steps`);
   }
 
-  getApiUserCompany(): Observable<ResponseResult<UserCompanyDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  getUserCompany(): Observable<ResponseResult<UserCompanyDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     return apiGet<ResponseResult<UserCompanyDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/user/company`);
   }
 
-  putApiUserCompany(requestContract: UserCompanySetRequest): Observable<ResponseResult<SetUserCompanyCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  putUserCompany(requestContract: UserCompanySetRequest): Observable<ResponseResult<SetUserCompanyCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<UserCompanySetRequest>(requestContract, false);
 
     return apiPut<ResponseResult<SetUserCompanyCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/user/company`, requestData);
   }
 
-  getApiServicesPackages(offset?: number, limit?: number): Observable<ResponseResult<EntityListOfServicePackageListItemDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  getServicesPackages(offset?: number, limit?: number): Observable<ResponseResult<EntityListOfServicePackageListItemDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     const queryParams = {
       "offset": offset,
       "limit": limit
@@ -1968,7 +1968,7 @@ export class ApiService {
     return apiGet<ResponseResult<EntityListOfServicePackageListItemDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/services/packages`, queryParams);
   }
 
-  getApiServicesPackagesAvailableServices(offset?: number, limit?: number): Observable<ResponseResult<EntityListOfServiceListItemDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  getServicesPackagesAvailableServices(offset?: number, limit?: number): Observable<ResponseResult<EntityListOfServiceListItemDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     const queryParams = {
       "offset": offset,
       "limit": limit
@@ -1976,31 +1976,31 @@ export class ApiService {
     return apiGet<ResponseResult<EntityListOfServiceListItemDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/services/packages/available-services`, queryParams);
   }
 
-  postApiServicesPackage(requestContract: SaveServicePackageRequest): Observable<ResponseResult<CreateServicePackageCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  postServicesPackage(requestContract: SaveServicePackageRequest): Observable<ResponseResult<CreateServicePackageCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<SaveServicePackageRequest>(requestContract, false);
 
     return apiPost<ResponseResult<CreateServicePackageCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/services/package`, requestData);
   }
 
-  getApiServicesServicePublicIDPackage(servicePublicID: string): Observable<ResponseResult<ServicePackageDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ProblemDetails, 500>> {
+  getServicesServicePublicIDPackage(servicePublicID: string): Observable<ResponseResult<ServicePackageDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ProblemDetails, 500>> {
     return apiGet<ResponseResult<ServicePackageDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/services/${servicePublicID}/package`);
   }
 
-  deleteApiServicesServicePublicIDPackage(servicePublicID: string): Observable<ResponseResult<ServicePackageDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
+  deleteServicesServicePublicIDPackage(servicePublicID: string): Observable<ResponseResult<ServicePackageDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
     return apiDelete<ResponseResult<ServicePackageDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/services/${servicePublicID}/package`);
   }
 
-  putApiServicesServicePublicIDPackage(requestContract: SaveServicePackageRequest, servicePublicID: string): Observable<ResponseResult<UpdateServicePackageCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
+  putServicesServicePublicIDPackage(requestContract: SaveServicePackageRequest, servicePublicID: string): Observable<ResponseResult<UpdateServicePackageCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<SaveServicePackageRequest>(requestContract, false);
 
     return apiPut<ResponseResult<UpdateServicePackageCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/services/${servicePublicID}/package`, requestData);
   }
 
-  getApiPartiesPublicID(publicID: string): Observable<ResponseResult<PartyDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
+  getPartiesPublicID(publicID: string): Observable<ResponseResult<PartyDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
     return apiGet<ResponseResult<PartyDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/parties/${publicID}`);
   }
 
-  getApiPartiesSearchAres(query?: string, partyType?: PartyType | undefined | null): Observable<ResponseResult<PartyDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
+  getPartiesSearchAres(query?: string, partyType?: PartyType | undefined | null): Observable<ResponseResult<PartyDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
     const queryParams = {
       "query": query,
       "partyType": partyType
@@ -2008,7 +2008,7 @@ export class ApiService {
     return apiGet<ResponseResult<PartyDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/parties/search/ares`, queryParams);
   }
 
-  getApiOrders(offset?: number, limit?: number, workflowStatuses?: string[], query?: string | undefined | null, startDate?: string | undefined | null, endDate?: string | undefined | null, isSearchInStructure?: boolean, onlyAfterInvoiceDueDate?: boolean, includeClientReminderAvailable?: boolean): Observable<ResponseResult<EntityListOfOrderListItemDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  getOrders(offset?: number, limit?: number, workflowStatuses?: string[], query?: string | undefined | null, startDate?: string | undefined | null, endDate?: string | undefined | null, isSearchInStructure?: boolean, onlyAfterInvoiceDueDate?: boolean, includeClientReminderAvailable?: boolean): Observable<ResponseResult<EntityListOfOrderListItemDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     const queryParams = {
       "offset": offset,
       "limit": limit,
@@ -2023,29 +2023,29 @@ export class ApiService {
     return apiGet<ResponseResult<EntityListOfOrderListItemDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/orders`, queryParams);
   }
 
-  getApiOrdersPublicID(publicID: string): Observable<ResponseResult<OrderDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
+  getOrdersPublicID(publicID: string): Observable<ResponseResult<OrderDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
     return apiGet<ResponseResult<OrderDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/orders/${publicID}`);
   }
 
-  deleteApiOrdersPublicID(publicID: string): Observable<ResponseResult<DeleteOrderCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
+  deleteOrdersPublicID(publicID: string): Observable<ResponseResult<DeleteOrderCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
     return apiDelete<ResponseResult<DeleteOrderCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/orders/${publicID}`);
   }
 
-  putApiOrdersPublicIDPeriodicity(requestContract: SetPeriodicityRequest, publicID: string): Observable<ResponseResult<SetPeriodicityCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
+  putOrdersPublicIDPeriodicity(requestContract: SetPeriodicityRequest, publicID: string): Observable<ResponseResult<SetPeriodicityCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<SetPeriodicityRequest>(requestContract, false);
 
     return apiPut<ResponseResult<SetPeriodicityCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/orders/${publicID}/periodicity`, requestData);
   }
 
-  getApiOrdersPublicIDServices(publicID: string): Observable<ResponseResult<EntityListOfOrderServiceDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  getOrdersPublicIDServices(publicID: string): Observable<ResponseResult<EntityListOfOrderServiceDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     return apiGet<ResponseResult<EntityListOfOrderServiceDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/orders/${publicID}/services`);
   }
 
-  deleteApiOrdersServicesServiceID(serviceID: number): Observable<ResponseResult<DeleteOrderServiceCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
+  deleteOrdersServicesServiceID(serviceID: number): Observable<ResponseResult<DeleteOrderServiceCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
     return apiDelete<ResponseResult<DeleteOrderServiceCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/orders/services/${serviceID}`);
   }
 
-  getApiOrdersPeriodicUpcoming(offset?: number, limit?: number, nexOrderDate?: string): Observable<ResponseResult<EntityListOfUpcomingPeriodicOrderDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  getOrdersPeriodicUpcoming(offset?: number, limit?: number, nexOrderDate?: string): Observable<ResponseResult<EntityListOfUpcomingPeriodicOrderDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     const queryParams = {
       "offset": offset,
       "limit": limit,
@@ -2054,186 +2054,186 @@ export class ApiService {
     return apiGet<ResponseResult<EntityListOfUpcomingPeriodicOrderDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/orders/periodic/upcoming`, queryParams);
   }
 
-  getApiOrdersRevocationExampleFile(): Observable<ResponseResult<File, 200> | ResponseResult<ApiProblemDetails, 204> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  getOrdersRevocationExampleFile(): Observable<ResponseResult<File, 200> | ResponseResult<ApiProblemDetails, 204> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     return apiGet<ResponseResult<File, 200> | ResponseResult<ApiProblemDetails, 204> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/orders/revocation/example/file`);
   }
 
-  getApiOrdersPublicIDPaymentCalendarItems(publicID: string): Observable<ResponseResult<EntityListOfPaymentCalendarItemDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  getOrdersPublicIDPaymentCalendarItems(publicID: string): Observable<ResponseResult<EntityListOfPaymentCalendarItemDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     return apiGet<ResponseResult<EntityListOfPaymentCalendarItemDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/orders/${publicID}/payment-calendar-items`);
   }
 
-  getApiOrdersCount(onlyActive?: boolean): Observable<ResponseResult<GetOrdersCountQueryResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  getOrdersCount(onlyActive?: boolean): Observable<ResponseResult<GetOrdersCountQueryResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     const queryParams = {
       "onlyActive": onlyActive
     };
     return apiGet<ResponseResult<GetOrdersCountQueryResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/orders/count`, queryParams);
   }
 
-  postApiOrdersOrderPublicIDClientInvoiceRecurringPaymentCreateInvoiceAndSetAsPaidByClient(requestContract: ClientInvoiceRecurringPaymentCreateInvoiceAndSetAsPaidByClientRequest, orderPublicID: string): Observable<ResponseResult<SetPeriodicityCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  postOrdersOrderPublicIDClientInvoiceRecurringPaymentCreateInvoiceAndSetAsPaidByClient(requestContract: ClientInvoiceRecurringPaymentCreateInvoiceAndSetAsPaidByClientRequest, orderPublicID: string): Observable<ResponseResult<SetPeriodicityCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<ClientInvoiceRecurringPaymentCreateInvoiceAndSetAsPaidByClientRequest>(requestContract, false);
 
     return apiPost<ResponseResult<SetPeriodicityCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/orders/${orderPublicID}/client-invoice-recurring-payment-create-invoice-and-set-as-paid-by-client`, requestData);
   }
 
-  getApiOrdersPublicIDClientZonePaymentCalendarItems(publicID: string): Observable<ResponseResult<EntityListOfPaymentCalendarClientZoneItemDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  getOrdersPublicIDClientZonePaymentCalendarItems(publicID: string): Observable<ResponseResult<EntityListOfPaymentCalendarClientZoneItemDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     return apiGet<ResponseResult<EntityListOfPaymentCalendarClientZoneItemDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/orders/${publicID}/client-zone/payment-calendar-items`);
   }
 
-  getApiOrdersPublicIDOrderServiceOrderServiceIDEucsOrderInfo(publicID: string, orderServiceID: number): Observable<ResponseResult<GetEucsOrderInfoQueryResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
+  getOrdersPublicIDOrderServiceOrderServiceIDEucsOrderInfo(publicID: string, orderServiceID: number): Observable<ResponseResult<GetEucsOrderInfoQueryResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
     return apiGet<ResponseResult<GetEucsOrderInfoQueryResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/orders/${publicID}/order-service/${orderServiceID}/eucs-order/info`);
   }
 
-  postApiOrdersPublicIDOrderServiceOrderServiceIDProductCancel(requestContract: CancelProductInInstitutionCommandRequest, publicID: string, orderServiceID: number): Observable<ResponseResult<CancelProductInInstitutionCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ApiProblemDetails, 500>> {
+  postOrdersPublicIDOrderServiceOrderServiceIDProductCancel(requestContract: CancelProductInInstitutionCommandRequest, publicID: string, orderServiceID: number): Observable<ResponseResult<CancelProductInInstitutionCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ApiProblemDetails, 500>> {
     const requestData = getApiRequestData<CancelProductInInstitutionCommandRequest>(requestContract, false);
 
     return apiPost<ResponseResult<CancelProductInInstitutionCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ApiProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/orders/${publicID}/order-service/${orderServiceID}/product/cancel`, requestData);
   }
 
-  postApiOrdersPublicIDOrderServiceOrderServiceIDProductCreate(requestContract: CreateProductInInstitutionRequest, publicID: string, orderServiceID: number): Observable<ResponseResult<CreateProductInInstitutionCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ApiProblemDetails, 500>> {
+  postOrdersPublicIDOrderServiceOrderServiceIDProductCreate(requestContract: CreateProductInInstitutionRequest, publicID: string, orderServiceID: number): Observable<ResponseResult<CreateProductInInstitutionCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ApiProblemDetails, 500>> {
     const requestData = getApiRequestData<CreateProductInInstitutionRequest>(requestContract, false);
 
     return apiPost<ResponseResult<CreateProductInInstitutionCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ApiProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/orders/${publicID}/order-service/${orderServiceID}/product/create`, requestData);
   }
 
-  getApiOrdersPublicIDWorkflowSteps(publicID: string): Observable<ResponseResult<EntityListOfOrderWorkflowStepDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  getOrdersPublicIDWorkflowSteps(publicID: string): Observable<ResponseResult<EntityListOfOrderWorkflowStepDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     return apiGet<ResponseResult<EntityListOfOrderWorkflowStepDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/orders/${publicID}/workflow/steps`);
   }
 
-  postApiOrdersWorkflowDraft(requestContract: SaveDraftRequest): Observable<ResponseResult<SaveDraftCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  postOrdersWorkflowDraft(requestContract: SaveDraftRequest): Observable<ResponseResult<SaveDraftCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<SaveDraftRequest>(requestContract, false);
 
     return apiPost<ResponseResult<SaveDraftCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/orders/workflow/draft`, requestData);
   }
 
-  postApiOrdersPublicIDWorkflowDraftComplete(publicID: string): Observable<ResponseResult<DraftStepCompleteCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
+  postOrdersPublicIDWorkflowDraftComplete(publicID: string): Observable<ResponseResult<DraftStepCompleteCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<object>(undefined, false);
 
     return apiPost<ResponseResult<DraftStepCompleteCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/orders/${publicID}/workflow/draft/complete`, requestData);
   }
 
-  getApiOrdersWorkflowClientReviewTokenSummary(token: string): Observable<ResponseResult<GetClientReviewSummaryQueryResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  getOrdersWorkflowClientReviewTokenSummary(token: string): Observable<ResponseResult<GetClientReviewSummaryQueryResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     return apiGet<ResponseResult<GetClientReviewSummaryQueryResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/orders/workflow/client-review/${token}/summary`);
   }
 
-  postApiOrdersPublicIDWorkflowClientReviewReminder(publicID: string): Observable<ResponseResult<SendReminderCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  postOrdersPublicIDWorkflowClientReviewReminder(publicID: string): Observable<ResponseResult<SendReminderCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<object>(undefined, false);
 
     return apiPost<ResponseResult<SendReminderCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/orders/${publicID}/workflow/client-review/reminder`, requestData);
   }
 
-  postApiOrdersWorkflowClientApprovalTokenReject(requestContract: ClientApprovalRejectRequest, token: string): Observable<ResponseResult<ClientApprovalStepRejectCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  postOrdersWorkflowClientApprovalTokenReject(requestContract: ClientApprovalRejectRequest, token: string): Observable<ResponseResult<ClientApprovalStepRejectCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<ClientApprovalRejectRequest>(requestContract, false);
 
     return apiPost<ResponseResult<ClientApprovalStepRejectCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/orders/workflow/client-approval/${token}/reject`, requestData);
   }
 
-  putApiOrdersWorkflowClientApprovalTokenInProgress(token: string): Observable<ResponseResult<ClientApprovalStepInitCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  putOrdersWorkflowClientApprovalTokenInProgress(token: string): Observable<ResponseResult<ClientApprovalStepInitCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<object>(undefined, false);
 
     return apiPut<ResponseResult<ClientApprovalStepInitCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/orders/workflow/client-approval/${token}/in-progress`, requestData);
   }
 
-  postApiOrdersWorkflowClientApprovalTokenComplete(requestContract: ClientApprovalCompleteRequest, token: string): Observable<ResponseResult<CompleteClientApprovalStepCommandResult, 200> | ResponseResult<ApiProblemDetailsOfCompleteClientApprovalStepError, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  postOrdersWorkflowClientApprovalTokenComplete(requestContract: ClientApprovalCompleteRequest, token: string): Observable<ResponseResult<CompleteClientApprovalStepCommandResult, 200> | ResponseResult<ApiProblemDetailsOfCompleteClientApprovalStepError, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<ClientApprovalCompleteRequest>(requestContract, false);
 
     return apiPost<ResponseResult<CompleteClientApprovalStepCommandResult, 200> | ResponseResult<ApiProblemDetailsOfCompleteClientApprovalStepError, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/orders/workflow/client-approval/${token}/complete`, requestData);
   }
 
-  postApiOrdersPublicIDWorkflowProcessingServicesOrderServiceIDComplete(publicID: string, orderServiceID: number): Observable<ResponseResult<OrderServiceCompleteCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
+  postOrdersPublicIDWorkflowProcessingServicesOrderServiceIDComplete(publicID: string, orderServiceID: number): Observable<ResponseResult<OrderServiceCompleteCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<object>(undefined, false);
 
     return apiPost<ResponseResult<OrderServiceCompleteCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/orders/${publicID}/workflow/processing-services/${orderServiceID}/complete`, requestData);
   }
 
-  postApiOrdersPublicIDWorkflowInvoiceIssuanceComplete(publicID: string): Observable<ResponseResult<InvoiceIssuanceStepCompleteCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
+  postOrdersPublicIDWorkflowInvoiceIssuanceComplete(publicID: string): Observable<ResponseResult<InvoiceIssuanceStepCompleteCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<object>(undefined, false);
 
     return apiPost<ResponseResult<InvoiceIssuanceStepCompleteCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/orders/${publicID}/workflow/invoice-issuance/complete`, requestData);
   }
 
-  postApiOrdersPublicIDWorkflowInvoicePaymentComplete(publicID: string): Observable<ResponseResult<InvoicePaymentStepCompleteCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
+  postOrdersPublicIDWorkflowInvoicePaymentComplete(publicID: string): Observable<ResponseResult<InvoicePaymentStepCompleteCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<object>(undefined, false);
 
     return apiPost<ResponseResult<InvoicePaymentStepCompleteCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/orders/${publicID}/workflow/invoice-payment/complete`, requestData);
   }
 
-  postApiOrdersPublicIDWorkflowInvoicePaymentReminder(publicID: string): Observable<ResponseResult<InvoicePaymentStepReminderCommand, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
+  postOrdersPublicIDWorkflowInvoicePaymentReminder(publicID: string): Observable<ResponseResult<InvoicePaymentStepReminderCommand, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<object>(undefined, false);
 
     return apiPost<ResponseResult<InvoicePaymentStepReminderCommand, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/orders/${publicID}/workflow/invoice-payment/reminder`, requestData);
   }
 
-  getApiOrdersPublicIDWorkflowEnterpriseInvoiceIssuanceAndPayment(publicID: string): Observable<ResponseResult<EnterpriseInvoiceIssuanceAndPaymentStepQueryResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
+  getOrdersPublicIDWorkflowEnterpriseInvoiceIssuanceAndPayment(publicID: string): Observable<ResponseResult<EnterpriseInvoiceIssuanceAndPaymentStepQueryResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
     return apiGet<ResponseResult<EnterpriseInvoiceIssuanceAndPaymentStepQueryResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/orders/${publicID}/workflow/enterprise-invoice-issuance-and-payment`);
   }
 
-  postApiOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDCancel(publicID: string, paymentCalendarItemID: number): Observable<ResponseResult<ClientInvoiceRecurringPaymentCancelCommandResult, 200> | ResponseResult<ApiProblemDetailsOfClientInvoiceRecurringPaymentCancelErrorStatus, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
+  postOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDCancel(publicID: string, paymentCalendarItemID: number): Observable<ResponseResult<ClientInvoiceRecurringPaymentCancelCommandResult, 200> | ResponseResult<ApiProblemDetailsOfClientInvoiceRecurringPaymentCancelErrorStatus, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<object>(undefined, false);
 
     return apiPost<ResponseResult<ClientInvoiceRecurringPaymentCancelCommandResult, 200> | ResponseResult<ApiProblemDetailsOfClientInvoiceRecurringPaymentCancelErrorStatus, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/orders/${publicID}/workflow/client-invoice-recurring-payment/${paymentCalendarItemID}/cancel`, requestData);
   }
 
-  postApiOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDReminder(publicID: string, paymentCalendarItemID: number): Observable<ResponseResult<ClientInvoiceRecurringPaymentReminderCommandResult, 200> | ResponseResult<ApiProblemDetailsOfClientInvoiceRecurringPaymentReminderErrorStatus, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
+  postOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDReminder(publicID: string, paymentCalendarItemID: number): Observable<ResponseResult<ClientInvoiceRecurringPaymentReminderCommandResult, 200> | ResponseResult<ApiProblemDetailsOfClientInvoiceRecurringPaymentReminderErrorStatus, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<object>(undefined, false);
 
     return apiPost<ResponseResult<ClientInvoiceRecurringPaymentReminderCommandResult, 200> | ResponseResult<ApiProblemDetailsOfClientInvoiceRecurringPaymentReminderErrorStatus, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/orders/${publicID}/workflow/client-invoice-recurring-payment/${paymentCalendarItemID}/reminder`, requestData);
   }
 
-  postApiOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDPrepaidReminder(publicID: string, paymentCalendarItemID: number): Observable<ResponseResult<ClientPrepaidInvoiceRecurringPaymentReminderCommandResult, 200> | ResponseResult<ApiProblemDetailsOfClientPrepaidInvoiceRecurringPaymentReminderErrorStatus, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
+  postOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDPrepaidReminder(publicID: string, paymentCalendarItemID: number): Observable<ResponseResult<ClientPrepaidInvoiceRecurringPaymentReminderCommandResult, 200> | ResponseResult<ApiProblemDetailsOfClientPrepaidInvoiceRecurringPaymentReminderErrorStatus, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<object>(undefined, false);
 
     return apiPost<ResponseResult<ClientPrepaidInvoiceRecurringPaymentReminderCommandResult, 200> | ResponseResult<ApiProblemDetailsOfClientPrepaidInvoiceRecurringPaymentReminderErrorStatus, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/orders/${publicID}/workflow/client-invoice-recurring-payment/${paymentCalendarItemID}/prepaid/reminder`, requestData);
   }
 
-  postApiOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDSendInvoice(publicID: string, paymentCalendarItemID: number): Observable<ResponseResult<ClientInvoiceRecurringPaymentCreateInvoiceCommandResult, 200> | ResponseResult<ApiProblemDetailsOfClientInvoiceRecurringPaymentCreateAndSendInvoiceToClientErrorStatus, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
+  postOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDSendInvoice(publicID: string, paymentCalendarItemID: number): Observable<ResponseResult<ClientInvoiceRecurringPaymentCreateInvoiceCommandResult, 200> | ResponseResult<ApiProblemDetailsOfClientInvoiceRecurringPaymentCreateAndSendInvoiceToClientErrorStatus, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<object>(undefined, false);
 
     return apiPost<ResponseResult<ClientInvoiceRecurringPaymentCreateInvoiceCommandResult, 200> | ResponseResult<ApiProblemDetailsOfClientInvoiceRecurringPaymentCreateAndSendInvoiceToClientErrorStatus, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/orders/${publicID}/workflow/client-invoice-recurring-payment/${paymentCalendarItemID}/send-invoice`, requestData);
   }
 
-  postApiOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDPay(requestContract: ClientInvoiceRecurringPaymentClientPaidRequest, publicID: string, paymentCalendarItemID: number): Observable<ResponseResult<ClientInvoiceRecurringPaymentClientPaidCommandResult, 200> | ResponseResult<ApiProblemDetailsOfClientInvoiceRecurringPaymentClientPaidErrorStatus, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
+  postOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDPay(requestContract: ClientInvoiceRecurringPaymentClientPaidRequest, publicID: string, paymentCalendarItemID: number): Observable<ResponseResult<ClientInvoiceRecurringPaymentClientPaidCommandResult, 200> | ResponseResult<ApiProblemDetailsOfClientInvoiceRecurringPaymentClientPaidErrorStatus, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<ClientInvoiceRecurringPaymentClientPaidRequest>(requestContract, false);
 
     return apiPost<ResponseResult<ClientInvoiceRecurringPaymentClientPaidCommandResult, 200> | ResponseResult<ApiProblemDetailsOfClientInvoiceRecurringPaymentClientPaidErrorStatus, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/orders/${publicID}/workflow/client-invoice-recurring-payment/${paymentCalendarItemID}/pay`, requestData);
   }
 
-  postApiOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDPrepaidSendInvoiceAndPay(requestContract: ClientPrepaidInvoiceRecurringPaymentSendInvoiceAndSetPaidRequest, publicID: string, paymentCalendarItemID: number): Observable<ResponseResult<ClientPrepaidInvoiceRecurringPaymentSendInvoiceAndSetPaidCommandResult, 200> | ResponseResult<ApiProblemDetailsOfClientPrepaidInvoiceRecurringPaymentSendInvoiceAndSetPaidErrorStatus, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
+  postOrdersPublicIDWorkflowClientInvoiceRecurringPaymentPaymentCalendarItemIDPrepaidSendInvoiceAndPay(requestContract: ClientPrepaidInvoiceRecurringPaymentSendInvoiceAndSetPaidRequest, publicID: string, paymentCalendarItemID: number): Observable<ResponseResult<ClientPrepaidInvoiceRecurringPaymentSendInvoiceAndSetPaidCommandResult, 200> | ResponseResult<ApiProblemDetailsOfClientPrepaidInvoiceRecurringPaymentSendInvoiceAndSetPaidErrorStatus, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<ClientPrepaidInvoiceRecurringPaymentSendInvoiceAndSetPaidRequest>(requestContract, false);
 
     return apiPost<ResponseResult<ClientPrepaidInvoiceRecurringPaymentSendInvoiceAndSetPaidCommandResult, 200> | ResponseResult<ApiProblemDetailsOfClientPrepaidInvoiceRecurringPaymentSendInvoiceAndSetPaidErrorStatus, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/orders/${publicID}/workflow/client-invoice-recurring-payment/${paymentCalendarItemID}/prepaid/send-invoice-and-pay`, requestData);
   }
 
-  postApiOrdersPublicIDWorkflowClientAssignmentSendAssignmentEmail(publicID: string): Observable<ResponseResult<SendClientAssignmentEmailCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
+  postOrdersPublicIDWorkflowClientAssignmentSendAssignmentEmail(publicID: string): Observable<ResponseResult<SendClientAssignmentEmailCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<object>(undefined, false);
 
     return apiPost<ResponseResult<SendClientAssignmentEmailCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/orders/${publicID}/workflow/client-assignment/send-assignment-email`, requestData);
   }
 
-  postApiOrdersPublicIDWorkflowClientPrepaidPaymentApprovalComplete(requestContract: ClientPrepaidPaymentApprovalStepCompleteCommandRequest, publicID: string): Observable<ResponseResult<ClientPrepaidPaymentApprovalStepCompleteCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
+  postOrdersPublicIDWorkflowClientPrepaidPaymentApprovalComplete(requestContract: ClientPrepaidPaymentApprovalStepCompleteCommandRequest, publicID: string): Observable<ResponseResult<ClientPrepaidPaymentApprovalStepCompleteCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<ClientPrepaidPaymentApprovalStepCompleteCommandRequest>(requestContract, false);
 
     return apiPost<ResponseResult<ClientPrepaidPaymentApprovalStepCompleteCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/orders/${publicID}/workflow/client-prepaid-payment-approval/complete`, requestData);
   }
 
-  postApiOrdersWorkflowClientPrepaidPaymentApprovalTokenInProgress(requestContract: ClientPrepaidPaymentApprovalStepInProgressRequest, token: string): Observable<ResponseResult<ClientPrepaidPaymentApprovalStepInProgressCommandResult, 200> | ResponseResult<ApiProblemDetailsOfInProgressClientApprovalStepError, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
+  postOrdersWorkflowClientPrepaidPaymentApprovalTokenInProgress(requestContract: ClientPrepaidPaymentApprovalStepInProgressRequest, token: string): Observable<ResponseResult<ClientPrepaidPaymentApprovalStepInProgressCommandResult, 200> | ResponseResult<ApiProblemDetailsOfInProgressClientApprovalStepError, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<ClientPrepaidPaymentApprovalStepInProgressRequest>(requestContract, false);
 
     return apiPost<ResponseResult<ClientPrepaidPaymentApprovalStepInProgressCommandResult, 200> | ResponseResult<ApiProblemDetailsOfInProgressClientApprovalStepError, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/orders/workflow/client-prepaid-payment-approval/${token}/in-progress`, requestData);
   }
 
-  postApiOrdersWorkflowClientPrepaidPaymentApprovalTokenReject(requestContract: ClientPrepaidPaymentApprovalStepRejectRequest, token: string): Observable<ResponseResult<ClientPrepaidPaymentApprovalStepRejectCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
+  postOrdersWorkflowClientPrepaidPaymentApprovalTokenReject(requestContract: ClientPrepaidPaymentApprovalStepRejectRequest, token: string): Observable<ResponseResult<ClientPrepaidPaymentApprovalStepRejectCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<ClientPrepaidPaymentApprovalStepRejectRequest>(requestContract, false);
 
     return apiPost<ResponseResult<ClientPrepaidPaymentApprovalStepRejectCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/orders/workflow/client-prepaid-payment-approval/${token}/reject`, requestData);
   }
 
-  putApiNotificationsUserSettings(requestContract: UserNotificationUpdateRequest): Observable<ResponseResult<SaveUserNotificationSettingsCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  putNotificationsUserSettings(requestContract: UserNotificationUpdateRequest): Observable<ResponseResult<SaveUserNotificationSettingsCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<UserNotificationUpdateRequest>(requestContract, false);
 
     return apiPut<ResponseResult<SaveUserNotificationSettingsCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/notifications/user-settings`, requestData);
   }
 
-  getApiInvoicesUserInvoices(offset?: number, limit?: number): Observable<ResponseResult<EntityListOfInvoiceForSupplierCompanyByUserListItemDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  getInvoicesUserInvoices(offset?: number, limit?: number): Observable<ResponseResult<EntityListOfInvoiceForSupplierCompanyByUserListItemDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     const queryParams = {
       "offset": offset,
       "limit": limit
@@ -2241,64 +2241,64 @@ export class ApiService {
     return apiGet<ResponseResult<EntityListOfInvoiceForSupplierCompanyByUserListItemDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/invoices/user-invoices`, queryParams);
   }
 
-  getApiInvoicesPublicID(publicID: string): Observable<ResponseResult<InvoiceDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
+  getInvoicesPublicID(publicID: string): Observable<ResponseResult<InvoiceDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
     return apiGet<ResponseResult<InvoiceDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/invoices/${publicID}`);
   }
 
-  getApiInvoicesPublicIDISDOC(publicID: string): Observable<ResponseResult<InvoiceISDOCDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
+  getInvoicesPublicIDISDOC(publicID: string): Observable<ResponseResult<InvoiceISDOCDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
     return apiGet<ResponseResult<InvoiceISDOCDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/invoices/${publicID}/ISDOC`);
   }
 
-  getApiInvoicesPublicIDISDOCPdf(publicID: string): Observable<ResponseResult<InvoiceISDOCPdfBase64Dto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
+  getInvoicesPublicIDISDOCPdf(publicID: string): Observable<ResponseResult<InvoiceISDOCPdfBase64Dto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
     return apiGet<ResponseResult<InvoiceISDOCPdfBase64Dto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/invoices/${publicID}/ISDOCPdf`);
   }
 
-  getApiInvoicesInvoiceForSupplierCompanyByUserISDOCPdf(InvoicePublicIDs?: string[]): Observable<ResponseResult<InvoiceForSupplierCompanyByUserISDOCPdfBase64ListDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
+  getInvoicesInvoiceForSupplierCompanyByUserISDOCPdf(InvoicePublicIDs?: string[]): Observable<ResponseResult<InvoiceForSupplierCompanyByUserISDOCPdfBase64ListDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
     const queryParams = {
       "InvoicePublicIDs": InvoicePublicIDs
     };
     return apiGet<ResponseResult<InvoiceForSupplierCompanyByUserISDOCPdfBase64ListDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/invoices/invoice-for-supplier-company-by-user/ISDOCPdf`, queryParams);
   }
 
-  postApiInvoicesInvoiceForClientByOrderPublicIDCancel(publicID: string): Observable<ResponseResult<CancelInvoiceForClientByOrderCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
+  postInvoicesInvoiceForClientByOrderPublicIDCancel(publicID: string): Observable<ResponseResult<CancelInvoiceForClientByOrderCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<object>(undefined, false);
 
     return apiPost<ResponseResult<CancelInvoiceForClientByOrderCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/invoices/invoice-for-client-by-order/${publicID}/cancel`, requestData);
   }
 
-  postApiEnterprises(requestContract: CreateEnterpriseRequest): Observable<ResponseResult<void, 204> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  postEnterprises(requestContract: CreateEnterpriseRequest): Observable<ResponseResult<void, 204> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<CreateEnterpriseRequest>(requestContract, false);
 
     return apiPost<ResponseResult<void, 204> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/enterprises`, requestData);
   }
 
-  postApiEnterprisesChangeMode(requestContract: EnterpriseModeChangeRequest): Observable<ResponseResult<ChangeEnterpriseModeCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ChangeEnterpriseModeCommandResult, 403> | ResponseResult<ProblemDetails, 500>> {
+  postEnterprisesChangeMode(requestContract: EnterpriseModeChangeRequest): Observable<ResponseResult<ChangeEnterpriseModeCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ChangeEnterpriseModeCommandResult, 403> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<EnterpriseModeChangeRequest>(requestContract, false);
 
     return apiPost<ResponseResult<ChangeEnterpriseModeCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ChangeEnterpriseModeCommandResult, 403> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/enterprises/change-mode`, requestData);
   }
 
-  putApiEnterprisesDesignSettings(requestContract: EnterpriseDesignSettingsUpdateRequest): Observable<ResponseResult<SaveEnterpriseDesignSettingsCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ChangeEnterpriseModeCommandResult, 403> | ResponseResult<ProblemDetails, 500>> {
+  putEnterprisesDesignSettings(requestContract: EnterpriseDesignSettingsUpdateRequest): Observable<ResponseResult<SaveEnterpriseDesignSettingsCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ChangeEnterpriseModeCommandResult, 403> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<EnterpriseDesignSettingsUpdateRequest>(requestContract, false);
 
     return apiPut<ResponseResult<SaveEnterpriseDesignSettingsCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ChangeEnterpriseModeCommandResult, 403> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/enterprises/design-settings`, requestData);
   }
 
-  putApiEnterprisesCommunicationSettings(requestContract: EnterpriseCommunicationSettingsUpdateRequest): Observable<ResponseResult<SaveEnterpriseCommunicationSettingsCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  putEnterprisesCommunicationSettings(requestContract: EnterpriseCommunicationSettingsUpdateRequest): Observable<ResponseResult<SaveEnterpriseCommunicationSettingsCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<EnterpriseCommunicationSettingsUpdateRequest>(requestContract, false);
 
     return apiPut<ResponseResult<SaveEnterpriseCommunicationSettingsCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/enterprises/communication-settings`, requestData);
   }
 
-  getApiEnterprisesBasicSettings(): Observable<ResponseResult<EnterpriseBasicSettingsDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  getEnterprisesBasicSettings(): Observable<ResponseResult<EnterpriseBasicSettingsDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     return apiGet<ResponseResult<EnterpriseBasicSettingsDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/enterprises/basic-settings`);
   }
 
-  getApiEnterprisesExternalIDBasicSettings(externalID: string): Observable<ResponseResult<EnterpriseBasicSettingsDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
+  getEnterprisesExternalIDBasicSettings(externalID: string): Observable<ResponseResult<EnterpriseBasicSettingsDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
     return apiGet<ResponseResult<EnterpriseBasicSettingsDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/enterprises/${externalID}/basic-settings`);
   }
 
-  getApiEnterprisesCommissionSettings(offset?: number, limit?: number): Observable<ResponseResult<EntityListOfEnterpriseCommissionSettingsListItemDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ChangeEnterpriseModeCommandResult, 403> | ResponseResult<ProblemDetails, 500>> {
+  getEnterprisesCommissionSettings(offset?: number, limit?: number): Observable<ResponseResult<EntityListOfEnterpriseCommissionSettingsListItemDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ChangeEnterpriseModeCommandResult, 403> | ResponseResult<ProblemDetails, 500>> {
     const queryParams = {
       "offset": offset,
       "limit": limit
@@ -2306,63 +2306,63 @@ export class ApiService {
     return apiGet<ResponseResult<EntityListOfEnterpriseCommissionSettingsListItemDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ChangeEnterpriseModeCommandResult, 403> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/enterprises/commission-settings`, queryParams);
   }
 
-  postApiEnterprisesCommissionSettings(requestContract: CreateEnterpriseCommissionSettingsRequest): Observable<ResponseResult<CreateEnterpriseCommissionSettingsCommandResult, 200> | ResponseResult<ApiProblemDetailsOfCreateEnterpriseCommissionSettingsErrorStatus, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ChangeEnterpriseModeCommandResult, 403> | ResponseResult<ProblemDetails, 500>> {
+  postEnterprisesCommissionSettings(requestContract: CreateEnterpriseCommissionSettingsRequest): Observable<ResponseResult<CreateEnterpriseCommissionSettingsCommandResult, 200> | ResponseResult<ApiProblemDetailsOfCreateEnterpriseCommissionSettingsErrorStatus, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ChangeEnterpriseModeCommandResult, 403> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<CreateEnterpriseCommissionSettingsRequest>(requestContract, false);
 
     return apiPost<ResponseResult<CreateEnterpriseCommissionSettingsCommandResult, 200> | ResponseResult<ApiProblemDetailsOfCreateEnterpriseCommissionSettingsErrorStatus, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ChangeEnterpriseModeCommandResult, 403> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/enterprises/commission-settings`, requestData);
   }
 
-  getApiEnterprisesServiceSettings(): Observable<ResponseResult<EnterpriseServiceSettingsDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  getEnterprisesServiceSettings(): Observable<ResponseResult<EnterpriseServiceSettingsDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     return apiGet<ResponseResult<EnterpriseServiceSettingsDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/enterprises/service-settings`);
   }
 
-  putApiEnterprisesServiceSettings(requestContract: EnterpriseServiceSettingsUpdateRequest): Observable<ResponseResult<SaveEnterpriseServiceSettingsCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ChangeEnterpriseModeCommandResult, 403> | ResponseResult<ProblemDetails, 500>> {
+  putEnterprisesServiceSettings(requestContract: EnterpriseServiceSettingsUpdateRequest): Observable<ResponseResult<SaveEnterpriseServiceSettingsCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ChangeEnterpriseModeCommandResult, 403> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<EnterpriseServiceSettingsUpdateRequest>(requestContract, false);
 
     return apiPut<ResponseResult<SaveEnterpriseServiceSettingsCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ChangeEnterpriseModeCommandResult, 403> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/enterprises/service-settings`, requestData);
   }
 
-  getApiEnterprisesServices(): Observable<ResponseResult<EnterpriseServiceListItemDto[], 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  getEnterprisesServices(): Observable<ResponseResult<EnterpriseServiceListItemDto[], 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     return apiGet<ResponseResult<EnterpriseServiceListItemDto[], 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/enterprises/services`);
   }
 
-  putApiEnterprisesServices(requestContract: EnterpriseServicesUpdateRequest): Observable<ResponseResult<SaveEnterpriseServicesCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ProblemDetails, 500>> {
+  putEnterprisesServices(requestContract: EnterpriseServicesUpdateRequest): Observable<ResponseResult<SaveEnterpriseServicesCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<EnterpriseServicesUpdateRequest>(requestContract, false);
 
     return apiPut<ResponseResult<SaveEnterpriseServicesCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/enterprises/services`, requestData);
   }
 
-  getApiEnterprisesLogo(): Observable<ResponseResult<EnterpriseLogoDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  getEnterprisesLogo(): Observable<ResponseResult<EnterpriseLogoDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     return apiGet<ResponseResult<EnterpriseLogoDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/enterprises/logo`);
   }
 
-  getApiEnterprisesPublicIDLogoJson(publicID: string): Observable<ResponseResult<EnterpriseLogoDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
+  getEnterprisesPublicIDLogoJson(publicID: string): Observable<ResponseResult<EnterpriseLogoDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
     return apiGet<ResponseResult<EnterpriseLogoDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/enterprises/${publicID}/logo/json`);
   }
 
-  getApiEnterprisesPublicIDLogoFile(publicID: string): Observable<ResponseResult<File, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  getEnterprisesPublicIDLogoFile(publicID: string): Observable<ResponseResult<File, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     return apiGet<ResponseResult<File, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/enterprises/${publicID}/logo/file`);
   }
 
-  getApiEnterprisesPublicIDLogoTenantFile(publicID: string): Observable<ResponseResult<File, 200> | ResponseResult<ApiProblemDetails, 204> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  getEnterprisesPublicIDLogoTenantFile(publicID: string): Observable<ResponseResult<File, 200> | ResponseResult<ApiProblemDetails, 204> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     return apiGet<ResponseResult<File, 200> | ResponseResult<ApiProblemDetails, 204> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/enterprises/${publicID}/logo/tenant/file`);
   }
 
-  getApiEnterprisesPublicIDDesignSettings(publicID: string): Observable<ResponseResult<EnterpriseDesignSettingsDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
+  getEnterprisesPublicIDDesignSettings(publicID: string): Observable<ResponseResult<EnterpriseDesignSettingsDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
     return apiGet<ResponseResult<EnterpriseDesignSettingsDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/enterprises/${publicID}/design-settings`);
   }
 
-  getApiEnterprisesPackageServiceSettings(): Observable<ResponseResult<EnterprisePackageServiceSettingsDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  getEnterprisesPackageServiceSettings(): Observable<ResponseResult<EnterprisePackageServiceSettingsDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     return apiGet<ResponseResult<EnterprisePackageServiceSettingsDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/enterprises/package-service-settings`);
   }
 
-  putApiEnterprisesPackageServiceSettings(requestContract: EnterprisePackageServiceSettingsUpdateRequest): Observable<ResponseResult<SaveEnterprisePackageServiceSettingsCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  putEnterprisesPackageServiceSettings(requestContract: EnterprisePackageServiceSettingsUpdateRequest): Observable<ResponseResult<SaveEnterprisePackageServiceSettingsCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<EnterprisePackageServiceSettingsUpdateRequest>(requestContract, false);
 
     return apiPut<ResponseResult<SaveEnterprisePackageServiceSettingsCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/enterprises/package-service-settings`, requestData);
   }
 
-  getApiCutoffs(offset?: number, limit?: number): Observable<ResponseResult<EntityListOfCutoffListItemDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ProblemDetails, 500>> {
+  getCutoffs(offset?: number, limit?: number): Observable<ResponseResult<EntityListOfCutoffListItemDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ProblemDetails, 500>> {
     const queryParams = {
       "offset": offset,
       "limit": limit
@@ -2370,174 +2370,174 @@ export class ApiService {
     return apiGet<ResponseResult<EntityListOfCutoffListItemDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/cutoffs`, queryParams);
   }
 
-  postApiCutoffs(requestContract: CutoffCreateRequest): Observable<ResponseResult<CreateCutoffCommandResult, 200> | ResponseResult<ApiProblemDetailsOfCreateCutoffErrorStatus, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ApiProblemDetailsOfCreateCutoffErrorStatus, 409> | ResponseResult<ProblemDetails, 500>> {
+  postCutoffs(requestContract: CutoffCreateRequest): Observable<ResponseResult<CreateCutoffCommandResult, 200> | ResponseResult<ApiProblemDetailsOfCreateCutoffErrorStatus, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ApiProblemDetailsOfCreateCutoffErrorStatus, 409> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<CutoffCreateRequest>(requestContract, false);
 
     return apiPost<ResponseResult<CreateCutoffCommandResult, 200> | ResponseResult<ApiProblemDetailsOfCreateCutoffErrorStatus, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ApiProblemDetailsOfCreateCutoffErrorStatus, 409> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/cutoffs`, requestData);
   }
 
-  getApiCutoffsPublicID(publicID: string): Observable<ResponseResult<CutoffDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
+  getCutoffsPublicID(publicID: string): Observable<ResponseResult<CutoffDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
     return apiGet<ResponseResult<CutoffDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/cutoffs/${publicID}`);
   }
 
-  getApiCutoffsCompanyIDDateFromForNextCutoff(companyID: number): Observable<ResponseResult<DateFromForNextCutoffDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ProblemDetails, 500>> {
+  getCutoffsCompanyIDDateFromForNextCutoff(companyID: number): Observable<ResponseResult<DateFromForNextCutoffDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ProblemDetails, 500>> {
     return apiGet<ResponseResult<DateFromForNextCutoffDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/cutoffs/${companyID}/date-from-for-next-cutoff`);
   }
 
-  getApiCutoffsExpectedUserCommission(): Observable<ResponseResult<GetExpectedUserCommissionQueryResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  getCutoffsExpectedUserCommission(): Observable<ResponseResult<GetExpectedUserCommissionQueryResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     return apiGet<ResponseResult<GetExpectedUserCommissionQueryResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/cutoffs/expected-user-commission`);
   }
 
-  getApiCutoffsPaidUserCommission(): Observable<ResponseResult<GetPaidUserCommissionQueryResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  getCutoffsPaidUserCommission(): Observable<ResponseResult<GetPaidUserCommissionQueryResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     return apiGet<ResponseResult<GetPaidUserCommissionQueryResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/cutoffs/paid-user-commission`);
   }
 
-  getApiCutoffsPublicIDISDOCPdfs(publicID: string): Observable<ResponseResult<CutoffISDOCPdfsDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
+  getCutoffsPublicIDISDOCPdfs(publicID: string): Observable<ResponseResult<CutoffISDOCPdfsDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
     return apiGet<ResponseResult<CutoffISDOCPdfsDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/cutoffs/${publicID}/ISDOCPdfs`);
   }
 
-  postApiCutoffsPublicIDSendPayments(publicID: string): Observable<ResponseResult<SendCutoffPaymentsCommandResult, 200> | ResponseResult<ApiProblemDetails, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
+  postCutoffsPublicIDSendPayments(publicID: string): Observable<ResponseResult<SendCutoffPaymentsCommandResult, 200> | ResponseResult<ApiProblemDetails, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<object>(undefined, false);
 
     return apiPost<ResponseResult<SendCutoffPaymentsCommandResult, 200> | ResponseResult<ApiProblemDetails, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/cutoffs/${publicID}/send-payments`, requestData);
   }
 
-  getApiCutoffsPublicIDDetailPdf(publicID: string): Observable<ResponseResult<CutoffDetailPdfBase64Dto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
+  getCutoffsPublicIDDetailPdf(publicID: string): Observable<ResponseResult<CutoffDetailPdfBase64Dto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
     return apiGet<ResponseResult<CutoffDetailPdfBase64Dto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/cutoffs/${publicID}/detail-pdf`);
   }
 
-  getApiCutoffsUserSupplierCompanies(): Observable<ResponseResult<CutoffUserSupplierCompanyListItemDto[], 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  getCutoffsUserSupplierCompanies(): Observable<ResponseResult<CutoffUserSupplierCompanyListItemDto[], 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     return apiGet<ResponseResult<CutoffUserSupplierCompanyListItemDto[], 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/cutoffs/user-supplier-companies`);
   }
 
-  getApiCompaniesPublicID(publicID: string): Observable<ResponseResult<CompanyDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
+  getCompaniesPublicID(publicID: string): Observable<ResponseResult<CompanyDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
     return apiGet<ResponseResult<CompanyDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/companies/${publicID}`);
   }
 
-  postApiCompanies(requestContract: CompanyCreateRequest): Observable<ResponseResult<CreateCompanyCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  postCompanies(requestContract: CompanyCreateRequest): Observable<ResponseResult<CreateCompanyCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<CompanyCreateRequest>(requestContract, false);
 
     return apiPost<ResponseResult<CreateCompanyCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/companies`, requestData);
   }
 
-  putApiCompanies(requestContract: CompanyUpdateRequest): Observable<ResponseResult<UpdateCompanyCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ProblemDetails, 500>> {
+  putCompanies(requestContract: CompanyUpdateRequest): Observable<ResponseResult<UpdateCompanyCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<CompanyUpdateRequest>(requestContract, false);
 
     return apiPut<ResponseResult<UpdateCompanyCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/companies`, requestData);
   }
 
-  getApiCompaniesUserSupplierCompanies(): Observable<ResponseResult<UserSupplierCompanyListItemDto[], 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  getCompaniesUserSupplierCompanies(): Observable<ResponseResult<UserSupplierCompanyListItemDto[], 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     return apiGet<ResponseResult<UserSupplierCompanyListItemDto[], 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/companies/user-supplier-companies`);
   }
 
-  postApiCompaniesUserSupplierCompany(requestContract: UserSupplierCompanySetRequest): Observable<ResponseResult<SetUserSupplierCompanyCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ProblemDetails, 500>> {
+  postCompaniesUserSupplierCompany(requestContract: UserSupplierCompanySetRequest): Observable<ResponseResult<SetUserSupplierCompanyCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<UserSupplierCompanySetRequest>(requestContract, false);
 
     return apiPost<ResponseResult<SetUserSupplierCompanyCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/companies/user-supplier-company`, requestData);
   }
 
-  getApiCompaniesPublicIDDesignSettings(publicID: string): Observable<ResponseResult<CompanyDesignSettingsDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
+  getCompaniesPublicIDDesignSettings(publicID: string): Observable<ResponseResult<CompanyDesignSettingsDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
     return apiGet<ResponseResult<CompanyDesignSettingsDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/companies/${publicID}/design-settings`);
   }
 
-  putApiCompaniesPublicIDDesignSettings(requestContract: SaveCompanyDesignSettingsRequest, publicID: string): Observable<ResponseResult<SaveCompanyDesignSettingsCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ProblemDetails, 500>> {
+  putCompaniesPublicIDDesignSettings(requestContract: SaveCompanyDesignSettingsRequest, publicID: string): Observable<ResponseResult<SaveCompanyDesignSettingsCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<SaveCompanyDesignSettingsRequest>(requestContract, false);
 
     return apiPut<ResponseResult<SaveCompanyDesignSettingsCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/companies/${publicID}/design-settings`, requestData);
   }
 
-  getApiCompaniesPublicIDFioSettings(publicID: string): Observable<ResponseResult<CompanyFioSettingsDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
+  getCompaniesPublicIDFioSettings(publicID: string): Observable<ResponseResult<CompanyFioSettingsDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
     return apiGet<ResponseResult<CompanyFioSettingsDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/companies/${publicID}/fio-settings`);
   }
 
-  putApiCompaniesPublicIDFioSettings(requestContract: SaveFioSettingsRequest, publicID: string): Observable<ResponseResult<SaveCompanyFioSettingsCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ProblemDetails, 500>> {
+  putCompaniesPublicIDFioSettings(requestContract: SaveFioSettingsRequest, publicID: string): Observable<ResponseResult<SaveCompanyFioSettingsCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<SaveFioSettingsRequest>(requestContract, false);
 
     return apiPut<ResponseResult<SaveCompanyFioSettingsCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 403> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/companies/${publicID}/fio-settings`, requestData);
   }
 
-  getApiCompaniesPublicIDLogoFile(publicID: string): Observable<ResponseResult<File, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  getCompaniesPublicIDLogoFile(publicID: string): Observable<ResponseResult<File, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     return apiGet<ResponseResult<File, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/companies/${publicID}/logo/file`);
   }
 
-  getApiCodeLists(): Observable<ResponseResult<GetCodeListCollectionQueryResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  getCodeLists(): Observable<ResponseResult<GetCodeListCollectionQueryResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     return apiGet<ResponseResult<GetCodeListCollectionQueryResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/code-lists`);
   }
 
-  getApiClientsCount(): Observable<ResponseResult<GetClientsCountQueryResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  getClientsCount(): Observable<ResponseResult<GetClientsCountQueryResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     return apiGet<ResponseResult<GetClientsCountQueryResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/clients/count`);
   }
 
-  getApiClientsSearch(query?: string): Observable<ResponseResult<ClientDto[], 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  getClientsSearch(query?: string): Observable<ResponseResult<ClientDto[], 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     const queryParams = {
       "query": query
     };
     return apiGet<ResponseResult<ClientDto[], 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/clients/search`, queryParams);
   }
 
-  getApiClientsSearchPersonalNumber(query?: string): Observable<ResponseResult<ClientDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
+  getClientsSearchPersonalNumber(query?: string): Observable<ResponseResult<ClientDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>> {
     const queryParams = {
       "query": query
     };
     return apiGet<ResponseResult<ClientDto, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetails, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/clients/search/personal-number`, queryParams);
   }
 
-  postApiCacheRefresh(body: string): Observable<ResponseResult<void, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 403> | ResponseResult<ProblemDetails, 500>> {
+  postCacheRefresh(body: string): Observable<ResponseResult<void, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 403> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<string>(body, false);
 
     return apiPost<ResponseResult<void, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 403> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/cache/refresh`, requestData);
   }
 
-  postApiAuthSignUp(requestContract: SignUpCommand): Observable<ResponseResult<SignUpCommandResult, 201> | ResponseResult<ApiProblemDetailsOfPasswordChangeResultStatus, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetailsOfSignUpErrorStatus, 409> | ResponseResult<ProblemDetails, 500>> {
+  postAuthSignUp(requestContract: SignUpCommand): Observable<ResponseResult<SignUpCommandResult, 201> | ResponseResult<ApiProblemDetailsOfPasswordChangeResultStatus, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetailsOfSignUpErrorStatus, 409> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<SignUpCommand>(requestContract, false);
 
     return apiPost<ResponseResult<SignUpCommandResult, 201> | ResponseResult<ApiProblemDetailsOfPasswordChangeResultStatus, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetailsOfSignUpErrorStatus, 409> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/auth/sign-up`, requestData);
   }
 
-  postApiAuthSignIn(requestContract: SignInCommand): Observable<ResponseResult<SignInResult, 200> | ResponseResult<ApiProblemDetailsOfAuthError, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  postAuthSignIn(requestContract: SignInCommand): Observable<ResponseResult<SignInResult, 200> | ResponseResult<ApiProblemDetailsOfAuthError, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<SignInCommand>(requestContract, false);
 
     return apiPost<ResponseResult<SignInResult, 200> | ResponseResult<ApiProblemDetailsOfAuthError, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/auth/sign-in`, requestData);
   }
 
-  postApiAuthToken(): Observable<ResponseResult<TokenResponse, 200> | ResponseResult<ApiProblemDetailsOfAuthError, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  postAuthToken(): Observable<ResponseResult<TokenResponse, 200> | ResponseResult<ApiProblemDetailsOfAuthError, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<object>(undefined, true);
 
     return apiPost<ResponseResult<TokenResponse, 200> | ResponseResult<ApiProblemDetailsOfAuthError, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/auth/token`, requestData);
   }
 
-  postApiAuthEmailVerification(requestContract: EmailVerificationCommand): Observable<ResponseResult<EmailVerificationCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetailsOfEmailVerificationCommandResultStatus, 404> | ResponseResult<ProblemDetails, 500>> {
+  postAuthEmailVerification(requestContract: EmailVerificationCommand): Observable<ResponseResult<EmailVerificationCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetailsOfEmailVerificationCommandResultStatus, 404> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<EmailVerificationCommand>(requestContract, false);
 
     return apiPost<ResponseResult<EmailVerificationCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetailsOfEmailVerificationCommandResultStatus, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/auth/email-verification`, requestData);
   }
 
-  postApiAuthEmailVerificationSend(requestContract: ResendVerificationEmailCommand): Observable<ResponseResult<ResendVerificationEmailCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
+  postAuthEmailVerificationSend(requestContract: ResendVerificationEmailCommand): Observable<ResponseResult<ResendVerificationEmailCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<ResendVerificationEmailCommand>(requestContract, false);
 
     return apiPost<ResponseResult<ResendVerificationEmailCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/auth/email-verification/send`, requestData);
   }
 
-  postApiAuthSso(requestContract: SsoSignInRequest): Observable<ResponseResult<SignInResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetailsOfAuthError, 404> | ResponseResult<ProblemDetails, 500>> {
+  postAuthSso(requestContract: SsoSignInRequest): Observable<ResponseResult<SignInResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetailsOfAuthError, 404> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<SsoSignInRequest>(requestContract, false);
 
     return apiPost<ResponseResult<SignInResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetailsOfAuthError, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/auth/sso`, requestData);
   }
 
-  getApiAuthSsoToken(IdentityProvider?: IdentityProvider): Observable<ResponseResult<RedirectHttpResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500> | ResponseResult<ApiProblemDetails, 501>> {
+  getAuthSsoToken(IdentityProvider?: IdentityProvider): Observable<ResponseResult<RedirectHttpResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500> | ResponseResult<ApiProblemDetails, 501>> {
     const queryParams = {
       "IdentityProvider": IdentityProvider
     };
     return apiGet<ResponseResult<RedirectHttpResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ProblemDetails, 500> | ResponseResult<ApiProblemDetails, 501>>(this.httpClient, `${this.baseUrl}/api/v1/auth/sso-token`, queryParams);
   }
 
-  postApiAuthPasswordReset(requestContract: ResetPasswordCommand): Observable<ResponseResult<ResetPasswordCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetailsOfResetPasswordCommandResultStatus, 404> | ResponseResult<ProblemDetails, 500>> {
+  postAuthPasswordReset(requestContract: ResetPasswordCommand): Observable<ResponseResult<ResetPasswordCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetailsOfResetPasswordCommandResultStatus, 404> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<ResetPasswordCommand>(requestContract, false);
 
     return apiPost<ResponseResult<ResetPasswordCommandResult, 200> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetailsOfResetPasswordCommandResultStatus, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/auth/password-reset`, requestData);
   }
 
-  putApiAuthPassword(requestContract: SetPasswordCommand): Observable<ResponseResult<SetPasswordCommandResult, 200> | ResponseResult<ApiProblemDetailsOfPasswordChangeResultStatus, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetailsOfSetPasswordCommandStatus, 404> | ResponseResult<ProblemDetails, 500>> {
+  putAuthPassword(requestContract: SetPasswordCommand): Observable<ResponseResult<SetPasswordCommandResult, 200> | ResponseResult<ApiProblemDetailsOfPasswordChangeResultStatus, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetailsOfSetPasswordCommandStatus, 404> | ResponseResult<ProblemDetails, 500>> {
     const requestData = getApiRequestData<SetPasswordCommand>(requestContract, false);
 
     return apiPut<ResponseResult<SetPasswordCommandResult, 200> | ResponseResult<ApiProblemDetailsOfPasswordChangeResultStatus, 400> | ResponseResult<ApiProblemDetails, 401> | ResponseResult<ApiProblemDetailsOfSetPasswordCommandStatus, 404> | ResponseResult<ProblemDetails, 500>>(this.httpClient, `${this.baseUrl}/api/v1/auth/password`, requestData);

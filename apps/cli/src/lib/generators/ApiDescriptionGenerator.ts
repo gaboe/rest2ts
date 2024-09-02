@@ -28,7 +28,19 @@ export type EndpointDescription = {
   isFileResponse: boolean;
 };
 
-export const getEndpointsDescriptions = (swagger: SwaggerSchema) => {
+const removePrefixes = (prop: string, prefixesToRemove: string[]): string => {
+  for (const prefix of prefixesToRemove) {
+    if (prop.startsWith(prefix)) {
+      return prop.substring(prefix.length);
+    }
+  }
+  return prop;
+};
+
+export const getEndpointsDescriptions = (
+  swagger: SwaggerSchema,
+  prefixesToRemove: string[],
+) => {
   const endpoints: EndpointDescription[][] = Object.keys(swagger.paths).map(
     e => {
       const pathObject = swagger.paths[e]!;
@@ -44,7 +56,7 @@ export const getEndpointsDescriptions = (swagger: SwaggerSchema) => {
       const methods = [];
       const generate = (methodType: MethodType, operation: Operation) => {
         const formattedName = snakeToCamel(
-          `${methodType.toLowerCase()}_${prop}`,
+          `${methodType.toLowerCase()}_${removePrefixes(prop, prefixesToRemove)}`,
         );
         const name = `${formattedName.replace(version, "")}${
           version === "V1" ? "" : version

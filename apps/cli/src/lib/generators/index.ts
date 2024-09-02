@@ -12,6 +12,7 @@ import { render } from "../renderers/Renderer";
 const generateContent = (
   schema: any,
   isCookiesAuthEnabled: boolean = false,
+  prefixesToRemove: string[] = [],
 ) => {
   const swaggerSchema = schema as SwaggerSchema;
   const contracts = generateContracts(swaggerSchema);
@@ -19,7 +20,7 @@ const generateContent = (
   const view = {
     infrastructure: getInfrastructureTemplate(isCookiesAuthEnabled),
     contracts,
-    services: generateServices(swaggerSchema),
+    services: generateServices(swaggerSchema, prefixesToRemove),
   };
   const content = render(
     "{{{ infrastructure }}}\n{{{ contracts }}}\n{{{ services }}}",
@@ -28,14 +29,14 @@ const generateContent = (
   return content;
 };
 
-const generateAngularContent = (schema: any) => {
+const generateAngularContent = (schema: any, prefixesToRemove: string[]) => {
   const swaggerSchema = schema as SwaggerSchema;
   const contracts = generateContracts(swaggerSchema);
 
   const view = {
     contracts,
     infrastructure: getAngularInfrastructureTemplate(),
-    services: generateAngularServices(swaggerSchema),
+    services: generateAngularServices(swaggerSchema, prefixesToRemove),
   };
   const content = render(
     "{{{ infrastructure }}}\n{{{ contracts }}}\n\n{{{ services }}}\n",
@@ -48,6 +49,7 @@ export const generate = async (
   api: any,
   generateForAngular: boolean = false,
   isCookiesAuthEnabled: boolean = false,
+  prefixesToRemove: string[] = [],
 ) => {
   const logStep = () => console.log("⚡2/3 - Generating code");
 
@@ -63,12 +65,12 @@ export const generate = async (
 
     logStep();
     return generateForAngular
-      ? generateAngularContent(response.data)
-      : generateContent(response.data, isCookiesAuthEnabled);
+      ? generateAngularContent(response.data, prefixesToRemove)
+      : generateContent(response.data, isCookiesAuthEnabled, prefixesToRemove);
   }
 
   logStep();
   return generateForAngular
-    ? generateAngularContent(api)
-    : generateContent(api, isCookiesAuthEnabled);
+    ? generateAngularContent(api, prefixesToRemove)
+    : generateContent(api, isCookiesAuthEnabled, prefixesToRemove);
 };

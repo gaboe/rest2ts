@@ -356,13 +356,13 @@ export class ApiService {
       this.baseUrl = baseUrl ?? "";
   }
 
-  postApiSignatureSms(requestContract: CreateNewSignatureCommand): Observable<ResponseResult<boolean, 200>> {
+  postSignatureSms(requestContract: CreateNewSignatureCommand): Observable<ResponseResult<boolean, 200>> {
     const requestData = getApiRequestData<CreateNewSignatureCommand>(requestContract, false);
 
     return apiPost<ResponseResult<boolean, 200>>(this.httpClient, `${this.baseUrl}/api/signature/sms`, requestData);
   }
 
-  putApiSignatureSms(requestContract: SmsSignDto): Observable<ResponseResult<SignSmsCommandResult, 200>> {
+  putSignatureSms(requestContract: SmsSignDto): Observable<ResponseResult<SignSmsCommandResult, 200>> {
     const requestData = getApiRequestData<SmsSignDto>(requestContract, false);
 
     return apiPut<ResponseResult<SignSmsCommandResult, 200>>(this.httpClient, `${this.baseUrl}/api/signature/sms`, requestData);

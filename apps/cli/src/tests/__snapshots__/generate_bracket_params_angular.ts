@@ -337,7 +337,7 @@ export class ApiService {
       this.baseUrl = baseUrl ?? "";
   }
 
-  getApiProducers(filterTerm?: string, filterHidden?: number, filterRegion?: string, filterCategory?: string): Observable<ResponseResult<ProducerItemDTO[], 200> | ResponseResult<ExceptionDTO, 401> | ResponseResult<ExceptionDTO, 403> | ResponseResult<ExceptionDTO, 500>> {
+  getProducers(filterTerm?: string, filterHidden?: number, filterRegion?: string, filterCategory?: string): Observable<ResponseResult<ProducerItemDTO[], 200> | ResponseResult<ExceptionDTO, 401> | ResponseResult<ExceptionDTO, 403> | ResponseResult<ExceptionDTO, 500>> {
     const queryParams = {
       "filter[term]": filterTerm,
       "filter[hidden]": filterHidden,

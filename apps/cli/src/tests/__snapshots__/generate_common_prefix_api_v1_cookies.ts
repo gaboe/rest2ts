@@ -512,32 +512,32 @@ export type CodeListItemDto = {
 	name: string;
 };
 
-export type GetApiUsersFetchResponse = 
+export type GetUsersFetchResponse = 
 | FetchResponse<EntityListOfUserListItemDto, 200> 
 | FetchResponse<ApiProblemDetails, 401> 
 | FetchResponse<ProblemDetails, 500> 
 | ErrorResponse;
 
-export const getApiUsersPath = () => `/api/v1/users`;
+export const getUsersPath = () => `/api/v1/users`;
 
-export const getApiUsers = (offset?: number, limit?: number, headers = new Headers()):
-  Promise<GetApiUsersFetchResponse> => {
+export const getUsers = (offset?: number, limit?: number, headers = new Headers()):
+  Promise<GetUsersFetchResponse> => {
     const queryParams = {
       "offset": offset,
       "limit": limit
     }
-    return apiGet(`${getApiUrl()}${getApiUsersPath()}`, headers, queryParams) as Promise<GetApiUsersFetchResponse>;
+    return apiGet(`${getApiUrl()}${getUsersPath()}`, headers, queryParams) as Promise<GetUsersFetchResponse>;
 }
 
-export type GetApiUsersUserIDFetchResponse = 
+export type GetUsersUserIDFetchResponse = 
 | FetchResponse<UserDetailDto, 200> 
 | FetchResponse<ApiProblemDetails, 401> 
 | FetchResponse<ProblemDetails, 500> 
 | ErrorResponse;
 
-export const getApiUsersUserIDPath = (userID: number) => `/api/v1/users/${userID}`;
+export const getUsersUserIDPath = (userID: number) => `/api/v1/users/${userID}`;
 
-export const getApiUsersUserID = (userID: number, headers = new Headers()):
-  Promise<GetApiUsersUserIDFetchResponse> => {
-    return apiGet(`${getApiUrl()}${getApiUsersUserIDPath(userID)}`, headers, {}) as Promise<GetApiUsersUserIDFetchResponse>;
+export const getUsersUserID = (userID: number, headers = new Headers()):
+  Promise<GetUsersUserIDFetchResponse> => {
+    return apiGet(`${getApiUrl()}${getUsersUserIDPath(userID)}`, headers, {}) as Promise<GetUsersUserIDFetchResponse>;
 }
