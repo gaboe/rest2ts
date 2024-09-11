@@ -319,12 +319,13 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
   const parametrizedUrl = parameters.reduce(
     ({ url, usedParameters, usedFormattedParameters }, e) => {
       const name = escapeReservedWordParamName(e.name);
+      const matchedName = `\{${name}\}`;
       const match = `\{${e.name}\}`;
       const index = url.indexOf(match);
 
       return index > -1
         ? {
-            url: url.replace(match, `\$${`\{${name}\}`}`),
+          url: url.replace(match, `\$${matchedName}`),
             usedParameters: [...usedParameters, ...[name]],
             usedFormattedParameters: [
               ...usedFormattedParameters,
