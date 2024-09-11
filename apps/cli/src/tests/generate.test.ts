@@ -19,6 +19,7 @@ const cases = [
   "common_prefix_v1",
   "common_prefix_v2",
   "all_of_reference",
+  "reserved_words",
 ];
 
 function fixturePath(name: string) {

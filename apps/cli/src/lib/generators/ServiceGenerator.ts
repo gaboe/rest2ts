@@ -17,6 +17,7 @@ import {
   getTypeNameFromSchema,
 } from "./Common";
 import { render } from "../renderers/Renderer";
+import { escapeReservedWordParamName } from "../models/JavaScriptReservedWords";
 
 export type RequestContractType = {
   contractParameterName: string;
@@ -273,6 +274,7 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
         required: !!e.required,
         xPosition: e["x-position"] ?? index, // Ensures undefined x-positions are treated as very large numbers
       };
+
       return param;
     })
     .sort((a, b) => {
@@ -288,18 +290,20 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
     });
 
   const formatParamName = (name: string) =>
-    name
-      .split(".")
-      .join("")
-      .replace(/\[(.*?)\]/g, (_match, innerMatch) =>
-        innerMatch
-          .split("")
-          .map((char: string, i: number) =>
-            i === 0 ? char.toUpperCase() : char.toLowerCase(),
-          )
-          .join(""),
-      )
-      .trim();
+    escapeReservedWordParamName(
+      name
+        .split(".")
+        .join("")
+        .replace(/\[(.*?)\]/g, (_match, innerMatch) =>
+          innerMatch
+            .split("")
+            .map((char: string, i: number) =>
+              i === 0 ? char.toUpperCase() : char.toLowerCase(),
+            )
+            .join(""),
+        )
+        .trim(),
+    );
 
   const formatAsArgument = (parameter: {
     name: string;
@@ -314,13 +318,15 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
 
   const parametrizedUrl = parameters.reduce(
     ({ url, usedParameters, usedFormattedParameters }, e) => {
+      const name = escapeReservedWordParamName(e.name);
+      const matchedName = `\{${name}\}`;
       const match = `\{${e.name}\}`;
       const index = url.indexOf(match);
 
       return index > -1
         ? {
-            url: url.replace(match, `\$${match}`),
-            usedParameters: [...usedParameters, ...[e.name]],
+          url: url.replace(match, `\$${matchedName}`),
+            usedParameters: [...usedParameters, ...[name]],
             usedFormattedParameters: [
               ...usedFormattedParameters,
               ...[formatAsArgument(e)],
@@ -336,10 +342,15 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
   );
 
   const unusedParameters = parameters
-    .filter(e => !parametrizedUrl.usedParameters.some(x => x === e.name))
+    .filter(
+      e =>
+        !parametrizedUrl.usedParameters.some(
+          x => x === escapeReservedWordParamName(e.name),
+        ),
+    )
     .map(e => `"${e.name}": ${formatParamName(e.name)}`);
 
-  return { parametrizedUrl, formattedFunctionParameters, unusedParameters };
+    return { parametrizedUrl, formattedFunctionParameters, unusedParameters };
 };
 
 const parametrizedMethod = (

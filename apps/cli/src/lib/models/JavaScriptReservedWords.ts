@@ -1,0 +1,47 @@
+const javaScriptReservedWords = {
+  arguments: "arguments",
+  break: "break",
+  case: "case",
+  catch: "catch",
+  class: "class",
+  const: "const",
+  continue: "continue",
+  debugger: "debugger",
+  default: "default",
+  delete: "delete",
+  do: "do",
+  else: "else",
+  enum: "enum",
+  eval: "eval",
+  export: "export",
+  extends: "extends",
+  false: "false",
+  finally: "finally",
+  for: "for",
+  function: "function",
+  if: "if",
+  import: "import",
+  in: "in",
+  instanceof: "instanceof",
+  new: "new",
+  null: "null",
+  return: "return",
+  super: "super",
+  switch: "switch",
+  this: "this",
+  throw: "throw",
+  true: "true",
+  try: "try",
+  typeof: "typeof",
+  var: "var",
+  void: "void",
+  while: "while",
+  with: "with",
+  yield: "yield",
+} as const;
+
+export const isReservedWordParamName = (name: string) =>
+  !!javaScriptReservedWords[name as keyof typeof javaScriptReservedWords];
+
+export const escapeReservedWordParamName = (name: string) =>
+  isReservedWordParamName(name) ? `$${name}` : name;
