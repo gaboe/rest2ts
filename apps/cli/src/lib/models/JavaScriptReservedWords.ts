@@ -42,5 +42,6 @@ const javaScriptReservedWords = {
 
 export const isReservedWordParamName = (name: string) =>
   !!javaScriptReservedWords[name as keyof typeof javaScriptReservedWords];
+
 export const escapeReservedWordParamName = (name: string) =>
   isReservedWordParamName(name) ? `$${name}` : name;

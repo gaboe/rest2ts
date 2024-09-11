@@ -348,8 +348,7 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
         ),
     )
     .map(e => `"${e.name}": ${formatParamName(e.name)}`);
-
-  console.log("unusedParameters: ", unusedParameters);
+  
   return { parametrizedUrl, formattedFunctionParameters, unusedParameters };
 };
 
