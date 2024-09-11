@@ -290,42 +290,41 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
     });
 
   const formatParamName = (name: string) =>
-    escapeReservedWordParamName(name
-      .split(".")
-      .join("")
-      .replace(/\[(.*?)\]/g, (_match, innerMatch) =>
-        innerMatch
-          .split("")
-          .map((char: string, i: number) =>
-            i === 0 ? char.toUpperCase() : char.toLowerCase(),
-          )
-          .join(""),
-      )
-      .trim());
+    escapeReservedWordParamName(
+      name
+        .split(".")
+        .join("")
+        .replace(/\[(.*?)\]/g, (_match, innerMatch) =>
+          innerMatch
+            .split("")
+            .map((char: string, i: number) =>
+              i === 0 ? char.toUpperCase() : char.toLowerCase(),
+            )
+            .join(""),
+        )
+        .trim(),
+    );
 
   const formatAsArgument = (parameter: {
     name: string;
     type: string;
     required: boolean;
   }) =>
-    `${formatParamName((parameter.name))}${parameter.required ? "" : "?"}: ${parameter.type}`;
+    `${formatParamName(parameter.name)}${parameter.required ? "" : "?"}: ${parameter.type}`;
 
   const formattedFunctionParameters = parameters
     .map(e => formatAsArgument(e))
     .join(", ");
 
-  const parametrizedUrl = parameters.reduce(    
+  const parametrizedUrl = parameters.reduce(
     ({ url, usedParameters, usedFormattedParameters }, e) => {
-      const name = escapeReservedWordParamName(e.name);      
+      const name = escapeReservedWordParamName(e.name);
       const match = `\{${e.name}\}`;
       const index = url.indexOf(match);
 
       return index > -1
         ? {
-            url: url.replace(
-              match,
-              `\$${`\{${name}\}`}`,
-            ),
+            url: url.replace(match, `\$${`\{${name}\}`}`),
             usedParameters: [...usedParameters, ...[name]],
             usedFormattedParameters: [
               ...usedFormattedParameters,
@@ -339,13 +338,18 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
       usedParameters: new Array<string>(),
       usedFormattedParameters: new Array<string>(),
     },
-  );  
+  );
 
   const unusedParameters = parameters
-  .filter(e => !parametrizedUrl.usedParameters.some(x => x === escapeReservedWordParamName(e.name)))
-  .map(e => `"${e.name}": ${formatParamName(e.name)}`);
-  
-  console.log('unusedParameters: ', unusedParameters);
+    .filter(
+      e =>
+        !parametrizedUrl.usedParameters.some(
+          x => x === escapeReservedWordParamName(e.name),
+        ),
+    )
+    .map(e => `"${e.name}": ${formatParamName(e.name)}`);
+
+  console.log("unusedParameters: ", unusedParameters);
   return { parametrizedUrl, formattedFunctionParameters, unusedParameters };
 };
 
