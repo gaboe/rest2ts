@@ -290,7 +290,7 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
     });
 
   const formatParamName = (name: string) =>
-    name
+    escapeReservedWordParamName(name
       .split(".")
       .join("")
       .replace(/\[(.*?)\]/g, (_match, innerMatch) =>
@@ -301,14 +301,14 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
           )
           .join(""),
       )
-      .trim();
+      .trim());
 
   const formatAsArgument = (parameter: {
     name: string;
     type: string;
     required: boolean;
   }) =>
-    `${formatParamName(escapeReservedWordParamName(parameter.name))}${parameter.required ? "" : "?"}: ${parameter.type}`;
+    `${formatParamName((parameter.name))}${parameter.required ? "" : "?"}: ${parameter.type}`;
 
   const formattedFunctionParameters = parameters
     .map(e => formatAsArgument(e))
