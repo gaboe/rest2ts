@@ -316,8 +316,7 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
 
   const parametrizedUrl = parameters.reduce(    
     ({ url, usedParameters, usedFormattedParameters }, e) => {
-      const name = escapeReservedWordParamName(e.name);
-      console.log('name: ', name);
+      const name = escapeReservedWordParamName(e.name);      
       const match = `\{${e.name}\}`;
       const index = url.indexOf(match);
 
