@@ -349,8 +349,8 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
         ),
     )
     .map(e => `"${e.name}": ${formatParamName(e.name)}`);
-  
-  return { parametrizedUrl, formattedFunctionParameters, unusedParameters };
+
+    return { parametrizedUrl, formattedFunctionParameters, unusedParameters };
 };
 
 const parametrizedMethod = (
