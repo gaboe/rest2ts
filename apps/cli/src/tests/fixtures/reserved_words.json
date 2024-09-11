@@ -1,0 +1,287 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "API",
+    "version": "v1"
+  },
+  "paths": {
+    "/Entity/{for}": {
+      "get": {
+        "parameters": [          
+          {
+            "name": "for",
+            "in": "path",
+            "description": "The issued unique identifier.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "lang",
+            "in": "query",
+            "description": "The language.",
+            "schema": {
+              "type": "string",
+              "default": "en"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Sessions/{arguments}": {
+      "put": {
+        "summary": "Updates the existing session.",
+        "parameters": [         
+          {
+            "name": "arguments",
+            "in": "path",
+            "description": "The session identifier.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "lang",
+            "in": "query",
+            "description": "The language.",
+            "schema": {
+              "type": "string",
+              "default": "en"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The session.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/UpdateSessionModel"
+                  }
+                ],
+                "description": "Model used for performing existing session updates."
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/UpdateSessionModel"
+                  }
+                ],
+                "description": "Model used for performing existing session updates."
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/UpdateSessionModel"
+                  }
+                ],
+                "description": "Model used for performing existing session updates."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CountryCode": {
+        "enum": ["sk", "cz", "pl", "hu", "ro", "bg"],
+        "type": "string",
+        "description": "Enumeration for country code.\n\nsk\n\ncz\n\npl\n\nhu\n\nro\n\nbg",
+        "x-enumNames": ["Sk", "Cz", "Pl", "Hu", "Ro", "Bg"]
+      },
+      "Session": {
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "type": "string",
+            "description": "Gets or sets session unique identifier.",
+            "format": "uuid"
+          },
+          "createdDate": {
+            "type": "string",
+            "description": "Gets or sets the date of creation.",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Gets or sets the date of last update.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "countryCode": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CountryCode"
+              }
+            ],
+            "description": "Gets or sets the session country code.\n\nsk\n\ncz\n\npl\n\nhu\n\nro\n\nbg",
+            "x-enumNames": ["Sk", "Cz", "Pl", "Hu", "Ro", "Bg"]
+          },
+          "claimNumber": {
+            "type": "string",
+            "description": "Gets or sets the related claim number.",
+            "nullable": true
+          },
+          "policyId": {
+            "type": "string",
+            "description": "Gets or sets the bound policy identifier.",
+            "nullable": true
+          },
+          "policyNumber": {
+            "type": "string",
+            "description": "Gets or sets the bound policy number."
+          },
+          "isPolicyVerified": {
+            "type": "boolean",
+            "description": "Gets or sets the value indicating whether bound policy is a verified policy.",
+            "nullable": true
+          },
+          "policyTypeCode": {
+            "type": "string",
+            "description": "Gets or sets the bound policy type code."
+          },
+          "sectionCode": {
+            "type": "string",
+            "description": "Gets or sets the last active modified section code."
+          },
+          "stepNumber": {
+            "type": "integer",
+            "description": "Gets or sets the last active step in process.",
+            "format": "int32"
+          },
+          "maxStepNumber": {
+            "type": "integer",
+            "description": "Gets or sets the maximum number of step in process related to this session.",
+            "format": "int32"
+          },
+          "sessionUUID": {
+            "type": "string",
+            "description": "Gets or sets the CC-issued Session universal unique identifier.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Model for FNOL user session."
+      },
+      "UpdateSessionModel": {
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "type": "string",
+            "description": "Gets or sets the Session identifier.",
+            "format": "uuid"
+          },
+          "policyNumber": {
+            "type": "string",
+            "description": "Gets or sets the associated policy number."
+          },
+          "policyTypeCode": {
+            "type": "string",
+            "description": "Gets or sets the associated policy code."
+          },
+          "stepNumber": {
+            "type": "integer",
+            "description": "Gets or sets the last active step.",
+            "format": "int32"
+          },
+          "maxStepNumber": {
+            "type": "integer",
+            "description": "Gets or sets the max amount of steps in session-bound process.",
+            "format": "int32"
+          },
+          "sectionCode": {
+            "type": "string",
+            "description": "Gets or sets the last active section code identifier."
+          }
+        },
+        "additionalProperties": false,
+        "description": "Model used for performing existing session updates."
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "description": "Please enter a valid token",
+        "scheme": "Bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "Bearer": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Claims",
+      "description": "Claims controller."
+    },
+    {
+      "name": "Consents",
+      "description": "Consents controller."
+    },
+    {
+      "name": "Sessions",
+      "description": "Session controller."
+    },
+    {
+      "name": "Typelists",
+      "description": "Product controller."
+    }
+  ]
+}

@@ -17,6 +17,7 @@ import {
   getTypeNameFromSchema,
 } from "./Common";
 import { render } from "../renderers/Renderer";
+import { escapeReservedWordParamName } from "../models/JavaScriptReservedWords";
 
 export type RequestContractType = {
   contractParameterName: string;
@@ -273,6 +274,7 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
         required: !!e.required,
         xPosition: e["x-position"] ?? index, // Ensures undefined x-positions are treated as very large numbers
       };
+
       return param;
     })
     .sort((a, b) => {
@@ -306,7 +308,7 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
     type: string;
     required: boolean;
   }) =>
-    `${formatParamName(parameter.name)}${parameter.required ? "" : "?"}: ${parameter.type}`;
+    `${formatParamName(escapeReservedWordParamName(parameter.name))}${parameter.required ? "" : "?"}: ${parameter.type}`;
 
   const formattedFunctionParameters = parameters
     .map(e => formatAsArgument(e))
@@ -314,13 +316,18 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
 
   const parametrizedUrl = parameters.reduce(
     ({ url, usedParameters, usedFormattedParameters }, e) => {
+      const name = escapeReservedWordParamName(e.name);
+      console.log('name: ', name);
       const match = `\{${e.name}\}`;
       const index = url.indexOf(match);
 
       return index > -1
         ? {
-            url: url.replace(match, `\$${match}`),
-            usedParameters: [...usedParameters, ...[e.name]],
+            url: url.replace(
+              match,
+              `\$${`\{${name}\}`}`,
+            ),
+            usedParameters: [...usedParameters, ...[name]],
             usedFormattedParameters: [
               ...usedFormattedParameters,
               ...[formatAsArgument(e)],
@@ -334,6 +341,7 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
       usedFormattedParameters: new Array<string>(),
     },
   );
+  console.log("parametrizedUrl: ", parametrizedUrl.url);
 
   const unusedParameters = parameters
     .filter(e => !parametrizedUrl.usedParameters.some(x => x === e.name))
