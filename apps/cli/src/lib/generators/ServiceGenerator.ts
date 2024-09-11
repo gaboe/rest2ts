@@ -314,7 +314,7 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
     .map(e => formatAsArgument(e))
     .join(", ");
 
-  const parametrizedUrl = parameters.reduce(
+  const parametrizedUrl = parameters.reduce(    
     ({ url, usedParameters, usedFormattedParameters }, e) => {
       const name = escapeReservedWordParamName(e.name);
       console.log('name: ', name);
@@ -340,13 +340,13 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
       usedParameters: new Array<string>(),
       usedFormattedParameters: new Array<string>(),
     },
-  );
-  console.log("parametrizedUrl: ", parametrizedUrl.url);
+  );  
 
   const unusedParameters = parameters
-    .filter(e => !parametrizedUrl.usedParameters.some(x => x === e.name))
-    .map(e => `"${e.name}": ${formatParamName(e.name)}`);
-
+  .filter(e => !parametrizedUrl.usedParameters.some(x => x === escapeReservedWordParamName(e.name)))
+  .map(e => `"${e.name}": ${formatParamName(e.name)}`);
+  
+  console.log('unusedParameters: ', unusedParameters);
   return { parametrizedUrl, formattedFunctionParameters, unusedParameters };
 };
 
