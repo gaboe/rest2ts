@@ -145,7 +145,12 @@ export const renderProperties =
               );
             })
             .orDefault("");
-          return `${arrayTypeSchema}[]`;
+
+          return `${
+            arrayTypeSchema?.includes("|")
+              ? `(${arrayTypeSchema})`
+              : arrayTypeSchema
+          }[]`;
         }
         default:
           return (schema.type || schema.allOf) as string;

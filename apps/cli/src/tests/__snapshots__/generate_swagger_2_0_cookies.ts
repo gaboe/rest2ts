@@ -458,7 +458,7 @@ export type IPA_PlexDbContext_ContractSignature = {
 	Signature: string;
 	UP_Id: number;
 	SignatureType: number;
-	VisibilityTypes: ("None" | "Partners" | "Client")[];
+	VisibilityTypes: (("None" | "Partners" | "Client"))[];
 };
 
 export enum Status {
