@@ -3,6 +3,9 @@ import { EndpointDescription, MethodType } from "./ApiDescriptionGenerator";
 import { render } from "../renderers/Renderer";
 import { Just, Maybe } from "purify-ts";
 
+export const sanitizeTypeName = (typeName: string | undefined) =>
+  typeName?.replace(/[^a-zA-Z0-9]/g, "_");
+
 export const getTypeNameFromRef = (ref: string) => ref?.split("/").reverse()[0];
 
 export const getTypeNameFromSchema = (
@@ -10,7 +13,7 @@ export const getTypeNameFromSchema = (
   swagger: SwaggerSchema,
 ) => {
   if (schema.$ref) {
-    return getTypeNameFromRef(schema.$ref);
+    return sanitizeTypeName(getTypeNameFromRef(schema.$ref));
   }
 
   if (
@@ -101,15 +104,16 @@ export const renderProperties =
           if (x.$ref) {
             const typeName = getTypeNameFromRef(x.$ref)!;
             const tt = swagger.components.schemas[typeName]!;
+            const sanitizedTypeName = sanitizeTypeName(typeName);
             if (schema.type === "object") {
               return renderProperties(swagger)(tt);
             } else if (
               tt.type === "object" ||
               (schema.allOf?.length ?? 0) > 0
             ) {
-              return typeName!;
+              return sanitizedTypeName!;
             }
-            return `typeof ${typeName}`;
+            return `typeof ${sanitizedTypeName}`;
           }
           return renderProperties(swagger)(x);
         })
@@ -140,7 +144,7 @@ export const renderProperties =
 
               return Just(
                 e!.$ref
-                  ? getTypeNameFromRef(e!.$ref)
+                  ? sanitizeTypeName(getTypeNameFromRef(e!.$ref))
                   : renderProperties(swagger)(e!),
               );
             })

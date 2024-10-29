@@ -1,0 +1,117 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Invalid Type Names",
+    "version": "v1"
+  },
+  "paths": {
+    "/Campaigns": {
+      "get": {
+        "tags": ["Campaigns"],
+        "summary": "Gets the campaigns.",
+        "parameters": [
+          {
+            "name": "lang",
+            "in": "query",
+            "description": "The language.",
+            "schema": {
+              "type": "string",
+              "default": "en"
+            }
+          },
+          {
+            "name": "transportationModeCode",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/Domain.TransportationMode+TransportationModeCode"
+                }
+              ],
+              "x-enumNames": ["Car", "Plane", "Other"]
+            },
+            "x-enumNames": ["Car", "Plane", "Other"]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Domain.TransportationMode"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Domain.TransportationMode"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Domain.TransportationMode"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Domain.SessionStatus": {
+        "enum": ["active", "activeLockedForAnonymous", "expired", "readOnly"],
+        "type": "string",
+        "description": "\n\nactive\n\nactiveLockedForAnonymous\n\nexpired\n\nreadOnly",
+        "x-enumNames": [
+          "Active",
+          "ActiveLockedForAnonymous",
+          "Expired",
+          "ReadOnly"
+        ]
+      },
+      "Domain.TransportationMode": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Domain.TransportationMode+TransportationModeCode"
+              }
+            ],
+            "description": "\n\ncar\n\nplane\n\nother",
+            "x-enumNames": ["Car", "Plane", "Other"]
+          },
+          "name": {
+            "type": "string"
+          },
+          "history": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Domain.TransportationMode+TransportationModeCode"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Domain.TransportationMode+TransportationModeCode": {
+        "enum": ["car", "plane", "other"],
+        "type": "string",
+        "description": "\n\ncar\n\nplane\n\nother",
+        "x-enumNames": ["Car", "Plane", "Other"]
+      }
+    }
+  }
+}
