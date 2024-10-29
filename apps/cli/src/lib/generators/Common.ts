@@ -124,13 +124,13 @@ export const renderProperties =
           return "unknown";
         case "array": {
           const arrayTypeSchema = Maybe.fromNullable(schema.items)
-            .chain(e => (e instanceof Array ? Just(e[0]) : Just(e)))
-            .chain(e => {
-              if (e!.enum) {
-                return Just(
-                  `(${e!.enum
-                    .map(e => (isNaN(parseInt(e)) ? `"${e}"` : e))
-                    .join(" | ")})`,
+          .chain(e => (e instanceof Array ? Just(e[0]) : Just(e)))
+          .chain(e => {
+            if (e!.enum) {
+              return Just(
+                `${e!.enum
+                  .map(e => (isNaN(parseInt(e)) ? `"${e}"` : e))
+                  .join(" | ")}`,
                 );
               }
 
