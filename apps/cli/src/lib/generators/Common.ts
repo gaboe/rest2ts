@@ -132,9 +132,9 @@ export const renderProperties =
             .chain(e => {
               if (e!.enum) {
                 return Just(
-                  `(${e!.enum
+                  `${e!.enum
                     .map(e => (isNaN(parseInt(e)) ? `"${e}"` : e))
-                    .join(" | ")})`,
+                    .join(" | ")}`,
                 );
               }
 
@@ -149,7 +149,12 @@ export const renderProperties =
               );
             })
             .orDefault("");
-          return `${arrayTypeSchema}[]`;
+
+          return `${
+            arrayTypeSchema?.includes("|")
+              ? `(${arrayTypeSchema})`
+              : arrayTypeSchema
+          }[]`;
         }
         default:
           return (schema.type || schema.allOf) as string;

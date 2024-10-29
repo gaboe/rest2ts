@@ -421,6 +421,10 @@ export type Idcard = {
 	issue_date: string;
 };
 
+export type OneOfArrayDto = {
+	changedProperties: (string | number)[];
+};
+
 
 
 export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
@@ -450,6 +454,10 @@ export class ApiService {
       "contractTypeCode": contractTypeCode
     };
     return apiGet<ResponseResult<ProductItemDto[], 200>>(this.httpClient, `${this.baseUrl}/api/product/list`, queryParams);
+  }
+
+  getOneOfArray(): Observable<ResponseResult<OneOfArrayDto[], 200>> {
+    return apiGet<ResponseResult<OneOfArrayDto[], 200>>(this.httpClient, `${this.baseUrl}/api/oneOf/array`);
   }
 }
 

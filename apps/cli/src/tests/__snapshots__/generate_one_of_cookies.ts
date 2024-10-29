@@ -547,6 +547,10 @@ export type Idcard = {
 	issue_date: string;
 };
 
+export type OneOfArrayDto = {
+	changedProperties: (string | number)[];
+};
+
 export type GetBankIDVerifyBankIdFetchResponse = 
 | FetchResponse<ProcessBankIDVerificationCommandResult, 200> 
 | ErrorResponse;
@@ -573,4 +577,15 @@ export const getProductList = (contractTypeCode?: ContractTypeCode | undefined |
       "contractTypeCode": contractTypeCode
     }
     return apiGet(`${getApiUrl()}${getProductListPath()}`, headers, queryParams) as Promise<GetProductListFetchResponse>;
+}
+
+export type GetOneOfArrayFetchResponse = 
+| FetchResponse<OneOfArrayDto[], 200> 
+| ErrorResponse;
+
+export const getOneOfArrayPath = () => `/api/oneOf/array`;
+
+export const getOneOfArray = (headers = new Headers()):
+  Promise<GetOneOfArrayFetchResponse> => {
+    return apiGet(`${getApiUrl()}${getOneOfArrayPath()}`, headers, {}) as Promise<GetOneOfArrayFetchResponse>;
 }
