@@ -46,7 +46,7 @@
     "purify-ts": "^2.1.0"
   },
   "devDependencies": {
-    "@next/eslint-plugin-next": "^14.2.5",
+    "@next/eslint-plugin-next": "^15.0.0",
     "@rest2ts/eslint-config": "workspace:*",
     "@rest2ts/typescript-config": "workspace:*",
     "@types/eslint": "^9.0.0",
