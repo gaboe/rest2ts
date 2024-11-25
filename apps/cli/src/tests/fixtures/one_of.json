@@ -84,6 +84,34 @@
           }
         ]
       }
+    },
+    "/api/oneOf/array": {
+      "get": {
+        "tags": [
+          "oneof"
+        ],
+        "operationId": "oneOf_List",        
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OneOfArrayDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -469,6 +497,27 @@
           },
           "issue_date": {
             "type": "string"
+          }
+        }
+      },
+      "OneOfArrayDto": {
+        "type": "object",
+        "properties": {
+          "changedProperties": {
+            "type": "array",
+            "items": {
+              "discriminator": {
+                "propertyName": "discriminator"
+              },
+              "oneOf": [
+                {
+                  "type": "string"
+              },
+              {
+                  "type": "number"
+              }
+              ]
+            }
           }
         }
       }

@@ -126,6 +126,7 @@
     headers: Headers;
     body?: any;
     redirect: RequestRedirect;
+		credentials?: RequestCredentials;
   };
 
   export type FetchArgs = {
@@ -304,6 +305,7 @@ export function apiPost<TResponse extends FetchResponse<unknown, number>, TReque
     headers,
     body: raw,
     redirect: "follow",
+		credentials: "include",
   };
 
   const maybeQueryString = getQueryParamsString(paramsObject);
@@ -331,6 +333,7 @@ export function apiGet<TResponse extends FetchResponse<unknown, number>>(
     method: "GET",
     headers,
     redirect: "follow",
+		credentials: "include",
   };
 
   return fetchJson<TResponse>({
@@ -354,6 +357,7 @@ export function apiPut<TResponse extends FetchResponse<unknown, number>, TReques
     headers,
     body: raw,
     redirect: "follow",
+		credentials: "include",
   };
 
   const maybeQueryString = getQueryParamsString(paramsObject);
@@ -382,6 +386,7 @@ export function apiDelete<TResponse extends FetchResponse<unknown, number>>(
     method: "DELETE",
     headers,
     redirect: "follow",
+		credentials: "include",
   };
 
   return fetchJson<TResponse>({
@@ -405,6 +410,7 @@ export function apiPatch<TResponse extends FetchResponse<unknown, number>, TRequ
     headers,
     body: raw,
     redirect: "follow",
+		credentials: "include",
   };
   const maybeQueryString = getQueryParamsString(paramsObject);
 
@@ -415,171 +421,36 @@ export function apiPatch<TResponse extends FetchResponse<unknown, number>, TRequ
 }
 // INFRASTRUCTURE END
 
-export enum ContractTypeCode {
-	BEN = "BEN",
-	CONSIGNMENT = "CONSIGNMENT",
-	DYN = "DYN",
-	FCG = "FCG",
-	LIBERO_RS = "LIBERO_RS",
-	OKP = "OKP",
-	OKS_FKI = "OKS_FKI",
-	OKS_Investor = "OKS_Investor",
-	OKS_LC = "OKS_LC",
-	OKS_LC_EX = "OKS_LC_EX",
-	OKS_LC_EX_ = "OKS_LC_EX_",
-	OKSP_LC = "OKSP_LC",
-	OKSP_LC_EX = "OKSP_LC_EX",
-	OKSP_LC_EX_ = "OKSP_LC_EX_",
-	RS_INVCZK = "RS_INVCZK",
-	RS_INVCZKSELF = "RS_INVCZKSELF",
-	RS_INVEUR = "RS_INVEUR",
-	RS_INVEURSELF = "RS_INVEURSELF",
-	RS_INVPROFICZK = "RS_INVPROFICZK",
-	RS_OKSmartFondy = "RS_OKSmartFondy",
-	RS_OKSmartFondy_EX = "RS_OKSmartFondy_EX",
-	RS_OKSmartFondy_EX_ = "RS_OKSmartFondy_EX_",
-	RS_OKSmartProdukty = "RS_OKSmartProdukty",
-	RS_OKSmartProdukty_EX = "RS_OKSmartProdukty_EX",
-	RS_OKSmartProdukty_EX_ = "RS_OKSmartProdukty_EX_"
+export enum Domain_SessionStatus {
+	active = "active",
+	activeLockedForAnonymous = "activeLockedForAnonymous",
+	expired = "expired",
+	readOnly = "readOnly"
 };
 
-export type ProductItemDto = {
-	className?: string | null;
-	order?: number | null;
-	singleMinInvestment?: number | null;
-	singleMaxInvestment?: number | null;
-	singleDefaultInvestment?: number | null;
-	periodicalMinInvestment?: number | null;
-	periodicalMaxInvestment?: number | null;
-	periodicalDefaultInvestment?: number | null;
-	color?: string | null;
-	hasPeriodicalRedemption?: boolean | null;
-	minPerformance?: number | null;
-	maxPerformance?: number | null;
-	productCode?: string | null;
-	isin?: string | null;
-	productName?: string | null;
-	productSingleSS?: string | null;
-	productPeriodicalSS?: string | null;
+export type Domain_TransportationMode = {
+	code: Domain_TransportationMode_TransportationModeCode;
+	name: string;
+	history?: Domain_TransportationMode_TransportationModeCode[] | null;
 };
 
-export type ProcessBankIDVerificationCommandResult = {
-	status: ProcessBankIDVerificationCommandResultStatus;
-	profile?: BankIDProfileResponse | null;
+export enum Domain_TransportationMode_TransportationModeCode {
+	car = "car",
+	plane = "plane",
+	other = "other"
 };
 
-export enum ProcessBankIDVerificationCommandResultStatus {
-	BankIDUserInfoError = "BankIDUserInfoError",
-	Success = "Success",
-	Fail = "Fail",
-	VerificationAlreadyExists = "VerificationAlreadyExists"
-};
-
-export type BankIDProfileResponse = {
-	sub: string;
-	txn: string;
-	verified_claims?: VerifiedClaimsDto | null;
-	given_name: string;
-	family_name: string;
-	gender: string;
-	birthdate: string;
-	birthnumber?: string | null;
-	age: number;
-	majority: boolean;
-	date_of_death: any;
-	birthplace: string;
-	primary_nationality: string;
-	nationalities: string[];
-	maritalstatus: string;
-	email: string;
-	phone_number: string;
-	pep: boolean;
-	limited_legal_capacity: boolean;
-	addresses: Address[];
-	idcards: Idcard[];
-	paymentAccounts: string[];
-	updated_at: number;
-};
-
-export type VerifiedClaimsDto = {
-	verification?: Verification | null;
-	claims: Claims;
-};
-
-export type Verification = {
-	trust_framework?: string | null;
-	verification_process: string;
-};
-
-export type Claims = {
-	given_name: string;
-	family_name: string;
-	gender: string;
-	birthdate: string;
-	addresses: Address[];
-	idcards: Idcard[];
-};
-
-export type Address = {
-	type: string;
-	street: string;
-	buildingapartment: string;
-	streetnumber: string;
-	city: string;
-	zipcode: string;
-	country: string;
-	ruian_reference: string;
-};
-
-export type Idcard = {
-	type: string;
-	description: string;
-	country: string;
-	number: string;
-	valid_to: string;
-	issuer: string;
-	issue_date: string;
-};
-
-export type OneOfArrayDto = {
-	changedProperties: (string | number)[];
-};
-
-export type GetBankIDVerifyBankIdFetchResponse = 
-| FetchResponse<ProcessBankIDVerificationCommandResult, 200> 
+export type GetCampaignsFetchResponse = 
+| FetchResponse<Domain_TransportationMode[], 200> 
 | ErrorResponse;
 
-export const getBankIDVerifyBankIdPath = () => `/api/BankID/verify-bank-id`;
+export const getCampaignsPath = () => `/Campaigns`;
 
-export const getBankIDVerifyBankId = (token?: string | undefined | null, headers = new Headers()):
-  Promise<GetBankIDVerifyBankIdFetchResponse> => {
+export const getCampaigns = (transportationModeCode: Domain_TransportationMode_TransportationModeCode, lang?: string, headers = new Headers()):
+  Promise<GetCampaignsFetchResponse> => {
     const queryParams = {
-      "token": token
+      "transportationModeCode": transportationModeCode,
+      "lang": lang
     }
-    return apiGet(`${getApiUrl()}${getBankIDVerifyBankIdPath()}`, headers, queryParams) as Promise<GetBankIDVerifyBankIdFetchResponse>;
-}
-
-export type GetProductListFetchResponse = 
-| FetchResponse<ProductItemDto[], 200> 
-| ErrorResponse;
-
-export const getProductListPath = () => `/api/product/list`;
-
-export const getProductList = (contractTypeCode?: ContractTypeCode | undefined | null, headers = new Headers()):
-  Promise<GetProductListFetchResponse> => {
-    const queryParams = {
-      "contractTypeCode": contractTypeCode
-    }
-    return apiGet(`${getApiUrl()}${getProductListPath()}`, headers, queryParams) as Promise<GetProductListFetchResponse>;
-}
-
-export type GetOneOfArrayFetchResponse = 
-| FetchResponse<OneOfArrayDto[], 200> 
-| ErrorResponse;
-
-export const getOneOfArrayPath = () => `/api/oneOf/array`;
-
-export const getOneOfArray = (headers = new Headers()):
-  Promise<GetOneOfArrayFetchResponse> => {
-    return apiGet(`${getApiUrl()}${getOneOfArrayPath()}`, headers, {}) as Promise<GetOneOfArrayFetchResponse>;
+    return apiGet(`${getApiUrl()}${getCampaignsPath()}`, headers, queryParams) as Promise<GetCampaignsFetchResponse>;
 }

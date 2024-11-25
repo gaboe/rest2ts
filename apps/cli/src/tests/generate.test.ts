@@ -20,6 +20,7 @@ const cases = [
   "common_prefix_v2",
   "all_of_reference",
   "reserved_words",
+  "invalid_schema_names",
 ];
 
 function fixturePath(name: string) {

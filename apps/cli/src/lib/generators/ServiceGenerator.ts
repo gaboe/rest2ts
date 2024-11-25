@@ -15,6 +15,7 @@ import {
   getStatusCode,
   getTypeNameFromRef,
   getTypeNameFromSchema,
+  sanitizeTypeName,
 } from "./Common";
 import { render } from "../renderers/Renderer";
 import { escapeReservedWordParamName } from "../models/JavaScriptReservedWords";
@@ -220,7 +221,9 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
           .chain(e => (e instanceof Array ? Just(e[0]) : Just(e)))
           .chain(e =>
             Just(
-              e!.$ref ? getTypeNameFromRef(e!.$ref) : getType(parameter, e!),
+              e!.$ref
+                ? sanitizeTypeName(getTypeNameFromRef(e!.$ref))
+                : getType(parameter, e!),
             ),
           )
           .orDefault("");
@@ -232,7 +235,7 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
         if (!!oneOf) {
           const types = oneOf
             .filter(e => !!e.$ref)
-            .map(e => getTypeNameFromRef(e.$ref!))
+            .map(e => sanitizeTypeName(getTypeNameFromRef(e.$ref!)))
             .join(" | ");
 
           return `${types}${nullability}`;
@@ -243,7 +246,7 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
         return `${
           schema.type ||
           (!Array.isArray(schema.allOf) && schema.allOf) ||
-          (ref && getTypeNameFromRef(ref))
+          (ref && sanitizeTypeName(getTypeNameFromRef(ref)))
         }${nullability}`;
       }
     }
@@ -325,7 +328,7 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
 
       return index > -1
         ? {
-          url: url.replace(match, `\$${matchedName}`),
+            url: url.replace(match, `\$${matchedName}`),
             usedParameters: [...usedParameters, ...[name]],
             usedFormattedParameters: [
               ...usedFormattedParameters,
@@ -350,7 +353,7 @@ export const parametrizeUrl = (endpointDescription: EndpointDescription) => {
     )
     .map(e => `"${e.name}": ${formatParamName(e.name)}`);
 
-    return { parametrizedUrl, formattedFunctionParameters, unusedParameters };
+  return { parametrizedUrl, formattedFunctionParameters, unusedParameters };
 };
 
 const parametrizedMethod = (

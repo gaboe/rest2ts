@@ -17,8 +17,8 @@
     "update-packages": "pnpm dlx npm-check-updates -i"
   },
   "dependencies": {
-    "@docusaurus/core": "3.5.2",
-    "@docusaurus/preset-classic": "3.5.2",
+    "@docusaurus/core": "3.6.3",
+    "@docusaurus/preset-classic": "3.6.3",
     "@getalby/bitcoin-connect-react": "^3.5.3",
     "@getalby/lightning-tools": "^5.0.3",
     "@mdx-js/react": "^3.0.1",
@@ -28,11 +28,11 @@
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "@docusaurus/module-type-aliases": "3.5.2",
-    "@docusaurus/tsconfig": "3.5.2",
-    "@docusaurus/types": "3.5.2",
+    "@docusaurus/module-type-aliases": "3.6.3",
+    "@docusaurus/tsconfig": "3.6.3",
+    "@docusaurus/types": "3.6.3",
     "gh-pages": "^6.1.1",
-    "typescript": "~5.6.0"
+    "typescript": "~5.7.0"
   },
   "browserslist": {
     "production": [
