@@ -86,7 +86,7 @@ importers:
         version: 3.6.3(@algolia/client-search@4.24.0)(@mdx-js/react@3.1.0(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(eslint@9.15.0(jiti@1.21.6))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(search-insights@2.16.2)(typescript@5.7.2)
       '@getalby/bitcoin-connect-react':
         specifier: ^3.5.3
-        version: 3.6.2(@types/react@18.3.3)(immer@9.0.21)(react@18.3.1)(typescript@5.7.2)
+        version: 3.6.3(@types/react@18.3.3)(immer@9.0.21)(react@18.3.1)(typescript@5.7.2)
       '@getalby/lightning-tools':
         specifier: ^5.0.3
         version: 5.1.0
@@ -2170,20 +2170,20 @@ packages:
     resolution: {integrity: sha512-2b/g5hRmpbb1o4GnTZax9N9m0FXzz9OV42ZzI4rDDMDuHUqigAiQCEWChBWCY4ztAGVRjoWT19v0yMmc5/L5kA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@getalby/bitcoin-connect-react@3.6.2':
-    resolution: {integrity: sha512-5XeqBoiT7BuZHwGWSsCAMOrEqDrgJyyyOFnBi/hZZ+AsMBXRVqhgwst07Zbf4t7bNyXvphEYRTgisMvDQ42ErQ==}
+  '@getalby/bitcoin-connect-react@3.6.3':
+    resolution: {integrity: sha512-tDomhNtXl94Z2YNQa52UpZUfZhdSwLEWgaOg6bCoLEJO0SqemUcKOrIIB/Y6DYm5XliktD7bLtvB4rJoFE74QQ==}
     peerDependencies:
       react: ^18.2.0
 
-  '@getalby/bitcoin-connect@3.6.2':
-    resolution: {integrity: sha512-JttIpbKWbkS5WA62S2xHQ2I6Ld5azJi99BLVcgjJoM6szpE4tlSuZi+oASduG8XTFMsiQ1GU57nqfiVXrv9ZyA==}
+  '@getalby/bitcoin-connect@3.6.3':
+    resolution: {integrity: sha512-mS3hmKGF8P7RH06DFtawc6T738iwz+wGz28XR46tMDKGfZjPrpcCG7R8Wy7n0w1JBgf7Nec79edQ5cDM1Pbrrw==}
 
   '@getalby/lightning-tools@5.1.0':
     resolution: {integrity: sha512-KhLnKu6hboNYxVmmegRi06ufW3J0o/5gZ5vMe4e94tKC1o8glN/fDn1fTL4hRIqgZjfzvDPPmV1A3YUkNtQttA==}
     engines: {node: '>=14'}
 
-  '@getalby/sdk@3.6.1':
-    resolution: {integrity: sha512-hg3WvRXQUf9S9NE1QZaz50IrOOnBr0QehlTRBENX2wRbZPSdpuyVOc4LWyI9tme8hOabeLbNpEl6iMZ7gZENwQ==}
+  '@getalby/sdk@3.8.0':
+    resolution: {integrity: sha512-o7dCtWtCjbtn0g36zDAgYL5vaTyXcZ04PbvA7qiEVi+mKIyCPWBuGR4+YsruIogGckucNecgLU1T/AeB9OP5EQ==}
     engines: {node: '>=14'}
 
   '@hapi/hoek@9.3.0':
@@ -2255,11 +2255,11 @@ packages:
   '@leichtgewicht/ip-codec@2.0.5':
     resolution: {integrity: sha512-Vo+PSpZG2/fmgmiNzYK9qWRh8h/CHrwD0mo1h1DzL4yzHNSfWYujGTYsWGreD000gcgmZ7K4Ys6Tx9TxtsKdDw==}
 
-  '@lightninglabs/lnc-core@0.3.1-alpha':
-    resolution: {integrity: sha512-I/hThdItLWJ6RU8Z27ZIXhpBS2JJuD3+TjtaQXX2CabaUYXlcN4sk+Kx8N/zG/fk8qZvjlRWum4vHu4ZX554Fg==}
+  '@lightninglabs/lnc-core@0.3.2-alpha':
+    resolution: {integrity: sha512-H6tG+X9txCIdxTR+GPsbImzP2Juo+6Uvq/Ipaijd7xPISzgEU4J4GNE5PEHuIZqbnBo1RmpuXnFG6dmsl3PTzQ==}
 
-  '@lightninglabs/lnc-web@0.3.1-alpha':
-    resolution: {integrity: sha512-yL5SgBkl6kd6ISzJHGlSN7TXbiDoo1pfGvTOIdVWYVyXtEeW8PT+x6YGOmyQXGFT2OOf7fC7PfP9VnskDPuFaA==}
+  '@lightninglabs/lnc-web@0.3.2-alpha':
+    resolution: {integrity: sha512-3aCBugBf0NzczpJqmHn03Oq2Ju9W5n0+nOdAe+Y/Zhf6YLXdqG1PTJ2J+7TXncpiogfPYDCw95tVQqSi4Zi/ZA==}
 
   '@mdx-js/mdx@3.0.1':
     resolution: {integrity: sha512-eIQ4QTrOWyL3LWEe/bu6Taqzq2HQvHcyTMaOrI95P2/LmJE7AsfPfgJGuFLPVqBUE1BC1rik3VIhU+s9u72arA==}
@@ -3981,6 +3981,10 @@ packages:
   email-addresses@5.0.0:
     resolution: {integrity: sha512-4OIPYlA6JXqtVn8zpHpGiI7vE6EQOAg16aGnDMIAlZVinnoZ8208tW1hAbjWydgN/4PLTT9q+O1K6AH/vALJGw==}
 
+  emittery@1.0.3:
+    resolution: {integrity: sha512-tJdCJitoy2lrC2ldJcqN4vkqJ00lT+tOWNT1hBJjO/3FDMJa5TTIiYGCKGkn/WfCyOzUMObeohbVTj00fhiLiA==}
+    engines: {node: '>=14.16'}
+
   emoji-regex@8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
 
@@ -4325,9 +4329,6 @@ packages:
 
   eventemitter3@4.0.7:
     resolution: {integrity: sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==}
-
-  eventemitter3@5.0.1:
-    resolution: {integrity: sha512-GWkBvjiSZK87ELrYOSESUYeVIc9mvLLf/nXalMOS5dYrgZq9o5OVkbZAVM06CVxYsCwH9BDZFPlQTlPA1j4ahA==}
 
   events@3.3.0:
     resolution: {integrity: sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==}
@@ -10678,20 +10679,20 @@ snapshots:
     dependencies:
       levn: 0.4.1
 
-  '@getalby/bitcoin-connect-react@3.6.2(@types/react@18.3.3)(immer@9.0.21)(react@18.3.1)(typescript@5.7.2)':
+  '@getalby/bitcoin-connect-react@3.6.3(@types/react@18.3.3)(immer@9.0.21)(react@18.3.1)(typescript@5.7.2)':
     dependencies:
-      '@getalby/bitcoin-connect': 3.6.2(@types/react@18.3.3)(immer@9.0.21)(react@18.3.1)(typescript@5.7.2)
+      '@getalby/bitcoin-connect': 3.6.3(@types/react@18.3.3)(immer@9.0.21)(react@18.3.1)(typescript@5.7.2)
       react: 18.3.1
     transitivePeerDependencies:
       - '@types/react'
       - immer
       - typescript
 
-  '@getalby/bitcoin-connect@3.6.2(@types/react@18.3.3)(immer@9.0.21)(react@18.3.1)(typescript@5.7.2)':
+  '@getalby/bitcoin-connect@3.6.3(@types/react@18.3.3)(immer@9.0.21)(react@18.3.1)(typescript@5.7.2)':
     dependencies:
       '@getalby/lightning-tools': 5.1.0
-      '@getalby/sdk': 3.6.1(typescript@5.7.2)
-      '@lightninglabs/lnc-web': 0.3.1-alpha
+      '@getalby/sdk': 3.8.0(typescript@5.7.2)
+      '@lightninglabs/lnc-web': 0.3.2-alpha
       qrcode-generator: 1.4.4
       zustand: 4.5.5(@types/react@18.3.3)(immer@9.0.21)(react@18.3.1)
     transitivePeerDependencies:
@@ -10702,9 +10703,9 @@ snapshots:
 
   '@getalby/lightning-tools@5.1.0': {}
 
-  '@getalby/sdk@3.6.1(typescript@5.7.2)':
+  '@getalby/sdk@3.8.0(typescript@5.7.2)':
     dependencies:
-      eventemitter3: 5.0.1
+      emittery: 1.0.3
       nostr-tools: 1.17.0(typescript@5.7.2)
     transitivePeerDependencies:
       - typescript
@@ -10778,11 +10779,11 @@ snapshots:
 
   '@leichtgewicht/ip-codec@2.0.5': {}
 
-  '@lightninglabs/lnc-core@0.3.1-alpha': {}
+  '@lightninglabs/lnc-core@0.3.2-alpha': {}
 
-  '@lightninglabs/lnc-web@0.3.1-alpha':
+  '@lightninglabs/lnc-web@0.3.2-alpha':
     dependencies:
-      '@lightninglabs/lnc-core': 0.3.1-alpha
+      '@lightninglabs/lnc-core': 0.3.2-alpha
       crypto-js: 4.2.0
 
   '@mdx-js/mdx@3.0.1':
@@ -12700,6 +12701,8 @@ snapshots:
 
   email-addresses@5.0.0: {}
 
+  emittery@1.0.3: {}
+
   emoji-regex@8.0.0: {}
 
   emoji-regex@9.2.2: {}
@@ -13230,8 +13233,6 @@ snapshots:
       require-like: 0.1.2
 
   eventemitter3@4.0.7: {}
-
-  eventemitter3@5.0.1: {}
 
   events@3.3.0: {}
 
