@@ -16,7 +16,7 @@ importers:
         version: link:packages/typescript-config
       prettier:
         specifier: ^3.3.2
-        version: 3.3.3
+        version: 3.4.2
       turbo:
         specifier: 2.3.3
         version: 2.3.3
@@ -132,7 +132,7 @@ importers:
         version: 8.15.0(eslint@9.15.0(jiti@1.21.6))(typescript@5.7.2)
       '@vercel/style-guide':
         specifier: ^6.0.0
-        version: 6.0.0(@next/eslint-plugin-next@14.2.16)(eslint@9.15.0(jiti@1.21.6))(prettier@3.3.3)(typescript@5.7.2)(vitest@2.1.6(@types/node@22.10.3)(jiti@1.21.6)(terser@5.31.5))
+        version: 6.0.0(@next/eslint-plugin-next@14.2.16)(eslint@9.15.0(jiti@1.21.6))(prettier@3.4.2)(typescript@5.7.2)(vitest@2.1.6(@types/node@22.10.3)(jiti@1.21.6)(terser@5.31.5))
       eslint-config-prettier:
         specifier: ^9.1.0
         version: 9.1.0(eslint@9.15.0(jiti@1.21.6))
@@ -6270,8 +6270,8 @@ packages:
       prettier:
         optional: true
 
-  prettier@3.3.3:
-    resolution: {integrity: sha512-i2tDNA0O5IrMO757lfrdQZCc2jPNDVntV0m/+4whiDfWaTKfMNgR7Qz0NAeGz/nRqF4m5/6CLzbP4/liHt12Ew==}
+  prettier@3.4.2:
+    resolution: {integrity: sha512-e9MewbtFo+Fevyuxn/4rrcDAaq0IYxPGLvObpQjiZBMAzB9IGmzlnG9RZy3FFas+eBMu2vA0CszMeduow5dIuQ==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -11325,7 +11325,7 @@ snapshots:
 
   '@ungap/structured-clone@1.2.0': {}
 
-  '@vercel/style-guide@6.0.0(@next/eslint-plugin-next@14.2.16)(eslint@9.15.0(jiti@1.21.6))(prettier@3.3.3)(typescript@5.7.2)(vitest@2.1.6(@types/node@22.10.3)(jiti@1.21.6)(terser@5.31.5))':
+  '@vercel/style-guide@6.0.0(@next/eslint-plugin-next@14.2.16)(eslint@9.15.0(jiti@1.21.6))(prettier@3.4.2)(typescript@5.7.2)(vitest@2.1.6(@types/node@22.10.3)(jiti@1.21.6)(terser@5.31.5))':
     dependencies:
       '@babel/core': 7.25.2
       '@babel/eslint-parser': 7.25.1(@babel/core@7.25.2)(eslint@9.15.0(jiti@1.21.6))
@@ -11346,11 +11346,11 @@ snapshots:
       eslint-plugin-tsdoc: 0.2.17
       eslint-plugin-unicorn: 51.0.1(eslint@9.15.0(jiti@1.21.6))
       eslint-plugin-vitest: 0.3.26(@typescript-eslint/eslint-plugin@7.18.0(@typescript-eslint/parser@7.18.0(eslint@9.15.0(jiti@1.21.6))(typescript@5.7.2))(eslint@9.15.0(jiti@1.21.6))(typescript@5.7.2))(eslint@9.15.0(jiti@1.21.6))(typescript@5.7.2)(vitest@2.1.6(@types/node@22.10.3)(jiti@1.21.6)(terser@5.31.5))
-      prettier-plugin-packagejson: 2.5.1(prettier@3.3.3)
+      prettier-plugin-packagejson: 2.5.1(prettier@3.4.2)
     optionalDependencies:
       '@next/eslint-plugin-next': 14.2.16
       eslint: 9.15.0(jiti@1.21.6)
-      prettier: 3.3.3
+      prettier: 3.4.2
       typescript: 5.7.2
     transitivePeerDependencies:
       - eslint-import-resolver-node
@@ -15502,14 +15502,14 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
-  prettier-plugin-packagejson@2.5.1(prettier@3.3.3):
+  prettier-plugin-packagejson@2.5.1(prettier@3.4.2):
     dependencies:
       sort-package-json: 2.10.0
       synckit: 0.9.1
     optionalDependencies:
-      prettier: 3.3.3
+      prettier: 3.4.2
 
-  prettier@3.3.3: {}
+  prettier@3.4.2: {}
 
   pretty-error@4.0.0:
     dependencies:
