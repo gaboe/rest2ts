@@ -89,7 +89,7 @@ importers:
         version: 3.6.3(@types/react@18.3.3)(immer@9.0.21)(react@18.3.1)(typescript@5.7.2)
       '@getalby/lightning-tools':
         specifier: ^5.0.3
-        version: 5.1.0
+        version: 5.1.2
       '@mdx-js/react':
         specifier: ^3.0.1
         version: 3.1.0(@types/react@18.3.3)(react@18.3.1)
@@ -2040,8 +2040,8 @@ packages:
   '@getalby/bitcoin-connect@3.6.3':
     resolution: {integrity: sha512-mS3hmKGF8P7RH06DFtawc6T738iwz+wGz28XR46tMDKGfZjPrpcCG7R8Wy7n0w1JBgf7Nec79edQ5cDM1Pbrrw==}
 
-  '@getalby/lightning-tools@5.1.0':
-    resolution: {integrity: sha512-KhLnKu6hboNYxVmmegRi06ufW3J0o/5gZ5vMe4e94tKC1o8glN/fDn1fTL4hRIqgZjfzvDPPmV1A3YUkNtQttA==}
+  '@getalby/lightning-tools@5.1.2':
+    resolution: {integrity: sha512-BwGm8eGbPh59BVa1gI5yJMantBl/Fdps6X4p1ZACnmxz9vDINX8/3aFoOnDlF7yyA2boXWCsReVQSr26Q2yjiQ==}
     engines: {node: '>=14'}
 
   '@getalby/sdk@3.8.0':
@@ -10492,7 +10492,7 @@ snapshots:
 
   '@getalby/bitcoin-connect@3.6.3(@types/react@18.3.3)(immer@9.0.21)(react@18.3.1)(typescript@5.7.2)':
     dependencies:
-      '@getalby/lightning-tools': 5.1.0
+      '@getalby/lightning-tools': 5.1.2
       '@getalby/sdk': 3.8.0(typescript@5.7.2)
       '@lightninglabs/lnc-web': 0.3.2-alpha
       qrcode-generator: 1.4.4
@@ -10503,7 +10503,7 @@ snapshots:
       - react
       - typescript
 
-  '@getalby/lightning-tools@5.1.0': {}
+  '@getalby/lightning-tools@5.1.2': {}
 
   '@getalby/sdk@3.8.0(typescript@5.7.2)':
     dependencies:
