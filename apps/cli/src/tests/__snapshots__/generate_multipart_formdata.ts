@@ -12,7 +12,7 @@
     data: null;
     error: StandardError;
     status: ErrorStatuses;
-    args: any;
+    args: FetchArgs;
   };
 
   export type FetchResponseOfSuccess<TData, TStatus extends number = 0> = 
@@ -20,7 +20,7 @@
     data: TData;
     error: null;
     status: TStatus;
-    args: any;
+    args: FetchArgs;
     responseHeaders: Headers;
   };
 
@@ -39,9 +39,9 @@
     }>;
     responseMiddlewares?: Array<{
       name: string;
-      fn: (
-        response: FetchResponse<unknown, any>
-      ) => FetchResponse<unknown, any> | TerminateResponse;
+      fn: <TData, TStatus extends number>(
+        response: FetchResponse<TData, TStatus>,
+      ) => FetchResponse<TData, TStatus> | TerminateResponse;
     }>;
   };
 
@@ -89,7 +89,7 @@
         if (middlewareResponse === null) {
           return { termination: { name: middleware.name } };
         }
-        request = middlewareResponse;
+        return middlewareResponse;
       } catch (e) {
         console.error("Request middleware error", e);
       }
@@ -97,9 +97,9 @@
     return request;
   }
 
-  export function processResponseWithMiddlewares<T extends FetchResponse<unknown, any>>(
-    response: T
-  ): T | Termination {
+  export function processResponseWithMiddlewares<TData, TStatus extends number>(
+    response: FetchResponse<TData, TStatus>,
+  ): FetchResponse<TData, TStatus | 0> {
     for (const middleware of CONFIG.responseMiddlewares || []) {
       try {
         const middlewareResponse = middleware.fn(response);
@@ -111,9 +111,9 @@
             error: new Error(
               `Response terminated by middleware: ${middleware.name}`
             ),
-          } as FetchResponseOfError as unknown as T;
+          } satisfies FetchResponseOfError;
         }
-        response = middlewareResponse as T;
+        response = middlewareResponse;
       } catch (e) {
         console.error("Response middleware error", e);
       }
@@ -121,41 +121,39 @@
     return response;
   }
 
-  export type FetchOptions = {
-    method: string;
-    headers: Headers;
-    body?: any;
-    redirect: RequestRedirect;
-  };
+  export type FetchArgsOptions = Omit<RequestInit, "method" | "redirect" | "body">;
 
   export type FetchArgs = {
     url: string;
-    options: FetchOptions;
+    options: RequestInit;
   }
 
-  export async function fetchJson<T extends FetchResponse<unknown, number>>(
-    args: FetchArgs
-  ): Promise<T> {
-    const errorResponse = (error: StandardError, status: number, args: any) => {
+  export type UriComponent = string | number | boolean;
+  export type ParamsObject = {
+    [key: string]: UriComponent | UriComponent[] | undefined | null;
+  };
+
+  export async function fetchJson<TData>(args: FetchArgs): Promise<FetchResponse<TData, number> | FetchResponseOfError> {
+    const errorResponse = (error: StandardError, status: number, args: FetchArgs) => {  
       const errorResponse = {
         status: status as ErrorStatuses,
         args,
         data: null,
         error,
-      } satisfies FetchResponse<T>;
+      } satisfies FetchResponseOfError;
 
-      return processResponseWithMiddlewares(errorResponse) as unknown as T;
+      return processResponseWithMiddlewares(errorResponse);
     };
 
-    const errorStatus = (args: any) => {
+    const errorStatus = (args: FetchArgs) => {
       const errorResponse = {
         status: 0,
         args,
         data: null,
         error: new Error("Network error"),
-      } as FetchResponse<T, Error500s>;
+      } satisfies FetchResponseOfError;
 
-      return processResponseWithMiddlewares(errorResponse) as unknown as T;
+      return processResponseWithMiddlewares(errorResponse);
     };
 
     try {
@@ -169,11 +167,9 @@
           error: new Error(
             `Request terminated by middleware: ${fetchRequest.termination.name}`
           ),
-        } as FetchResponse<T, Error500s>;
+        } satisfies FetchResponseOfError;
 
-        return processResponseWithMiddlewares(
-          terminationResponse
-        ) as unknown as T;
+        return processResponseWithMiddlewares(terminationResponse);
       }
 
       const fetchResponse: Response = await fetch(fetchRequest.url, fetchRequest.options);
@@ -187,7 +183,7 @@
           error: null,
           responseHeaders: fetchResponse.headers,
         };
-        return processResponseWithMiddlewares(response) as unknown as T;
+        return processResponseWithMiddlewares(response);
       } catch (error) {
         return errorResponse(error as StandardError, status, args);
       }
@@ -229,14 +225,15 @@
           for (const val of values) {
               if (val === undefined) {
                   continue;
-              } else if (val === null) {
+              }
+              if (val === null) {
                   formData.append(key, '');
               } else if (val instanceof File) {
                   formData.append(key, val);
               } else if (typeof val === 'object' && val !== null) {
                   formData.append(key, JSON.stringify(val));
               } else {
-                  formData.append(key, val as any);
+                  formData.append(key, val);
               }
           }
       });
@@ -246,28 +243,79 @@
   }
 
   
-  function updateHeadersAndGetBody<TResponse extends FetchResponse<unknown, number>, TRequest>(
-    request: TRequest,
-    headers: Headers
-  ) {
-    updateHeaders(headers);
-    if (request instanceof FormData) {
-      headers.delete("Content-Type");
-      return request;
-    } else {      
-      return JSON.stringify(request);
-    }
-  }
-  
-  function updateHeaders(headers: Headers) {
+function updateHeaders(headers: HeadersInit) {
+  const token = getJwtKey();
+  if (headers instanceof Headers) {
     if (!headers.has("Content-Type")) {
       headers.append("Content-Type", "application/json");
     }
-    const token = getJwtKey();
     if (!headers.has("Authorization") && !!token) {
       headers.append("Authorization", token);
     }
+    return;
   }
+
+  if (Array.isArray(headers)) {
+    if (!headers.find(([key]) => key === "Content-Type")) {
+      headers.push(["Content-Type", "application/json"]);
+    }
+    if (!headers.find(([key]) => key === "Authorization") && !!token) {
+      headers.push(["Authorization", token]);
+    }
+    return;
+  }
+
+  if (!headers["Content-Type"]) {
+    headers["Content-Type"] = "application/json";
+  }
+  if (!headers.Authorization && !!token) {
+    headers.Authorization = token;
+  }
+}
+
+function removeContentTypeHeader(headers: HeadersInit) {
+  if (headers instanceof Headers) {
+    headers.delete("Content-Type");
+    return;
+  }
+
+  if (Array.isArray(headers)) {
+    return headers.filter(([key]) => key !== "Content-Type");
+  }
+
+  delete headers["Content-Type"];
+}
+
+export function createRequest<TRequest>(
+  method: string,
+  request: TRequest | undefined,
+  options: FetchArgsOptions | undefined,
+  url: string,
+  paramsObject: ParamsObject = {},
+) {
+  const fetchOptions = options ?? {};
+
+  if (!fetchOptions.headers) {
+    fetchOptions.headers = new Headers();
+  }
+
+  updateHeaders(fetchOptions.headers);
+  if (request instanceof FormData) {
+    removeContentTypeHeader(fetchOptions.headers);
+  }
+
+  const body = request !== undefined || !(request instanceof FormData) ? JSON.stringify(request) : undefined;
+  const maybeQueryString = getQueryParamsString(paramsObject);
+
+  const requestOptions: RequestInit = {
+    ...fetchOptions,
+    method,
+    body,
+    redirect: "follow",
+  };
+
+  return { options: requestOptions, url: `${url}${maybeQueryString}` } as FetchArgs;
+}
 
 export function getQueryParamsString(paramsObject: ParamsObject = {}) {
 	const queryString = Object.entries(paramsObject)
@@ -293,125 +341,44 @@ export function getQueryParamsString(paramsObject: ParamsObject = {}) {
 export function apiPost<TResponse extends FetchResponse<unknown, number>, TRequest>(
   url: string,
   request: TRequest,
-  headers: Headers,
+  options: FetchArgsOptions | undefined,
   paramsObject: ParamsObject = {}
 ) {
-  
-  const raw = updateHeadersAndGetBody(request, headers); 
-
-  const requestOptions: FetchOptions = {
-    method: "POST",
-    headers,
-    body: raw,
-    redirect: "follow",
-  };
-
-  const maybeQueryString = getQueryParamsString(paramsObject);
-
-  return fetchJson<TResponse>({
-    url: `${url}${maybeQueryString}`,
-    options: requestOptions,
-  });
+  return fetchJson<TResponse>(createRequest("POST", request, options, url, paramsObject));
 }
-
-export type ParamsObject = {
-  [key: string]: any;
-};
 
 export function apiGet<TResponse extends FetchResponse<unknown, number>>(
   url: string,
-  headers: Headers,
+  options: FetchArgsOptions | undefined,
   paramsObject: ParamsObject = {}
 ) {
-  updateHeaders(headers);
-  
-  const maybeQueryString = getQueryParamsString(paramsObject);
-
-  const requestOptions: FetchOptions = {
-    method: "GET",
-    headers,
-    redirect: "follow",
-  };
-
-  return fetchJson<TResponse>({
-    url: `${url}${maybeQueryString}`,
-    options: requestOptions,
-  });
+  return fetchJson<TResponse>(createRequest("GET", undefined, options, url, paramsObject));
 }
 
 export function apiPut<TResponse extends FetchResponse<unknown, number>, TRequest>(
   url: string,
   request: TRequest,
-  headers: Headers,
+  options: FetchArgsOptions | undefined,
   paramsObject: ParamsObject = {}
 ) {
-  updateHeaders(headers);
-
-  const raw = JSON.stringify(request);
-
-  const requestOptions: FetchOptions = {
-    method: "PUT",
-    headers,
-    body: raw,
-    redirect: "follow",
-  };
-
-  const maybeQueryString = getQueryParamsString(paramsObject);
-
-  return fetchJson<TResponse>({
-    url: `${url}${maybeQueryString}`,
-    options: requestOptions,
-  });
+  return fetchJson<TResponse>(createRequest("PUT", request, options, url, paramsObject));
 }
 
 export function apiDelete<TResponse extends FetchResponse<unknown, number>>(
   url: string,
-  headers: Headers,
+  options: FetchArgsOptions | undefined,
   paramsObject: ParamsObject = {}
 ) {
-  updateHeaders(headers);
-
-  const queryString = Object.entries(paramsObject)
-    .filter(([_, val]) => val !== undefined && val !== null)
-    .map(([key, val]) => `${key}=${val}`)
-    .join("&");
-  
-  const maybeQueryString = queryString.length > 0 ? `?${queryString}` : "";
-
-  const requestOptions: FetchOptions = {
-    method: "DELETE",
-    headers,
-    redirect: "follow",
-  };
-
-  return fetchJson<TResponse>({
-    url: `${url}${maybeQueryString}`,
-    options: requestOptions,
-  });
+  return fetchJson<TResponse>(createRequest("DELETE", undefined, options, url, paramsObject));
 }
 
 export function apiPatch<TResponse extends FetchResponse<unknown, number>, TRequest>(
   url: string,
   request: TRequest,
-  headers: Headers,
+  options: FetchArgsOptions | undefined,
   paramsObject: ParamsObject = {}
 ) {
-  updateHeaders(headers);
-
-  const raw = JSON.stringify(request);
-
-  const requestOptions: FetchOptions = {
-    method: "PATCH",
-    headers,
-    body: raw,
-    redirect: "follow",
-  };
-  const maybeQueryString = getQueryParamsString(paramsObject);
-
-  return fetchJson<TResponse>({
-    url: `${url}${maybeQueryString}`,
-    options: requestOptions,
-  });
+  return fetchJson<TResponse>(createRequest("PATCH", request, options, url, paramsObject));
 }
 // INFRASTRUCTURE END
 
@@ -473,12 +440,12 @@ export type PostElectronicTradeTradesElectronicTradeIdFormalityFetchResponse =
 
 export const postElectronicTradeTradesElectronicTradeIdFormalityPath = (electronicTradeId: number, fields?: string) => `/api/electronic-trade/trades/${electronicTradeId}/formality`;
 
-export const postElectronicTradeTradesElectronicTradeIdFormality = (requestContract: ElectronicTradeFormalityRequestDTO, electronicTradeId: number, fields?: string, headers = new Headers()):
+export const postElectronicTradeTradesElectronicTradeIdFormality = (requestContract: ElectronicTradeFormalityRequestDTO, electronicTradeId: number, fields?: string, options?: FetchArgsOptions):
   Promise<PostElectronicTradeTradesElectronicTradeIdFormalityFetchResponse> => {
     const queryParams = {
       "fields": fields
     };
     const requestData = getApiRequestData<ElectronicTradeFormalityRequestDTO>(requestContract, true);
 
-    return apiPost(`${getApiUrl()}${postElectronicTradeTradesElectronicTradeIdFormalityPath(electronicTradeId)}`, requestData, headers, queryParams) as Promise<PostElectronicTradeTradesElectronicTradeIdFormalityFetchResponse>;
+    return apiPost(`${getApiUrl()}${postElectronicTradeTradesElectronicTradeIdFormalityPath(electronicTradeId)}`, requestData, options, queryParams) as Promise<PostElectronicTradeTradesElectronicTradeIdFormalityFetchResponse>;
 }
