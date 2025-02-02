@@ -478,7 +478,7 @@ const bodyBasedMethod = (
     pathName,
     pathValue: `\`${parametrizedUrl.url}\``,
     url: `\`\$\{getApiUrl()\}$\{${pathName}(${parametrizedUrl.usedParameters.join(", ")})\}\``,
-    formattedParam: `${formattedRequestContractType}${comma}${formattedFunctionParameters}${paramSeparator}headers = new Headers()`,
+    formattedParam: `${formattedRequestContractType}${comma}${formattedFunctionParameters}${paramSeparator}options?: FetchArgsOptions`,
     method,
     queryParams,
     queryParameters,
@@ -493,7 +493,7 @@ const bodyBasedMethod = (
       `export const {{name}} = ({{{formattedParam}}}):
   Promise<{{contractResultName}}> => {
     {{{queryParams}}}{{{multipartConversion}}}
-    return api{{method}}({{{url}}}, {{contractParameterName}}, headers{{queryParameters}}) as Promise<{{contractResultName}}>;\n}\n`,
+    return api{{method}}({{{url}}}, {{contractParameterName}}, options{{queryParameters}}) as Promise<{{contractResultName}}>;\n}\n`,
     ].join("\n"),
 
     view,
