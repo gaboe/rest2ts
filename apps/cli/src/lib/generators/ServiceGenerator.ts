@@ -385,7 +385,7 @@ const parametrizedMethod = (
 
   const parameters = [
     url,
-    "headers",
+    "options",
     ...[unusedParameters.length > 0 ? "queryParams" : "{}"],
   ].join(", ");
 
@@ -400,7 +400,7 @@ const parametrizedMethod = (
     contractResultName,
     parameters,
     queryParams,
-    formattedParam: `${formattedFunctionParameters}${paramSeparator}headers = new Headers()`,
+    formattedParam: `${formattedFunctionParameters}${paramSeparator}options?: FetchArgsOptions`,
     method,
     pathName,
     pathValue: `\`${parametrizedUrl.url}\``,
