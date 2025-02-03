@@ -52,10 +52,10 @@
     "@types/eslint": "^9.0.0",
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^22.0.0",
-    "@vitest/coverage-istanbul": "^2.0.4",
+    "@vitest/coverage-istanbul": "^3.0.0",
     "eslint": "^9.6.0",
     "tsup": "^8.1.0",
     "typescript": "^5.5.3",
-    "vitest": "^2.0.2"
+    "vitest": "^3.0.0"
   }
 }
