@@ -31,7 +31,7 @@ program
   .option("-f, --file-name <name>", "Output file name (defaults to Api.ts)")
   .option("--cookies", "Generate API with cookies auth")
   .option(
-    "-ptr, --prefixes-to-remove <prefixes...>",
+    "--ptr, --prefixes-to-remove <prefixes...>",
     "Prefixes to remove from the generated code",
   )
   .helpOption("-h, --help", "Show help");
