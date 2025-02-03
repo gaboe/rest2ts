@@ -44,14 +44,15 @@ type QueryParams = { [key: string]: FlattenableValue } | null | undefined;
           for (const val of values) {
               if (val === undefined) {
                   continue;
-              } else if (val === null) {
+              }
+              if (val === null) {
                   formData.append(key, '');
               } else if (val instanceof File) {
                   formData.append(key, val);
               } else if (typeof val === 'object' && val !== null) {
                   formData.append(key, JSON.stringify(val));
               } else {
-                  formData.append(key, val as any);
+                  formData.append(key, val);
               }
           }
       });
