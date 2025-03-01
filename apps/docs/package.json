@@ -32,7 +32,7 @@
     "@docusaurus/tsconfig": "3.7.0",
     "@docusaurus/types": "3.7.0",
     "gh-pages": "^6.1.1",
-    "typescript": "~5.7.0"
+    "typescript": "~5.8.0"
   },
   "browserslist": {
     "production": [
