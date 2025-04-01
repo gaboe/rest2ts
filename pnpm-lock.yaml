@@ -86,7 +86,7 @@ importers:
         version: 3.7.0(@algolia/client-search@5.20.0)(@mdx-js/react@3.1.0(@types/react@18.3.3)(react@19.0.0))(@types/react@18.3.3)(eslint@9.21.0(jiti@1.21.6))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(search-insights@2.16.2)(typescript@5.8.2)
       '@getalby/bitcoin-connect-react':
         specifier: ^3.5.3
-        version: 3.6.3(@types/react@18.3.3)(immer@9.0.21)(react@19.0.0)(typescript@5.8.2)
+        version: 3.7.1(@types/react@18.3.3)(immer@9.0.21)(react@19.0.0)(typescript@5.8.2)
       '@getalby/lightning-tools':
         specifier: ^5.0.3
         version: 5.1.2
@@ -1558,20 +1558,20 @@ packages:
     resolution: {integrity: sha512-JubJ5B2pJ4k4yGxaNLdbjrnk9d/iDz6/q8wOilpIowd6PJPgaxCuHBnBszq7Ce2TyMrywm5r4PnKm6V3iiZF+g==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@getalby/bitcoin-connect-react@3.6.3':
-    resolution: {integrity: sha512-tDomhNtXl94Z2YNQa52UpZUfZhdSwLEWgaOg6bCoLEJO0SqemUcKOrIIB/Y6DYm5XliktD7bLtvB4rJoFE74QQ==}
+  '@getalby/bitcoin-connect-react@3.7.1':
+    resolution: {integrity: sha512-L8Z+0PTaPIppfYQvu0cxpYbTCTf7qwv7NumoTPqorP/FFHcUME6l+uBXAiDZJu2jFUvT484Fm9SnIO0mrRGUCA==}
     peerDependencies:
       react: ^18.2.0
 
-  '@getalby/bitcoin-connect@3.6.3':
-    resolution: {integrity: sha512-mS3hmKGF8P7RH06DFtawc6T738iwz+wGz28XR46tMDKGfZjPrpcCG7R8Wy7n0w1JBgf7Nec79edQ5cDM1Pbrrw==}
+  '@getalby/bitcoin-connect@3.7.1':
+    resolution: {integrity: sha512-HUb0KTdDOH9KANNEZtQgoF1d4++8t/VBoLvHyIc3jWoSW1GNAf50ubCOeV76bT0Lpc7AYmf+MTsjYyZKlmS2cw==}
 
   '@getalby/lightning-tools@5.1.2':
     resolution: {integrity: sha512-BwGm8eGbPh59BVa1gI5yJMantBl/Fdps6X4p1ZACnmxz9vDINX8/3aFoOnDlF7yyA2boXWCsReVQSr26Q2yjiQ==}
     engines: {node: '>=14'}
 
-  '@getalby/sdk@3.8.0':
-    resolution: {integrity: sha512-o7dCtWtCjbtn0g36zDAgYL5vaTyXcZ04PbvA7qiEVi+mKIyCPWBuGR4+YsruIogGckucNecgLU1T/AeB9OP5EQ==}
+  '@getalby/sdk@4.1.1':
+    resolution: {integrity: sha512-Tm0Puqm3qpXxSfUhiO8W7Uaq9Fx/Ww2aOv3sjRYL1jukLi+GRj4s65QCsjCIWaKWUN+RCJMlW3LtKFnUQC/O3A==}
     engines: {node: '>=14'}
 
   '@hapi/hoek@9.3.0':
@@ -1677,14 +1677,21 @@ packages:
   '@nicolo-ribaudo/eslint-scope-5-internals@5.1.1-v1':
     resolution: {integrity: sha512-54/JRvkLIzzDWshCWfuhadfrfZVPiElY8Fcgmg1HroEly/EDSszzhBAsarCux+D/kOslTRquNzuyGSmUSTTHGg==}
 
-  '@noble/ciphers@0.2.0':
-    resolution: {integrity: sha512-6YBxJDAapHSdd3bLDv6x2wRPwq4QFMUaB3HvljNBUTThDd12eSm7/3F+2lnfzx2jvM+S6Nsy0jEt9QbPqSwqRw==}
+  '@noble/ciphers@0.5.3':
+    resolution: {integrity: sha512-B0+6IIHiqEs3BPMT0hcRmHvEj2QHOLu+uwt+tqDDeVd0oyVzh7BPrDcPjRnV1PV/5LaknXJJQvOuRGR0zQJz+w==}
 
   '@noble/curves@1.1.0':
     resolution: {integrity: sha512-091oBExgENk/kGj3AZmtBDMpxQPDtxQABR2B9lb1JbVTs6ytdzZNwvhxQ4MWasRNEzlbEH8jCWFCwhF/Obj5AA==}
 
+  '@noble/curves@1.2.0':
+    resolution: {integrity: sha512-oYclrNgRaM9SsBUBVbb8M6DTV7ZHRTKugureoYEncY5c65HOmRzvSiTE3y5CYaPYJA/GVkrhXEoF0M3Ya9PMnw==}
+
   '@noble/hashes@1.3.1':
     resolution: {integrity: sha512-EbqwksQwz9xDRGfDST86whPBgM65E0OH/pCgqW0GBVzO22bNE+NuIbeTb714+IfSjU3aRk47EUvXIb5bTsenKA==}
+    engines: {node: '>= 16'}
+
+  '@noble/hashes@1.3.2':
+    resolution: {integrity: sha512-MVC8EAQp7MvEcm30KWENFjgR+Mkmf+D189XJTkFIlwohU5hcBbn1ZkKq7KVTi2Hme3PMGF390DaL52beVrIihQ==}
     engines: {node: '>= 16'}
 
   '@nodelib/fs.scandir@2.1.5':
@@ -3267,10 +3274,6 @@ packages:
 
   email-addresses@5.0.0:
     resolution: {integrity: sha512-4OIPYlA6JXqtVn8zpHpGiI7vE6EQOAg16aGnDMIAlZVinnoZ8208tW1hAbjWydgN/4PLTT9q+O1K6AH/vALJGw==}
-
-  emittery@1.0.3:
-    resolution: {integrity: sha512-tJdCJitoy2lrC2ldJcqN4vkqJ00lT+tOWNT1hBJjO/3FDMJa5TTIiYGCKGkn/WfCyOzUMObeohbVTj00fhiLiA==}
-    engines: {node: '>=14.16'}
 
   emoji-regex@8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
@@ -5037,13 +5040,16 @@ packages:
     resolution: {integrity: sha512-IO9QvjUMWxPQQhs60oOu10CRkWCiZzSUkzbXGGV9pviYl1fXYcvkzQ5jV9z8Y6un8ARoVRl4EtC6v6jNqbaJ/w==}
     engines: {node: '>=14.16'}
 
-  nostr-tools@1.17.0:
-    resolution: {integrity: sha512-LZmR8GEWKZeElbFV5Xte75dOeE9EFUW/QLI1Ncn3JKn0kFddDKEfBbFN8Mu4TMs+L4HR/WTPha2l+PPuRnJcMw==}
+  nostr-tools@2.9.4:
+    resolution: {integrity: sha512-Powumwkp+EWbdK1T8IsEX4daTLQhtWJvitfZ6OP2BdU1jJZvNlUp3SQB541UYw4uc9jgLbxZW6EZSdZoSfIygQ==}
     peerDependencies:
       typescript: '>=5.0.0'
     peerDependenciesMeta:
       typescript:
         optional: true
+
+  nostr-wasm@0.1.0:
+    resolution: {integrity: sha512-78BTryCLcLYv96ONU8Ws3Q1JzjlAt+43pWQhIl86xZmWeegYCNLPml7yQ+gG3vR6V5h4XGj+TxO+SS5dsThQIA==}
 
   npm-run-path@4.0.1:
     resolution: {integrity: sha512-S48WzZW777zhNIrn7gxOlISNAqi9ZC/uQFnRdbeIHhZhCA6UqpkOT8T1G7BvfdgP4Er8gF4sUbaS0i7QvIfCWw==}
@@ -6767,10 +6773,10 @@ packages:
       file-loader:
         optional: true
 
-  use-sync-external-store@1.2.2:
-    resolution: {integrity: sha512-PElTlVMwpblvbNqQ82d2n6RjStvdSoNe9FG28kNfz3WiXilJm4DdNkEzRhCZuIDwY8U08WVihhGR5iRqAwfDiw==}
+  use-sync-external-store@1.5.0:
+    resolution: {integrity: sha512-Rb46I4cGGVBmjamjphe8L/UnvJD+uPPtTkNvX5mZgqdbavhI4EbgIWJiIHXJ8bc/i9EQGPRh4DwEURJ552Do0A==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
@@ -7062,8 +7068,8 @@ packages:
     resolution: {integrity: sha512-b4JR1PFR10y1mKjhHY9LaGo6tmrgjit7hxVIeAmyMw3jegXR4dhYqLaQF5zMXZxY7tLpMyJeLjr1C4rLmkVe8g==}
     engines: {node: '>=12.20'}
 
-  zustand@4.5.5:
-    resolution: {integrity: sha512-+0PALYNJNgK6hldkgDq2vLrw5f6g/jCInz52n9RTpropGgeAf/ioFUCdtsjCqu4gNhW9D01rUQBROoRjdzyn2Q==}
+  zustand@4.5.6:
+    resolution: {integrity: sha512-ibr/n1hBzLLj5Y+yUcU7dYw8p6WnIVzdJbnX+1YpaScvZVF2ziugqHs+LAmHw4lWO9c/zRj+K1ncgWDQuthEdQ==}
     engines: {node: '>=12.7.0'}
     peerDependencies:
       '@types/react': '>=16.8'
@@ -9319,22 +9325,22 @@ snapshots:
       '@eslint/core': 0.12.0
       levn: 0.4.1
 
-  '@getalby/bitcoin-connect-react@3.6.3(@types/react@18.3.3)(immer@9.0.21)(react@19.0.0)(typescript@5.8.2)':
+  '@getalby/bitcoin-connect-react@3.7.1(@types/react@18.3.3)(immer@9.0.21)(react@19.0.0)(typescript@5.8.2)':
     dependencies:
-      '@getalby/bitcoin-connect': 3.6.3(@types/react@18.3.3)(immer@9.0.21)(react@19.0.0)(typescript@5.8.2)
+      '@getalby/bitcoin-connect': 3.7.1(@types/react@18.3.3)(immer@9.0.21)(react@19.0.0)(typescript@5.8.2)
       react: 19.0.0
     transitivePeerDependencies:
       - '@types/react'
       - immer
       - typescript
 
-  '@getalby/bitcoin-connect@3.6.3(@types/react@18.3.3)(immer@9.0.21)(react@19.0.0)(typescript@5.8.2)':
+  '@getalby/bitcoin-connect@3.7.1(@types/react@18.3.3)(immer@9.0.21)(react@19.0.0)(typescript@5.8.2)':
     dependencies:
       '@getalby/lightning-tools': 5.1.2
-      '@getalby/sdk': 3.8.0(typescript@5.8.2)
+      '@getalby/sdk': 4.1.1(typescript@5.8.2)
       '@lightninglabs/lnc-web': 0.3.2-alpha
       qrcode-generator: 1.4.4
-      zustand: 4.5.5(@types/react@18.3.3)(immer@9.0.21)(react@19.0.0)
+      zustand: 4.5.6(@types/react@18.3.3)(immer@9.0.21)(react@19.0.0)
     transitivePeerDependencies:
       - '@types/react'
       - immer
@@ -9343,10 +9349,9 @@ snapshots:
 
   '@getalby/lightning-tools@5.1.2': {}
 
-  '@getalby/sdk@3.8.0(typescript@5.8.2)':
+  '@getalby/sdk@4.1.1(typescript@5.8.2)':
     dependencies:
-      emittery: 1.0.3
-      nostr-tools: 1.17.0(typescript@5.8.2)
+      nostr-tools: 2.9.4(typescript@5.8.2)
     transitivePeerDependencies:
       - typescript
 
@@ -9488,13 +9493,19 @@ snapshots:
     dependencies:
       eslint-scope: 5.1.1
 
-  '@noble/ciphers@0.2.0': {}
+  '@noble/ciphers@0.5.3': {}
 
   '@noble/curves@1.1.0':
     dependencies:
       '@noble/hashes': 1.3.1
 
+  '@noble/curves@1.2.0':
+    dependencies:
+      '@noble/hashes': 1.3.2
+
   '@noble/hashes@1.3.1': {}
+
+  '@noble/hashes@1.3.2': {}
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
@@ -11292,8 +11303,6 @@ snapshots:
   electron-to-chromium@1.5.90: {}
 
   email-addresses@5.0.0: {}
-
-  emittery@1.0.3: {}
 
   emoji-regex@8.0.0: {}
 
@@ -13606,16 +13615,20 @@ snapshots:
 
   normalize-url@8.0.1: {}
 
-  nostr-tools@1.17.0(typescript@5.8.2):
+  nostr-tools@2.9.4(typescript@5.8.2):
     dependencies:
-      '@noble/ciphers': 0.2.0
-      '@noble/curves': 1.1.0
+      '@noble/ciphers': 0.5.3
+      '@noble/curves': 1.2.0
       '@noble/hashes': 1.3.1
       '@scure/base': 1.1.1
       '@scure/bip32': 1.3.1
       '@scure/bip39': 1.2.1
     optionalDependencies:
+      nostr-wasm: 0.1.0
       typescript: 5.8.2
+
+  nostr-wasm@0.1.0:
+    optional: true
 
   npm-run-path@4.0.1:
     dependencies:
@@ -15545,7 +15558,7 @@ snapshots:
     optionalDependencies:
       file-loader: 6.2.0(webpack@5.96.1)
 
-  use-sync-external-store@1.2.2(react@19.0.0):
+  use-sync-external-store@1.5.0(react@19.0.0):
     dependencies:
       react: 19.0.0
 
@@ -15905,9 +15918,9 @@ snapshots:
 
   yocto-queue@1.1.1: {}
 
-  zustand@4.5.5(@types/react@18.3.3)(immer@9.0.21)(react@19.0.0):
+  zustand@4.5.6(@types/react@18.3.3)(immer@9.0.21)(react@19.0.0):
     dependencies:
-      use-sync-external-store: 1.2.2(react@19.0.0)
+      use-sync-external-store: 1.5.0(react@19.0.0)
     optionalDependencies:
       '@types/react': 18.3.3
       immer: 9.0.21
