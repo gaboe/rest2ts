@@ -305,6 +305,11 @@ export type Dog = {
 	woof: boolean;
 };
 
+export type DogMissingType = Pet
+	& {
+	woof: boolean;
+};
+
 export type Cat = {
 	discriminator: string;
 	eat: boolean;
