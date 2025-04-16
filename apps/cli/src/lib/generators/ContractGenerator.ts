@@ -35,6 +35,10 @@ export const generateContracts = (swaggerSchema: SwaggerSchema) => {
           : render(`export type {{ name }} = {};\n`, view);
       }
 
+      if (o.type === undefined) {
+        return render(`export type {{ name }} = {{{ properties }}};\n`, view);
+      }
+
       return render(`export const {{ name }} = {{{ properties }}};\n`, view);
     })
     .join("\n");

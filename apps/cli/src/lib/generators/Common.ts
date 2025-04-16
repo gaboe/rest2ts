@@ -100,7 +100,16 @@ export const renderProperties =
         : schema.enum.map(e => `"${e}"`).join(" | ");
     } else if (schema.allOf) {
       return schema.allOf
-        .map(x => {
+        .sort((a, b) => {
+          if (a.$ref && b.$ref) {
+            return a.$ref.localeCompare(b.$ref);
+          }
+          if (a.$ref || b.$ref) {
+            return a.$ref ? -1 : 1;
+          }
+          return 0;
+        })
+        .map((x, index) => {
           if (x.$ref) {
             const typeName = getTypeNameFromRef(x.$ref)!;
             const tt = swagger.components.schemas[typeName]!;
@@ -114,6 +123,15 @@ export const renderProperties =
               return sanitizedTypeName!;
             }
             return `typeof ${sanitizedTypeName}`;
+          }
+
+          if (!!x.required) {
+            console.error(x);
+            console.error(renderProperties(swagger)(x));
+          }
+
+          if (!schema.type && schema.allOf?.[index - 1]?.$ref) {
+            return `& {\n\t${renderProperties(swagger)(x)}\n}`;
           }
           return renderProperties(swagger)(x);
         })

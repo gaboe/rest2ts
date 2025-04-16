@@ -74,6 +74,21 @@
           }
         ]
       },
+      "DogMissingType": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Pet"
+          },
+          {
+            "properties": {
+              "woof": {
+                "type": "boolean"
+              }
+            },
+            "type": "object"
+          }
+        ]
+      },
       "Cat": {
         "type": "object",
         "allOf": [
