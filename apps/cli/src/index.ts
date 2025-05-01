@@ -25,7 +25,7 @@ program
   .option("-s, --source <path>", "Path to the swagger file")
   .option("-t, --target <path>", "Target path")
   .option(
-    "--ng, --generate-for-angular",
+    "--generate-for-angular",
     "Generate output for Angular with HttpClient and RxJS",
   )
   .option("-f, --file-name <name>", "Output file name (defaults to Api.ts)")

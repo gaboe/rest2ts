@@ -36,7 +36,7 @@ Takes path to the directory where the generated files will be saved.
  npx rest2ts --source https://petstore.swagger.io/v2/swagger.json --target ./generated
 ```
 
-### --generate-for-angular / --ng
+### --generate-for-angular
 
 Generates output for Angular with HttpClient and RxJS.
 
