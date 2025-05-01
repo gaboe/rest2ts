@@ -51,7 +51,7 @@
     "@rest2ts/typescript-config": "workspace:*",
     "@types/eslint": "9.6.1",
     "@types/fs-extra": "11.0.4",
-    "@types/node": "22.0.0",
+    "@types/node": "22.15.3",
     "@vitest/coverage-istanbul": "3.0.0",
     "eslint": "9.25.1",
     "tsup": "8.1.0",
