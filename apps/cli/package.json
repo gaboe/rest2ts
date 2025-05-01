@@ -41,7 +41,7 @@
     "@apidevtools/swagger-parser": "10.1.0",
     "axios": "1.7.2",
     "commander": "13.0.0",
-    "fs-extra": "11.2.0",
+    "fs-extra": "11.3.0",
     "handlebars": "4.7.8",
     "purify-ts": "2.1.0"
   },
