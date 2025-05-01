@@ -36,7 +36,7 @@ Takes path to the directory where the generated files will be saved.
  npx rest2ts --source https://petstore.swagger.io/v2/swagger.json --target ./generated
 ```
 
-### --generate-for-angular / --ng
+### --generate-for-angular
 
 Generates output for Angular with HttpClient and RxJS.
 
@@ -58,7 +58,7 @@ Default value is `Api.ts`.
  npx rest2ts --source https://petstore.swagger.io/v2/swagger.json --target ./generated --generate-for-angular --file-name MyApi.ts
 ```
 
-### --prefixes-to-remove / --ptr
+### --prefixes-to-remove
 
 When API contains same prefix over and over again, you can use this option to remove it.
 

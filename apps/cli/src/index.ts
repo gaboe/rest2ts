@@ -25,13 +25,13 @@ program
   .option("-s, --source <path>", "Path to the swagger file")
   .option("-t, --target <path>", "Target path")
   .option(
-    "--ng, --generate-for-angular",
+    "--generate-for-angular",
     "Generate output for Angular with HttpClient and RxJS",
   )
   .option("-f, --file-name <name>", "Output file name (defaults to Api.ts)")
   .option("--cookies", "Generate API with cookies auth")
   .option(
-    "--ptr, --prefixes-to-remove <prefixes...>",
+    "--prefixes-to-remove <prefixes...>",
     "Prefixes to remove from the generated code",
   )
   .helpOption("-h, --help", "Show help");
