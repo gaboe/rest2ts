@@ -304,7 +304,7 @@ export function createRequest<TRequest>(
     removeContentTypeHeader(fetchOptions.headers);
   }
 
-  const body = request !== undefined || !(request instanceof FormData) ? JSON.stringify(request) : undefined;
+  const body = (request instanceof FormData) ? request : JSON.stringify(request);
   const maybeQueryString = getQueryParamsString(paramsObject);
 
   const requestOptions: RequestInit = {
