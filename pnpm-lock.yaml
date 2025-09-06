@@ -39,8 +39,8 @@ importers:
         specifier: 4.7.8
         version: 4.7.8
       purify-ts:
-        specifier: 2.1.0
-        version: 2.1.0
+        specifier: 2.1.2
+        version: 2.1.2
     devDependencies:
       '@next/eslint-plugin-next':
         specifier: 15.3.4
@@ -5734,8 +5734,8 @@ packages:
     resolution: {integrity: sha512-FLpr4flz5xZTSJxSeaheeMKN/EDzMdK7b8PTOC6a5PYFKTucWbdqjgqaEyH0shFiSJrVB1+Qqi4Tk19ccU6Aug==}
     engines: {node: '>=12.20'}
 
-  purify-ts@2.1.0:
-    resolution: {integrity: sha512-+KNUHV9FxB9BbjadFdvxa+LNJIaqZmSF7CQH5Rv6+f0rBzsxm9FEqrvkALQbWYJobAja2ZCbBDUY7O4fH2znMA==}
+  purify-ts@2.1.2:
+    resolution: {integrity: sha512-v9RnHfoxZJZt5PeZork6zErRwYnGKxUiO7wk+NqPnJcG7AKjt97ut41WbGRMSUuMBexrXZsVNePSMcO9qPHODQ==}
 
   qrcode-generator@1.4.4:
     resolution: {integrity: sha512-HM7yY8O2ilqhmULxGMpcHSF1EhJJ9yBj8gvDEuZ6M+KGJ0YY2hKpnXvRD+hZPLrDVck3ExIGhmPtSdcjC+guuw==}
@@ -14221,7 +14221,7 @@ snapshots:
     dependencies:
       escape-goat: 4.0.0
 
-  purify-ts@2.1.0:
+  purify-ts@2.1.2:
     dependencies:
       '@types/json-schema': 7.0.15
 

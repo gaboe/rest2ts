@@ -43,7 +43,7 @@
     "commander": "14.0.0",
     "fs-extra": "11.3.0",
     "handlebars": "4.7.8",
-    "purify-ts": "2.1.0"
+    "purify-ts": "2.1.2"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "15.3.4",
