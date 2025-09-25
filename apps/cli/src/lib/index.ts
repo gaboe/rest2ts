@@ -3,7 +3,11 @@ import SwaggerParser from "@apidevtools/swagger-parser";
 
 async function parseSwagger(source: string) {
   try {
-    return await SwaggerParser.parse(source);
+    return await SwaggerParser.parse(source, {
+      dereference: {
+        circular: "ignore",
+      },
+    });
   } catch (err) {
     console.log("parseSwagger ~ err:", err);
     return null;
