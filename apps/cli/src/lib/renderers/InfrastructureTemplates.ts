@@ -98,17 +98,27 @@ export const getInfrastructureTemplate = (isCookiesAuthEnabled: boolean) => {
   };
 
   export function setupClient(configuration: Configuration) {
+    const uniqMiddlewares = <
+      T extends
+        | Configuration["requestMiddlewares"]
+        | Configuration["responseMiddlewares"],
+    >(
+      oldMiddlewares: T,
+      newMiddlewares: T,
+    ): T => {
+      return [
+        ...(oldMiddlewares?.filter(
+          middleware => !newMiddlewares?.some(m => m.name === middleware.name),
+        ) ?? []),
+        ...(newMiddlewares ?? []),
+      ] as T;
+    };
+  
     CONFIG = {
       ...CONFIG,
       ...configuration,
-      requestMiddlewares: [
-        ...(CONFIG.requestMiddlewares || []),
-        ...(configuration.requestMiddlewares || []),
-      ],
-      responseMiddlewares: [
-        ...(CONFIG.responseMiddlewares || []),
-        ...(configuration.responseMiddlewares || []),
-      ],
+      requestMiddlewares: uniqMiddlewares(CONFIG.requestMiddlewares, configuration.requestMiddlewares),
+      responseMiddlewares: uniqMiddlewares(CONFIG.responseMiddlewares, configuration.responseMiddlewares),
     };
   }
 
@@ -134,7 +144,7 @@ export const getInfrastructureTemplate = (isCookiesAuthEnabled: boolean) => {
         if (middlewareResponse === null) {
           return { termination: { name: middleware.name } };
         }
-        return middlewareResponse;
+        request = middlewareResponse;
       } catch (e) {
         console.error("Request middleware error", e);
       }
