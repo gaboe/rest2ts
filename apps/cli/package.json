@@ -2,7 +2,7 @@
   "name": "rest2ts",
   "description": "Generate modern TypeScript types from REST APIs",
   "private": false,
-  "version": "6.3.2",
+  "version": "6.3.3",
   "type": "commonjs",
   "bin": {
     "rest2ts": "./dist/index.js"
@@ -38,7 +38,7 @@
     "update-packages": "pnpm dlx npm-check-updates -i"
   },
   "dependencies": {
-    "@apidevtools/swagger-parser": "10.1.1",
+    "@apidevtools/swagger-parser": "12.0.0",
     "axios": "1.11.0",
     "commander": "14.0.0",
     "fs-extra": "11.3.0",

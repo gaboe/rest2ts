@@ -1,15 +1,30 @@
 import { generate } from "./generators";
-import SwaggerParser from "@apidevtools/swagger-parser";
+import SwaggerParser, { Options } from "@apidevtools/swagger-parser";
 
 async function parseSwagger(source: string) {
+  const parseOptions: Options = {
+    resolve: {
+      external: false,
+    },
+    dereference: {
+      circular: "ignore",
+    },
+  };
+
   try {
-    return await SwaggerParser.parse(source, {
-      dereference: {
-        circular: "ignore",
-      },
-    });
+    if (source.startsWith("http://") || source.startsWith("https://")) {
+      const response = await fetch(source);
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      const swaggerJson = await response.json();
+
+      return await SwaggerParser.parse(swaggerJson, parseOptions);
+    } else {
+      return await SwaggerParser.parse(source, parseOptions);
+    }
   } catch (err) {
-    console.log("parseSwagger ~ err:", err);
+    console.log("Failed to parse swagger file:", err);
     return null;
   }
 }
