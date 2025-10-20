@@ -92,11 +92,24 @@ export const renderProperties =
         { type },
       );
     } else if (schema.enum) {
-      const handleEnumName = (name: string) =>
-        schema.type === "integer" ? `_${name}` : name;
+      const sanitizeEnumKey = (name: string | number) => {
+        const nameStr = String(name);
+        const hasInvalidChars = /[^a-zA-Z0-9_]/.test(nameStr);
+        
+        if (hasInvalidChars) {
+          const words = nameStr.split(/[^a-zA-Z0-9]+/).filter(word => word.length > 0);
+          const pascalCase = words
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+            .join('');
+          
+          return /^[0-9]/.test(pascalCase) ? `_${pascalCase}` : pascalCase;
+        }
+        
+        return /^[0-9]/.test(nameStr) ? `_${nameStr}` : nameStr;
+      };
 
       return isEnumDeclaration
-        ? schema.enum.map(e => `${handleEnumName(e)} = "${e}"`).join(",\n\t")
+        ? schema.enum.map(e => `${sanitizeEnumKey(e)} = "${e}"`).join(",\n\t")
         : schema.enum.map(e => `"${e}"`).join(" | ");
     } else if (schema.allOf) {
       return schema.allOf

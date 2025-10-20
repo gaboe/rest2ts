@@ -21,6 +21,7 @@ const cases = [
   "all_of_reference",
   "reserved_words",
   "invalid_schema_names",
+  "enum_special_chars",
 ];
 
 function fixturePath(name: string) {
