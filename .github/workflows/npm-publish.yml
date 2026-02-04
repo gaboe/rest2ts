@@ -7,6 +7,10 @@ on:
     paths:
       - "apps/cli/package.json"
 
+permissions:
+  id-token: write
+  contents: write
+
 jobs:
   publish-and-release:
     runs-on: ubuntu-latest
@@ -16,6 +20,12 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4.1.0
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          registry-url: "https://registry.npmjs.org"
+
       - name: Install dependencies and build
         run: |
           cd ./apps/cli
@@ -23,10 +33,8 @@ jobs:
           pnpm build
 
       - name: Publish to NPM
-        uses: JS-DevTools/npm-publish@v3
-        with:
-          package: ./apps/cli
-          token: ${{ secrets.NPM_TOKEN }}
+        run: npm publish
+        working-directory: ./apps/cli
 
       - name: Get version from package.json
         id: package-version
