@@ -105,6 +105,7 @@
         "type": "integer",
         "description": "Integer enum that starts with numbers",
         "enum": [
+          -1,
           200,
           201,
           400,

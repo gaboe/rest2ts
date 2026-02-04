@@ -399,6 +399,11 @@ export function apiPatch<TResponse extends FetchResponse<unknown, number>, TRequ
   return fetchJson<TResponse>(createRequest("PATCH", request, options, url, paramsObject));
 }
 // INFRASTRUCTURE END
+
+export type FileResponse = {
+  data: Blob;
+  fileName?: string;
+}
 `;
 };
 
