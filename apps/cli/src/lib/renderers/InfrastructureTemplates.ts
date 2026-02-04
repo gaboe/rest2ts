@@ -660,7 +660,7 @@ function apiPatch<T extends ResponseResult<unknown, number>, U = unknown>(
 
 // INFRASTRUCTURE END
 
-export type FileResponse = {
+export interface FileResponse {
   data: Blob;
   fileName?: string;
 }

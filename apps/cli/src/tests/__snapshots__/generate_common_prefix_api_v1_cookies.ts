@@ -393,6 +393,11 @@ export function apiPatch<TResponse extends FetchResponse<unknown, number>, TRequ
 }
 // INFRASTRUCTURE END
 
+export type FileResponse = {
+  data: Blob;
+  fileName?: string;
+}
+
 export type ApiProblemDetails = {
 	errors: { [key: string | number]: ErrorDetail[] };
 	type?: string | null;

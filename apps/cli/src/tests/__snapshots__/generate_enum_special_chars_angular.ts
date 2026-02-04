@@ -325,6 +325,7 @@ export enum ProtocolEnum {
 };
 
 export enum StatusCodeEnum {
+	_neg1 = "-1",
 	_200 = "200",
 	_201 = "201",
 	_400 = "400",

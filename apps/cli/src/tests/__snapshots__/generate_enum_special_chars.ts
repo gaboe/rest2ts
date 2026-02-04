@@ -392,6 +392,11 @@ export function apiPatch<TResponse extends FetchResponse<unknown, number>, TRequ
 }
 // INFRASTRUCTURE END
 
+export type FileResponse = {
+  data: Blob;
+  fileName?: string;
+}
+
 export type VersionResponse = {
 	version: VersionEnum;
 	protocol: ProtocolEnum;
@@ -421,6 +426,7 @@ export enum ProtocolEnum {
 };
 
 export enum StatusCodeEnum {
+	_neg1 = "-1",
 	_200 = "200",
 	_201 = "201",
 	_400 = "400",
