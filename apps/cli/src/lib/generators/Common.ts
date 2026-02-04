@@ -94,6 +94,11 @@ export const renderProperties =
     } else if (schema.enum) {
       const sanitizeEnumKey = (name: string | number) => {
         const nameStr = String(name);
+
+        if (/^-[0-9]+$/.test(nameStr)) {
+          return `_neg${nameStr.slice(1)}`;
+        }
+
         const hasInvalidChars = /[^a-zA-Z0-9_]/.test(nameStr);
         
         if (hasInvalidChars) {
