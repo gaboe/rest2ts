@@ -86,7 +86,7 @@ importers:
         version: 3.8.1(@algolia/client-search@5.20.0)(@mdx-js/react@3.1.0(@types/react@18.3.3)(react@19.1.0))(@types/react@18.3.3)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(search-insights@2.16.2)(typescript@5.8.3)
       '@getalby/bitcoin-connect-react':
         specifier: ^3.5.3
-        version: 3.8.2(@types/react@18.3.3)(immer@9.0.21)(react@19.1.0)(typescript@5.8.3)
+        version: 3.12.3(@types/react@18.3.3)(immer@9.0.21)(react@19.1.0)(typescript@5.8.3)(use-sync-external-store@1.5.0(react@19.1.0))
       '@getalby/lightning-tools':
         specifier: ^5.0.3
         version: 5.2.0
@@ -851,6 +851,10 @@ packages:
     resolution: {integrity: sha512-vbavdySgbTTrmFE+EsiqUTzlOr5bzlnJtUv9PynGCAKvfQqjIXbvFdumPM/GxMDfyuGMJaJAU6TO4zc1Jf1i8Q==}
     engines: {node: '>=6.9.0'}
 
+  '@babel/runtime@7.29.7':
+    resolution: {integrity: sha512-Nq8OhGWiZIZGV6hLHoyAKLLcJihP/xFeBMGJoUrxTX2psI8dCifzLhZISFb+VWS3wFMRDmCGw5R+dOySCqPLhw==}
+    engines: {node: '>=6.9.0'}
+
   '@babel/template@7.25.0':
     resolution: {integrity: sha512-aOOgh1/5XzKvg1jvVz7AVrx2piJ2XBi227DHmbY6y+bM9H2FlN+IfecYu4Xl0cNiiVejlsCri89LUsbj8vJD9Q==}
     engines: {node: '>=6.9.0'}
@@ -1541,21 +1545,25 @@ packages:
     resolution: {integrity: sha512-Z5kJ+wU3oA7MMIqVR9tyZRtjYPr4OC004Q4Rw7pgOKUOKkJfZ3O24nz3WYfGRpMDNmcOi3TwQOmgm7B7Tpii0w==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@getalby/bitcoin-connect-react@3.8.2':
-    resolution: {integrity: sha512-0oB4eH/idGaVpe1W84kooi3RF1oSEVqhagnPlF8QH7nvKK9CQIIZKnVkOtUmXNpk9AQiqJ+Xv12RGtnlBiKruQ==}
+  '@getalby/bitcoin-connect-react@3.12.3':
+    resolution: {integrity: sha512-TflmUi6+BDPyBtSmxpTCCXHLA1oTCK/tesX3z5+Fh44a8pmQO7MxmrAcWIccWF/cPmrkpxciail9DXY8GBnU/Q==}
     peerDependencies:
-      react: ^18.2.0
+      react: '>=18.2.0'
 
-  '@getalby/bitcoin-connect@3.8.2':
-    resolution: {integrity: sha512-sfHcuxXl9Pqe8dP2XwsA4IPbDXx30dn0cbopESoJkSeaV+kwxC+ssHxgYnfEWwvF66QSvz4MfxyxzV4IH7+4Ug==}
+  '@getalby/bitcoin-connect@3.12.3':
+    resolution: {integrity: sha512-2d+tNHBCZBoImKJgZwTUOyK9ypXaTg/hwvtQ8EHbgSKKkuycOrks7SzlUc0iJHthD3JGFVMWZEgOgw4AQVVE4w==}
 
   '@getalby/lightning-tools@5.2.0':
     resolution: {integrity: sha512-8kBvENBTMh541VjGKhw3I29+549/C02gLSh3AQaMfoMNSZaMxfQW+7dcMcc7vbFaCKEcEe18ST5bUveTRBuXCQ==}
     engines: {node: '>=14'}
 
-  '@getalby/sdk@4.1.1':
-    resolution: {integrity: sha512-Tm0Puqm3qpXxSfUhiO8W7Uaq9Fx/Ww2aOv3sjRYL1jukLi+GRj4s65QCsjCIWaKWUN+RCJMlW3LtKFnUQC/O3A==}
+  '@getalby/lightning-tools@8.2.0':
+    resolution: {integrity: sha512-eL+cnHyzeUARKVzNRuFBRBppAU5RBJOLjhFVzSWt8hDibRzL5+e4hq8I79+RGHfrWWMUDv382Jx8ewOazrBj7w==}
     engines: {node: '>=14'}
+
+  '@getalby/sdk@8.0.3':
+    resolution: {integrity: sha512-vPEogAWwLHbL55COeXrRN7yRBXMDGDxX1M2A+o3Lqw60FFng6fa9FK9sw8ptdILMD1dQZq8FzPXuabQ7seoDBA==}
+    engines: {node: '>=22'}
 
   '@hapi/hoek@9.3.0':
     resolution: {integrity: sha512-/c6rf4UJlmHlC9b5BaNvzAcFv7HZ2QHaV0D4/HNlBdvFnvQq8RI4kYdhyPCl7Xj+oWvTWQ8ujhqS53LIgAe6KQ==}
@@ -1623,11 +1631,11 @@ packages:
   '@leichtgewicht/ip-codec@2.0.5':
     resolution: {integrity: sha512-Vo+PSpZG2/fmgmiNzYK9qWRh8h/CHrwD0mo1h1DzL4yzHNSfWYujGTYsWGreD000gcgmZ7K4Ys6Tx9TxtsKdDw==}
 
-  '@lightninglabs/lnc-core@0.3.2-alpha':
-    resolution: {integrity: sha512-H6tG+X9txCIdxTR+GPsbImzP2Juo+6Uvq/Ipaijd7xPISzgEU4J4GNE5PEHuIZqbnBo1RmpuXnFG6dmsl3PTzQ==}
+  '@lightninglabs/lnc-core@0.3.6-alpha':
+    resolution: {integrity: sha512-ObzY5wi+PS0GQduFHYDjGJpYZxKD27vtMf3fUVne2gGNMej1mvvJAOwATgef8YV/IZodAzy73Z/F2zfaQ+iE4Q==}
 
-  '@lightninglabs/lnc-web@0.3.2-alpha':
-    resolution: {integrity: sha512-3aCBugBf0NzczpJqmHn03Oq2Ju9W5n0+nOdAe+Y/Zhf6YLXdqG1PTJ2J+7TXncpiogfPYDCw95tVQqSi4Zi/ZA==}
+  '@lightninglabs/lnc-web@0.3.6-alpha':
+    resolution: {integrity: sha512-oiL1mKlbEjb1lcmNAHA0Gn+mlx5oQOJ8YVONJR/vgo4QLmL/48EyA12QbZ71mP9li45hGOoGqpYMRwBYtIeFog==}
 
   '@mdx-js/mdx@3.0.1':
     resolution: {integrity: sha512-eIQ4QTrOWyL3LWEe/bu6Taqzq2HQvHcyTMaOrI95P2/LmJE7AsfPfgJGuFLPVqBUE1BC1rik3VIhU+s9u72arA==}
@@ -1653,22 +1661,17 @@ packages:
   '@nicolo-ribaudo/eslint-scope-5-internals@5.1.1-v1':
     resolution: {integrity: sha512-54/JRvkLIzzDWshCWfuhadfrfZVPiElY8Fcgmg1HroEly/EDSszzhBAsarCux+D/kOslTRquNzuyGSmUSTTHGg==}
 
-  '@noble/ciphers@0.5.3':
-    resolution: {integrity: sha512-B0+6IIHiqEs3BPMT0hcRmHvEj2QHOLu+uwt+tqDDeVd0oyVzh7BPrDcPjRnV1PV/5LaknXJJQvOuRGR0zQJz+w==}
+  '@noble/ciphers@2.1.1':
+    resolution: {integrity: sha512-bysYuiVfhxNJuldNXlFEitTVdNnYUc+XNJZd7Qm2a5j1vZHgY+fazadNFWFaMK/2vye0JVlxV3gHmC0WDfAOQw==}
+    engines: {node: '>= 20.19.0'}
 
-  '@noble/curves@1.1.0':
-    resolution: {integrity: sha512-091oBExgENk/kGj3AZmtBDMpxQPDtxQABR2B9lb1JbVTs6ytdzZNwvhxQ4MWasRNEzlbEH8jCWFCwhF/Obj5AA==}
+  '@noble/curves@2.0.1':
+    resolution: {integrity: sha512-vs1Az2OOTBiP4q0pwjW5aF0xp9n4MxVrmkFBxc6EKZc6ddYx5gaZiAsZoq0uRRXWbi3AT/sBqn05eRPtn1JCPw==}
+    engines: {node: '>= 20.19.0'}
 
-  '@noble/curves@1.2.0':
-    resolution: {integrity: sha512-oYclrNgRaM9SsBUBVbb8M6DTV7ZHRTKugureoYEncY5c65HOmRzvSiTE3y5CYaPYJA/GVkrhXEoF0M3Ya9PMnw==}
-
-  '@noble/hashes@1.3.1':
-    resolution: {integrity: sha512-EbqwksQwz9xDRGfDST86whPBgM65E0OH/pCgqW0GBVzO22bNE+NuIbeTb714+IfSjU3aRk47EUvXIb5bTsenKA==}
-    engines: {node: '>= 16'}
-
-  '@noble/hashes@1.3.2':
-    resolution: {integrity: sha512-MVC8EAQp7MvEcm30KWENFjgR+Mkmf+D189XJTkFIlwohU5hcBbn1ZkKq7KVTi2Hme3PMGF390DaL52beVrIihQ==}
-    engines: {node: '>= 16'}
+  '@noble/hashes@2.0.1':
+    resolution: {integrity: sha512-XlOlEbQcE9fmuXxrVTXCTlG2nlRXa9Rj3rr5Ue/+tX+nmkgbX720YHh0VR3hBF9xDvwnb8D2shVGOwNx+ulArw==}
+    engines: {node: '>= 20.19.0'}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -1808,14 +1811,14 @@ packages:
   '@rushstack/eslint-patch@1.10.4':
     resolution: {integrity: sha512-WJgX9nzTqknM393q1QJDJmoW28kUfEnybeTfVNcNAPnIx210RXm2DiXiHzfNPJNIUUb1tJnz/l4QGtJ30PgWmA==}
 
-  '@scure/base@1.1.1':
-    resolution: {integrity: sha512-ZxOhsSyxYwLJj3pLZCefNitxsj093tb2vq90mp2txoYeBqbcjDjqFhyM8eUjq/uFm6zJ+mUuqxlS2FkuSY1MTA==}
+  '@scure/base@2.0.0':
+    resolution: {integrity: sha512-3E1kpuZginKkek01ovG8krQ0Z44E3DHPjc5S2rjJw9lZn3KSQOs8S7wqikF/AH7iRanHypj85uGyxk0XAyC37w==}
 
-  '@scure/bip32@1.3.1':
-    resolution: {integrity: sha512-osvveYtyzdEVbt3OfwwXFr4P2iVBL5u1Q3q4ONBfDY/UpOuXmOlbgwc1xECEboY8wIays8Yt6onaWMUdUbfl0A==}
+  '@scure/bip32@2.0.1':
+    resolution: {integrity: sha512-4Md1NI5BzoVP+bhyJaY3K6yMesEFzNS1sE/cP+9nuvE7p/b0kx9XbpDHHFl8dHtufcbdHRUUQdRqLIPHN/s7yA==}
 
-  '@scure/bip39@1.2.1':
-    resolution: {integrity: sha512-Z3/Fsz1yr904dduJD0NpiyRHhRYHdcnyh73FZWiV+/qhWi83wNJ3NWolYqCEN+ZWsUz2TWwajJggcRE9r1zUYg==}
+  '@scure/bip39@2.0.1':
+    resolution: {integrity: sha512-PsxdFj/d2AcJcZDX1FXN3dDgitDDTmwf78rKZq1a6c1P1Nan1X/Sxc7667zU3U+AN60g7SxxP0YCVw2H/hBycg==}
 
   '@sideway/address@4.1.5':
     resolution: {integrity: sha512-IqO/DUQHUkPeixNQ8n0JA6102hT9CmaljNTPmQ1u8MEhBo/R4Q8eKLN/vGZxuebwOroDB4cbpjheD4+/sKFK4Q==}
@@ -2246,6 +2249,7 @@ packages:
 
   '@ungap/structured-clone@1.2.0':
     resolution: {integrity: sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==}
+    deprecated: Potential CWE-502 - Update to 1.3.1 or higher
 
   '@vercel/style-guide@6.0.0':
     resolution: {integrity: sha512-tu0wFINGz91EPwaT5VjSqUwbvCY9pvLach7SPG4XyfJKPU9Vku2TFa6+AyzJ4oroGbo9fK+TQhIFHrnFl0nCdg==}
@@ -2617,6 +2621,9 @@ packages:
   brace-expansion@2.0.1:
     resolution: {integrity: sha512-XnAIvQ8eM+kC6aULx6wuQiwVsnzsi9d3WxzV3FpWTGA19F621kwdbsAcFKXgKUHZWsy+mY6iL1sHTxWEFCytDA==}
 
+  brace-expansion@2.1.4:
+    resolution: {integrity: sha512-hGfVzPxthbf3+2yjg/RBs60cB0FhqBS/zvdV/4wn4/BmN0bNMMHPc4V/BbFieqf1TKAGGAHnY4eSjajCl0f2Xg==}
+
   braces@3.0.3:
     resolution: {integrity: sha512-yQbXgO/OSZVD2IsiLlro+7Hf6Q18EJrKSEsdoMzKePKXct3gvD8oLcOQdIzGupr5Fj+EDe8gO/lxc1BzfMpxvA==}
     engines: {node: '>=8'}
@@ -2954,6 +2961,7 @@ packages:
 
   crypto-js@4.2.0:
     resolution: {integrity: sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==}
+    deprecated: Active development of CryptoJS has been discontinued. This library is no longer maintained.
 
   crypto-random-string@4.0.0:
     resolution: {integrity: sha512-x8dy3RnvYdlUcPOjkEHqozhiwzKNSq7GcPuXFbnyMOCHxX8V3OgIg/pYuabl2sbUPfIJaeAQB7PMOK8DFIdoRA==}
@@ -3881,15 +3889,17 @@ packages:
   glob@10.3.10:
     resolution: {integrity: sha512-fa46+tv1Ak0UPK1TOy/pZrIybNNt4HCv7SDzwyfiOZkvZLEbjsZkJBPtDHVshZjbecAoAGSC20MjLDG/qr679g==}
     engines: {node: '>=16 || 14 >=14.17'}
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
     hasBin: true
 
   glob@10.4.5:
     resolution: {integrity: sha512-7Bv8RF0k6xjo7d4A/PxYLbUCfb6c+Vpd2/mB2yRDlew7Jb5hEXiCD9ibfO7wpk8i4sevK6DFny9h7EYbM3/sHg==}
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
     hasBin: true
 
   glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
-    deprecated: Glob versions prior to v9 are no longer supported
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   global-dirs@3.0.1:
     resolution: {integrity: sha512-NBcGGFbBA9s1VzD41QXDG+3++t9Mn5t1FpLdhESY6oKY4gYTFpX4wO3sqGUa0Srjtbfj3szX0RnemmrVRUdULA==}
@@ -4922,11 +4932,19 @@ packages:
     resolution: {integrity: sha512-G6T0ZX48xgozx7587koeX9Ys2NYy6Gmv//P89sEte9V9whIapMNF4idKxnW2QtCcLiTWlb/wfCabAtAFWhhBow==}
     engines: {node: '>=16 || 14 >=14.17'}
 
+  minimatch@9.0.9:
+    resolution: {integrity: sha512-OBwBN9AL4dqmETlpS2zasx+vTeWclWzkblfZk7KTA5j3jeOONz/tRCnZomUyvNg83wL5Zv9Ss6HMJXAgL8R2Yg==}
+    engines: {node: '>=16 || 14 >=14.17'}
+
   minimist@1.2.8:
     resolution: {integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==}
 
   minipass@7.1.2:
     resolution: {integrity: sha512-qOOzS1cBTWYF4BH8fVePDBOO9iptMnGUEZwNc/cMWnTV2nVLZ7VoNWEPHkYczZA0pdoA7dl6e7FL659nX9S2aw==}
+    engines: {node: '>=16 || 14 >=14.17'}
+
+  minipass@7.1.3:
+    resolution: {integrity: sha512-tEBHqDnIoM/1rXME1zgka9g6Q2lcoCkxHLuc7ODJ5BxbP5d4c2Z5cGgtXAku59200Cx7diuHTOYfSBD8n6mm8A==}
     engines: {node: '>=16 || 14 >=14.17'}
 
   mlly@1.8.0:
@@ -4993,8 +5011,8 @@ packages:
     resolution: {integrity: sha512-IO9QvjUMWxPQQhs60oOu10CRkWCiZzSUkzbXGGV9pviYl1fXYcvkzQ5jV9z8Y6un8ARoVRl4EtC6v6jNqbaJ/w==}
     engines: {node: '>=14.16'}
 
-  nostr-tools@2.9.4:
-    resolution: {integrity: sha512-Powumwkp+EWbdK1T8IsEX4daTLQhtWJvitfZ6OP2BdU1jJZvNlUp3SQB541UYw4uc9jgLbxZW6EZSdZoSfIygQ==}
+  nostr-tools@2.24.1:
+    resolution: {integrity: sha512-KdrKjC74n/rr6J3eCSfZj8dcbZFvolHYe4S22SefNZ5YWbhHiB0KL/mmJjEZ0u6B9mZK0YcQtl+WQ46KzwapeQ==}
     peerDependencies:
       typescript: '>=5.0.0'
     peerDependenciesMeta:
@@ -6727,6 +6745,7 @@ packages:
 
   uuid@8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
+    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
 
   validate-npm-package-license@3.0.4:
@@ -6998,19 +7017,22 @@ packages:
     resolution: {integrity: sha512-AyeEbWOu/TAXdxlV9wmGcR0+yh2j3vYPGOECcIj2S7MkrLyC7ne+oye2BKTItt0ii2PHk4cDy+95+LshzbXnGg==}
     engines: {node: '>=12.20'}
 
-  zustand@4.5.7:
-    resolution: {integrity: sha512-CHOUy7mu3lbD6o6LJLfllpjkzhHXSBlX8B9+qPddUsIfeF5S/UZ5q0kmCsnRqT1UHFQZchNFDDzMbQsuesHWlw==}
-    engines: {node: '>=12.7.0'}
+  zustand@5.0.15:
+    resolution: {integrity: sha512-MpSEjRiBkA9crSYeOUH32rJC7SVqAbm0Fqcqge/bUi2PPoLcBWKOsG+C8mevmpr8TwXHBVkChbbJiyvkE+i/3A==}
+    engines: {node: '>=12.20.0'}
     peerDependencies:
-      '@types/react': '>=16.8'
+      '@types/react': '>=18.0.0'
       immer: '>=9.0.6'
-      react: '>=16.8'
+      react: '>=18.0.0'
+      use-sync-external-store: '>=1.2.0'
     peerDependenciesMeta:
       '@types/react':
         optional: true
       immer:
         optional: true
       react:
+        optional: true
+      use-sync-external-store:
         optional: true
 
   zwitch@2.0.4:
@@ -7963,6 +7985,8 @@ snapshots:
       regenerator-runtime: 0.14.1
 
   '@babel/runtime@7.27.6': {}
+
+  '@babel/runtime@7.29.7': {}
 
   '@babel/template@7.25.0':
     dependencies:
@@ -9200,33 +9224,38 @@ snapshots:
       '@eslint/core': 0.15.2
       levn: 0.4.1
 
-  '@getalby/bitcoin-connect-react@3.8.2(@types/react@18.3.3)(immer@9.0.21)(react@19.1.0)(typescript@5.8.3)':
+  '@getalby/bitcoin-connect-react@3.12.3(@types/react@18.3.3)(immer@9.0.21)(react@19.1.0)(typescript@5.8.3)(use-sync-external-store@1.5.0(react@19.1.0))':
     dependencies:
-      '@getalby/bitcoin-connect': 3.8.2(@types/react@18.3.3)(immer@9.0.21)(react@19.1.0)(typescript@5.8.3)
+      '@getalby/bitcoin-connect': 3.12.3(@types/react@18.3.3)(immer@9.0.21)(react@19.1.0)(typescript@5.8.3)(use-sync-external-store@1.5.0(react@19.1.0))
       react: 19.1.0
     transitivePeerDependencies:
       - '@types/react'
       - immer
       - typescript
+      - use-sync-external-store
 
-  '@getalby/bitcoin-connect@3.8.2(@types/react@18.3.3)(immer@9.0.21)(react@19.1.0)(typescript@5.8.3)':
+  '@getalby/bitcoin-connect@3.12.3(@types/react@18.3.3)(immer@9.0.21)(react@19.1.0)(typescript@5.8.3)(use-sync-external-store@1.5.0(react@19.1.0))':
     dependencies:
-      '@getalby/lightning-tools': 5.2.0
-      '@getalby/sdk': 4.1.1(typescript@5.8.3)
-      '@lightninglabs/lnc-web': 0.3.2-alpha
+      '@getalby/lightning-tools': 8.2.0
+      '@getalby/sdk': 8.0.3(typescript@5.8.3)
+      '@lightninglabs/lnc-web': 0.3.6-alpha
       qrcode-generator: 1.4.4
-      zustand: 4.5.7(@types/react@18.3.3)(immer@9.0.21)(react@19.1.0)
+      zustand: 5.0.15(@types/react@18.3.3)(immer@9.0.21)(react@19.1.0)(use-sync-external-store@1.5.0(react@19.1.0))
     transitivePeerDependencies:
       - '@types/react'
       - immer
       - react
       - typescript
+      - use-sync-external-store
 
   '@getalby/lightning-tools@5.2.0': {}
 
-  '@getalby/sdk@4.1.1(typescript@5.8.3)':
+  '@getalby/lightning-tools@8.2.0': {}
+
+  '@getalby/sdk@8.0.3(typescript@5.8.3)':
     dependencies:
-      nostr-tools: 2.9.4(typescript@5.8.3)
+      '@getalby/lightning-tools': 8.2.0
+      nostr-tools: 2.24.1(typescript@5.8.3)
     transitivePeerDependencies:
       - typescript
 
@@ -9297,11 +9326,11 @@ snapshots:
 
   '@leichtgewicht/ip-codec@2.0.5': {}
 
-  '@lightninglabs/lnc-core@0.3.2-alpha': {}
+  '@lightninglabs/lnc-core@0.3.6-alpha': {}
 
-  '@lightninglabs/lnc-web@0.3.2-alpha':
+  '@lightninglabs/lnc-web@0.3.6-alpha':
     dependencies:
-      '@lightninglabs/lnc-core': 0.3.2-alpha
+      '@lightninglabs/lnc-core': 0.3.6-alpha
       crypto-js: 4.2.0
 
   '@mdx-js/mdx@3.0.1':
@@ -9360,19 +9389,13 @@ snapshots:
     dependencies:
       eslint-scope: 5.1.1
 
-  '@noble/ciphers@0.5.3': {}
+  '@noble/ciphers@2.1.1': {}
 
-  '@noble/curves@1.1.0':
+  '@noble/curves@2.0.1':
     dependencies:
-      '@noble/hashes': 1.3.1
+      '@noble/hashes': 2.0.1
 
-  '@noble/curves@1.2.0':
-    dependencies:
-      '@noble/hashes': 1.3.2
-
-  '@noble/hashes@1.3.1': {}
-
-  '@noble/hashes@1.3.2': {}
+  '@noble/hashes@2.0.1': {}
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
@@ -9467,18 +9490,18 @@ snapshots:
 
   '@rushstack/eslint-patch@1.10.4': {}
 
-  '@scure/base@1.1.1': {}
+  '@scure/base@2.0.0': {}
 
-  '@scure/bip32@1.3.1':
+  '@scure/bip32@2.0.1':
     dependencies:
-      '@noble/curves': 1.1.0
-      '@noble/hashes': 1.3.1
-      '@scure/base': 1.1.1
+      '@noble/curves': 2.0.1
+      '@noble/hashes': 2.0.1
+      '@scure/base': 2.0.0
 
-  '@scure/bip39@1.2.1':
+  '@scure/bip39@2.0.1':
     dependencies:
-      '@noble/hashes': 1.3.1
-      '@scure/base': 1.1.1
+      '@noble/hashes': 2.0.1
+      '@scure/base': 2.0.0
 
   '@sideway/address@4.1.5':
     dependencies:
@@ -9496,7 +9519,7 @@ snapshots:
 
   '@slorber/react-helmet-async@1.3.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
-      '@babel/runtime': 7.27.6
+      '@babel/runtime': 7.29.7
       invariant: 2.2.4
       prop-types: 15.8.1
       react: 19.1.0
@@ -10526,6 +10549,11 @@ snapshots:
   brace-expansion@2.0.1:
     dependencies:
       balanced-match: 1.0.2
+
+  brace-expansion@2.1.4:
+    dependencies:
+      balanced-match: 1.0.2
+    optional: true
 
   braces@3.0.3:
     dependencies:
@@ -12004,8 +12032,8 @@ snapshots:
     dependencies:
       foreground-child: 3.3.1
       jackspeak: 2.3.6
-      minimatch: 9.0.5
-      minipass: 7.1.2
+      minimatch: 9.0.9
+      minipass: 7.1.3
       path-scurry: 1.11.1
     optional: true
 
@@ -13382,9 +13410,17 @@ snapshots:
     dependencies:
       brace-expansion: 2.0.1
 
+  minimatch@9.0.9:
+    dependencies:
+      brace-expansion: 2.1.4
+    optional: true
+
   minimist@1.2.8: {}
 
   minipass@7.1.2: {}
+
+  minipass@7.1.3:
+    optional: true
 
   mlly@1.8.0:
     dependencies:
@@ -13447,20 +13483,19 @@ snapshots:
 
   normalize-url@8.0.1: {}
 
-  nostr-tools@2.9.4(typescript@5.8.3):
+  nostr-tools@2.24.1(typescript@5.8.3):
     dependencies:
-      '@noble/ciphers': 0.5.3
-      '@noble/curves': 1.2.0
-      '@noble/hashes': 1.3.1
-      '@scure/base': 1.1.1
-      '@scure/bip32': 1.3.1
-      '@scure/bip39': 1.2.1
-    optionalDependencies:
+      '@noble/ciphers': 2.1.1
+      '@noble/curves': 2.0.1
+      '@noble/hashes': 2.0.1
+      '@scure/base': 2.0.0
+      '@scure/bip32': 2.0.1
+      '@scure/bip39': 2.0.1
       nostr-wasm: 0.1.0
+    optionalDependencies:
       typescript: 5.8.3
 
-  nostr-wasm@0.1.0:
-    optional: true
+  nostr-wasm@0.1.0: {}
 
   npm-run-path@4.0.1:
     dependencies:
@@ -15355,6 +15390,7 @@ snapshots:
   use-sync-external-store@1.5.0(react@19.1.0):
     dependencies:
       react: 19.1.0
+    optional: true
 
   util-deprecate@1.0.2: {}
 
@@ -15713,12 +15749,11 @@ snapshots:
 
   yocto-queue@1.2.1: {}
 
-  zustand@4.5.7(@types/react@18.3.3)(immer@9.0.21)(react@19.1.0):
-    dependencies:
-      use-sync-external-store: 1.5.0(react@19.1.0)
+  zustand@5.0.15(@types/react@18.3.3)(immer@9.0.21)(react@19.1.0)(use-sync-external-store@1.5.0(react@19.1.0)):
     optionalDependencies:
       '@types/react': 18.3.3
       immer: 9.0.21
       react: 19.1.0
+      use-sync-external-store: 1.5.0(react@19.1.0)
 
   zwitch@2.0.4: {}
