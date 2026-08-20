@@ -52,7 +52,7 @@ export function getStatusCode(status: string, methodType: MethodType) {
 
 export const renderProperties =
   (swagger: SwaggerSchema) =>
-  (schema: Schema, isEnumDeclaration: boolean = false): string => {
+  (schema: Schema, isEnumDeclaration: boolean = false, level = 1): string => {
     if (
       schema.type === "object" &&
       !!Object.keys(schema?.properties ?? {}).length
@@ -61,7 +61,11 @@ export const renderProperties =
         .map(op => {
           const childProp = (schema.properties as any)[op] as Schema;
 
-          const type = renderProperties(swagger)(childProp);
+          const type = renderProperties(swagger)(
+            childProp,
+            undefined,
+            level + 1,
+          );
 
           const isNullable: boolean = (childProp as any).nullable;
           const isNameArray = op.endsWith("[]");
@@ -71,9 +75,18 @@ export const renderProperties =
             name: isNullable ? `${propertyName}?` : propertyName,
             type: isNullable ? `${type} | null` : type,
           };
+          if (
+            childProp.type === "object" &&
+            Object.keys(childProp.properties ?? {}).length > 0
+          ) {
+            return render(
+              `{{{ name }}}: {\n${"\t".repeat(level + 1)}{{{ type }}}\n${"\t".repeat(level)}};`,
+              view,
+            );
+          }
           return render("{{{ name }}}: {{{ type }}};", view);
         })
-        .join("\n\t");
+        .join("\n" + "\t".repeat(level));
       return properties.concat(addSchemaAllOf(schema.allOf ?? null, swagger));
     } else if (
       schema.type === "object" &&

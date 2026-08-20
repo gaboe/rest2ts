@@ -22,6 +22,7 @@ const cases = [
   "reserved_words",
   "invalid_schema_names",
   "enum_special_chars",
+  "nested_schema",
 ];
 
 function fixturePath(name: string) {
