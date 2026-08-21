@@ -309,6 +309,10 @@ export type QuotationPremiumsResponse = {
 		halfYearly: QuotationPremiumResponse;
 		yearly: QuotationPremiumResponse;
 	};
+	premiumsNullable?: {
+		monthly: QuotationPremiumResponse;
+		quarterly: QuotationPremiumResponse;
+	} | null;
 };
 
 

@@ -69,22 +69,25 @@ export const renderProperties =
 
           const isNullable: boolean = (childProp as any).nullable;
           const isNameArray = op.endsWith("[]");
+          const isNestedObject =
+            childProp.type === "object" &&
+            !!Object.keys(childProp?.properties ?? {}).length;
           const propertyName = isNameArray ? `"${op}"` : op;
 
           const view = {
             name: isNullable ? `${propertyName}?` : propertyName,
-            type: isNullable ? `${type} | null` : type,
+            type,
           };
-          if (
-            childProp.type === "object" &&
-            Object.keys(childProp.properties ?? {}).length > 0
-          ) {
+          if (isNestedObject) {
             return render(
-              `{{{ name }}}: {\n${"\t".repeat(level + 1)}{{{ type }}}\n${"\t".repeat(level)}};`,
+              `{{{ name }}}: {\n${"\t".repeat(level + 1)}{{{ type }}}\n${"\t".repeat(level)}}${isNullable ? " | null" : ""};`,
               view,
             );
           }
-          return render("{{{ name }}}: {{{ type }}};", view);
+          return render(
+            `{{{ name }}}: {{{ type }}}${isNullable ? " | null" : ""};`,
+            view,
+          );
         })
         .join("\n" + "\t".repeat(level));
       return properties.concat(addSchemaAllOf(schema.allOf ?? null, swagger));
@@ -113,16 +116,21 @@ export const renderProperties =
         }
 
         const hasInvalidChars = /[^a-zA-Z0-9_]/.test(nameStr);
-        
+
         if (hasInvalidChars) {
-          const words = nameStr.split(/[^a-zA-Z0-9]+/).filter(word => word.length > 0);
+          const words = nameStr
+            .split(/[^a-zA-Z0-9]+/)
+            .filter(word => word.length > 0);
           const pascalCase = words
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-            .join('');
-          
+            .map(
+              word =>
+                word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(),
+            )
+            .join("");
+
           return /^[0-9]/.test(pascalCase) ? `_${pascalCase}` : pascalCase;
         }
-        
+
         return /^[0-9]/.test(nameStr) ? `_${nameStr}` : nameStr;
       };
 

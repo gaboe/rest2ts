@@ -49,6 +49,19 @@
               }
             },
             "additionalProperties": false
+          },
+          "premiumsNullable": {
+            "type": "object",
+            "properties": {
+              "monthly": {
+                "$ref": "#/components/schemas/QuotationPremiumResponse"
+              },
+              "quarterly": {
+                "$ref": "#/components/schemas/QuotationPremiumResponse"
+              }
+            },
+            "additionalProperties": false,
+            "nullable": true
           }
         },
         "additionalProperties": false
