@@ -1,0 +1,71 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "Test of nested schema",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "https://localhost:7095"
+    }
+  ],
+  "paths": {},
+  "components": {
+    "schemas": {
+      "QuotationPremiumResponse": {
+        "type": "object",
+        "properties": {
+          "isDiscountCodeValid": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "discountErrorCode": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "QuotationPremiumsResponse": {
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "type": "string"
+          },
+          "premiums": {
+            "type": "object",
+            "properties": {
+              "monthly": {
+                "$ref": "#/components/schemas/QuotationPremiumResponse"
+              },
+              "quarterly": {
+                "$ref": "#/components/schemas/QuotationPremiumResponse"
+              },
+              "halfYearly": {
+                "$ref": "#/components/schemas/QuotationPremiumResponse"
+              },
+              "yearly": {
+                "$ref": "#/components/schemas/QuotationPremiumResponse"
+              }
+            },
+            "additionalProperties": false
+          },
+          "premiumsNullable": {
+            "type": "object",
+            "properties": {
+              "monthly": {
+                "$ref": "#/components/schemas/QuotationPremiumResponse"
+              },
+              "quarterly": {
+                "$ref": "#/components/schemas/QuotationPremiumResponse"
+              }
+            },
+            "additionalProperties": false,
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

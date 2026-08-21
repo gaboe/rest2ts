@@ -52,7 +52,7 @@ export function getStatusCode(status: string, methodType: MethodType) {
 
 export const renderProperties =
   (swagger: SwaggerSchema) =>
-  (schema: Schema, isEnumDeclaration: boolean = false): string => {
+  (schema: Schema, isEnumDeclaration: boolean = false, level = 1): string => {
     if (
       schema.type === "object" &&
       !!Object.keys(schema?.properties ?? {}).length
@@ -61,19 +61,35 @@ export const renderProperties =
         .map(op => {
           const childProp = (schema.properties as any)[op] as Schema;
 
-          const type = renderProperties(swagger)(childProp);
+          const type = renderProperties(swagger)(
+            childProp,
+            undefined,
+            level + 1,
+          );
 
           const isNullable: boolean = (childProp as any).nullable;
           const isNameArray = op.endsWith("[]");
+          const isNestedObject =
+            childProp.type === "object" &&
+            !!Object.keys(childProp?.properties ?? {}).length;
           const propertyName = isNameArray ? `"${op}"` : op;
 
           const view = {
             name: isNullable ? `${propertyName}?` : propertyName,
-            type: isNullable ? `${type} | null` : type,
+            type,
           };
-          return render("{{{ name }}}: {{{ type }}};", view);
+          if (isNestedObject) {
+            return render(
+              `{{{ name }}}: {\n${"\t".repeat(level + 1)}{{{ type }}}\n${"\t".repeat(level)}}${isNullable ? " | null" : ""};`,
+              view,
+            );
+          }
+          return render(
+            `{{{ name }}}: {{{ type }}}${isNullable ? " | null" : ""};`,
+            view,
+          );
         })
-        .join("\n\t");
+        .join("\n" + "\t".repeat(level));
       return properties.concat(addSchemaAllOf(schema.allOf ?? null, swagger));
     } else if (
       schema.type === "object" &&
@@ -100,16 +116,21 @@ export const renderProperties =
         }
 
         const hasInvalidChars = /[^a-zA-Z0-9_]/.test(nameStr);
-        
+
         if (hasInvalidChars) {
-          const words = nameStr.split(/[^a-zA-Z0-9]+/).filter(word => word.length > 0);
+          const words = nameStr
+            .split(/[^a-zA-Z0-9]+/)
+            .filter(word => word.length > 0);
           const pascalCase = words
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-            .join('');
-          
+            .map(
+              word =>
+                word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(),
+            )
+            .join("");
+
           return /^[0-9]/.test(pascalCase) ? `_${pascalCase}` : pascalCase;
         }
-        
+
         return /^[0-9]/.test(nameStr) ? `_${nameStr}` : nameStr;
       };
 
