@@ -42,7 +42,7 @@
     "axios": "1.11.0",
     "commander": "14.0.0",
     "fs-extra": "11.3.0",
-    "handlebars": "4.7.8",
+    "handlebars": "4.7.9",
     "purify-ts": "2.1.2"
   },
   "devDependencies": {
