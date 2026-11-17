@@ -52,7 +52,7 @@
     "@types/eslint": "9.6.1",
     "@types/fs-extra": "11.0.4",
     "@types/node": "22.18.1",
-    "@vitest/coverage-istanbul": "3.2.4",
+    "@vitest/coverage-istanbul": "3.2.7",
     "eslint": "9.35.0",
     "tsup": "8.5.0",
     "typescript": "5.8.3",
