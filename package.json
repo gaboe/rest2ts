@@ -17,7 +17,7 @@
   "author": "Gabriel Ecegi",
   "license": "ISC",
   "bin": {
-    "rest2ts": "./build/index.js"
+    "rest2ts": "build/index.js"
   },
   "rejectUnauthorized": false,
   "dependencies": {
