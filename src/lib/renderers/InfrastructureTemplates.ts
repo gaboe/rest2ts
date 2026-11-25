@@ -35,11 +35,13 @@ export const getInfrastructureTemplate = (isCookiesAuthEnabled: boolean) => {
 
   type Configuration = {
     jwtKey: string | undefined | (() => string | null | undefined);
+    onRequest?: (request: { url: string; options: RequestInit & { headers: Headers } }) => void | Promise<void>;
     onResponse?: (response: FetchResponse<unknown, any>) => void;
   };
-  
+
   let CONFIG: Configuration = {
     jwtKey: undefined,
+    onRequest: () => {},
     onResponse: () => {},
   };
   
@@ -61,6 +63,7 @@ export const getInfrastructureTemplate = (isCookiesAuthEnabled: boolean) => {
     }
 
     try {
+      CONFIG.onRequest && (await CONFIG.onRequest({ url: args[0], options: args[1] }));
       const res: Response = await (fetch as any)(...args);
       const status = res.status;
       try {
